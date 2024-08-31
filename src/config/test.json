@@ -1,0 +1,9 @@
+{
+  "server": {
+    "port": "5000"
+  },
+  "mongoose": {
+    "uri": "mongodb+srv://basketcol-admin:Q0VrlOhv7y3Q20slSCf8QQUM44W1KVI10gFKXDNDfUGXB8IIXc@basketcol-free.jbopdnv.mongodb.net/",
+    "database": "basketcol-test"
+  }
+}
