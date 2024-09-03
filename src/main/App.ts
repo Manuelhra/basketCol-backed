@@ -46,3 +46,4 @@ export class App {
 // Crear el método static en todas las entidades de create y reemplazar en todos los casos de uso new por .create
 // También crear en todas las entidades el método de update y crear la entidad Either
 // Y todos los métodos de los casos de uso que se pasen de llamar run a execute
+// Asegurarme que todos los casos de uso hereden o implementen el método execute
