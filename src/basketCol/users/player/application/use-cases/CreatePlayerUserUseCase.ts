@@ -46,6 +46,7 @@ export class CreatePlayerUserUseCase {
       id,
       name,
       biography,
+      nickname,
       email,
       password,
     } = payload;
@@ -65,6 +66,7 @@ export class CreatePlayerUserUseCase {
       playerUserId.value,
       name,
       biography,
+      nickname,
       playerUserEmail.value,
       playerUserPassword.value,
       active,
