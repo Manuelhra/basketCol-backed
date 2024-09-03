@@ -8,6 +8,8 @@ import {
   PlayerUserCreatedAt,
   PlayerUserEmail,
   PlayerUserId,
+  PlayerUserNickname,
+  PlayerUserNicknameValidationService,
   PlayerUserPassword,
   PlayerUserUpdatedAt,
   SecurePasswordCreationService,
@@ -18,6 +20,8 @@ import { CreatePlayerUserDTO } from '../dtos/CreatePlayerUserDTO';
 export class CreatePlayerUserUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
+  readonly #playerUserNicknameValidationService: PlayerUserNicknameValidationService;
+
   readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
 
   readonly #securePasswordCreationService: SecurePasswordCreationService;
@@ -27,12 +31,14 @@ export class CreatePlayerUserUseCase {
   readonly #playerUserRepository: IPlayerUserRepository;
 
   constructor(dependencies: {
+    playerUserNicknameValidationService: PlayerUserNicknameValidationService;
     emailUniquenessValidatorService: EmailUniquenessValidatorService;
     idUniquenessValidatorService: IdUniquenessValidatorService;
     securePasswordCreationService: SecurePasswordCreationService;
     playerUserRepository: IPlayerUserRepository;
     businessDateService: BusinessDateService;
   }) {
+    this.#playerUserNicknameValidationService = dependencies.playerUserNicknameValidationService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserRepository = dependencies.playerUserRepository;
@@ -52,9 +58,11 @@ export class CreatePlayerUserUseCase {
     } = payload;
 
     const playerUserId: PlayerUserId = new PlayerUserId(id);
+    const playerUserNickname: PlayerUserNickname = new PlayerUserNickname(nickname);
     const playerUserEmail: PlayerUserEmail = new PlayerUserEmail({ value: email.value, verified: false });
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PlayerUserId, IPlayerUser, PlayerUser>(playerUserId);
+    await this.#playerUserNicknameValidationService.ensureNicknameIsUnique(playerUserNickname);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<PlayerUserEmail, IPlayerUser, PlayerUser>(playerUserEmail);
 
     const active: boolean = true;
