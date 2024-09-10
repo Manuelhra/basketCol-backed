@@ -16,8 +16,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreatePlayerUserDTO } from '../dtos/CreatePlayerUserDTO';
+import { ICreatePlayerUserUseCase } from './ports/ICreatePlayerUserUseCase';
 
-export class CreatePlayerUserUseCase {
+export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserNicknameValidationService: PlayerUserNicknameValidationService;
@@ -47,7 +48,7 @@ export class CreatePlayerUserUseCase {
     this.#businessDateService = dependencies.businessDateService;
   }
 
-  public async run(payload: CreatePlayerUserDTO): Promise<void> {
+  public async execute(dto: CreatePlayerUserDTO): Promise<void> {
     const {
       id,
       name,
@@ -55,7 +56,7 @@ export class CreatePlayerUserUseCase {
       nickname,
       email,
       password,
-    } = payload;
+    } = dto;
 
     const playerUserId: PlayerUserId = new PlayerUserId(id);
     const playerUserNickname: PlayerUserNickname = new PlayerUserNickname(nickname);

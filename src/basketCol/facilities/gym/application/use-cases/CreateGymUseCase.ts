@@ -14,8 +14,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateGymDTO } from '../dtos/CreateGymDTO';
+import { ICreateGymUseCase } from './ports/ICreateGymUseCase';
 
-export class CreateGymUseCase {
+export class CreateGymUseCase implements ICreateGymUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #hostUserValidationService: HostUserValidationService;
@@ -36,14 +37,14 @@ export class CreateGymUseCase {
     this.#gymRepository = dependencies.gymRepository;
   }
 
-  public async run(payload: CreateGymDTO): Promise<void> {
+  public async execute(dto: CreateGymDTO): Promise<void> {
     const {
       id,
       officialName,
       location,
       establishmentDate,
       registeredById,
-    } = payload;
+    } = dto;
     const gymId: GymId = new GymId(id);
     const gymRegisteredById: GymRegisteredById = new GymRegisteredById(registeredById);
     const gymEstablishmentDate: GymEstablishmentDate = new GymEstablishmentDate(establishmentDate);

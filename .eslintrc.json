@@ -1,6 +1,8 @@
 {
   "env": {
-      "browser": false
+      "browser": false,
+      "node": true,
+      "es2021": true
   },
   "extends": [
       "airbnb",
@@ -27,6 +29,7 @@
     "consistent-return": "error",
     "max-len":"off",
     "import/prefer-default-export": "off",
-    "default-case": "off"
+    "default-case": "off",
+    "@typescript-eslint/no-throw-literal": "off"
   }
 }

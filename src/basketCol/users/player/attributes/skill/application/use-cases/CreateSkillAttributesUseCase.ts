@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateSkillAttributesDTO } from '../dtos/CreateSkillAttributesDTO';
+import { ICreateSkillAttributesUseCase } from './ports/ICreateSkillAttributesUseCase';
 
-export class CreateSkillAttributesUseCase {
+export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserValidationService: PlayerUserValidationService;
@@ -34,14 +35,14 @@ export class CreateSkillAttributesUseCase {
     this.#playerUserSkillAttributesRepository = dependencies.playerUserSkillAttributesRepository;
   }
 
-  public async run(payload: CreateSkillAttributesDTO): Promise<void> {
+  public async execute(dto: CreateSkillAttributesDTO): Promise<void> {
     const {
       id,
       passAccuracy,
       ballHandle,
       speedWithBall,
       playerUserId,
-    } = payload;
+    } = dto;
 
     const pUSASkillAttributesId: PUSASkillAttributesId = new PUSASkillAttributesId(id);
     const pUSASkillAttributesReferencedPlayerUserId: PUSASkillAttributesReferencedPlayerUserId = new PUSASkillAttributesReferencedPlayerUserId(playerUserId);

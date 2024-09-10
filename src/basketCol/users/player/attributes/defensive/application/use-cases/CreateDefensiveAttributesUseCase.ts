@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateDefensiveAttributesDTO } from '../dtos/CreateDefensiveAttributesDTO';
+import { ICreateDefensiveAttributesUseCase } from './ports/ICreateDefensiveAttributesUseCase';
 
-export class CreateDefensiveAttributesUseCase {
+export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserValidationService: PlayerUserValidationService;
@@ -34,7 +35,7 @@ export class CreateDefensiveAttributesUseCase {
     this.#playerUserDefensiveAttributesRepository = dependencies.playerUserDefensiveAttributesRepository;
   }
 
-  public async run(payload: CreateDefensiveAttributesDTO): Promise<void> {
+  public async execute(dto: CreateDefensiveAttributesDTO): Promise<void> {
     const {
       id,
       interiorDefense,
@@ -42,7 +43,7 @@ export class CreateDefensiveAttributesUseCase {
       steal,
       block,
       playerUserId,
-    } = payload;
+    } = dto;
 
     const pUDAId: PUDAId = new PUDAId(id);
     const pUDAReferencedPlayerUserId: PUDAReferencedPlayerUserId = new PUDAReferencedPlayerUserId(playerUserId);

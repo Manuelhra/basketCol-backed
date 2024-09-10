@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateReboundingAttributesDTO } from '../dtos/CreateReboundingAttributesDTO';
+import { ICreateReboundingAttributesUseCase } from './ports/ICreateReboundingAttributesUseCase';
 
-export class CreateReboundingAttributesUseCase {
+export class CreateReboundingAttributesUseCase implements ICreateReboundingAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserValidationService: PlayerUserValidationService;
@@ -34,13 +35,13 @@ export class CreateReboundingAttributesUseCase {
     this.#playerUserReboundingAttributesRepository = dependencies.playerUserReboundingAttributesRepository;
   }
 
-  public async run(payload: CreateReboundingAttributesDTO): Promise<void> {
+  public async execute(dto: CreateReboundingAttributesDTO): Promise<void> {
     const {
       id,
       offensiveRebound,
       defensiveRebound,
       playerUserId,
-    } = payload;
+    } = dto;
 
     const playerUserReboundingAttributesId: PURAId = new PURAId(id);
     const pURAReferencedPlayerUserId: PURAReferencedPlayerUserId = new PURAReferencedPlayerUserId(playerUserId);

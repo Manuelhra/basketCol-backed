@@ -16,8 +16,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateCourtDTO } from '../dtos/CreateCourtDTO';
+import { ICreateCourtUseCase } from './ports/ICreateCourtUseCase';
 
-export class CreateCourtUseCase {
+export class CreateCourtUseCase implements ICreateCourtUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #hostUserValidationService: HostUserValidationService;
@@ -42,7 +43,7 @@ export class CreateCourtUseCase {
     this.#courtRepository = dependencies.courtRepository;
   }
 
-  public async run(payload: CreateCourtDTO): Promise<void> {
+  public async execute(dto: CreateCourtDTO): Promise<void> {
     const {
       id,
       officialName,
@@ -52,7 +53,7 @@ export class CreateCourtUseCase {
       registeredById,
       location,
       gymId,
-    } = payload;
+    } = dto;
 
     const courtId: CourtId = new CourtId(id);
     const courtRegisteredById: CourtRegisteredById = new CourtRegisteredById(registeredById);

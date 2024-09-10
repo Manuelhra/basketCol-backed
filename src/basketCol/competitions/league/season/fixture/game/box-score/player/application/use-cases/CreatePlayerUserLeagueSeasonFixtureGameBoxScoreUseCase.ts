@@ -14,8 +14,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO } from '../dtos/CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO';
+import { ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase } from './ports/ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase';
 
-export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase {
+export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #leagueSeasonFixtureGameValidationService: LeagueSeasonFixtureGameValidationService;
@@ -40,7 +41,7 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase {
     this.#playerUserLeagueSeasonFixtureGameBoxScoreRepository = dependencies.playerUserLeagueSeasonFixtureGameBoxScoreRepository;
   }
 
-  public async run(payload: CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO): Promise<void> {
+  public async execute(dto: CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO): Promise<void> {
     const {
       id,
       points,
@@ -59,7 +60,7 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase {
       fieldGoalsMade,
       fixtureGameId,
       playerUserId,
-    } = payload;
+    } = dto;
 
     const pLSFGBoxScoreId: PLSFGBoxScoreId = new PLSFGBoxScoreId(id);
     const pLSFGBoxScoreFixtureGameId: PLSFGBoxScoreFixtureGameId = new PLSFGBoxScoreFixtureGameId(fixtureGameId);

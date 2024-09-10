@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreatePlayerUserCareerStatsDTO } from '../dtos/CreatePlayerUserCareerStatsDTO';
+import { ICreatePlayerUserCareerStatsUseCase } from './ports/ICreatePlayerUserCareerStatsUseCase';
 
-export class CreatePlayerUserCareerStatsUseCase {
+export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCareerStatsUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserValidationService: PlayerUserValidationService;
@@ -34,7 +35,7 @@ export class CreatePlayerUserCareerStatsUseCase {
     this.#playerUserCareerStatsRepository = dependencies.playerUserCareerStatsRepository;
   }
 
-  public async run(payload: CreatePlayerUserCareerStatsDTO): Promise<void> {
+  public async execute(dto: CreatePlayerUserCareerStatsDTO): Promise<void> {
     const {
       id,
       totalGamesPlayed,
@@ -56,7 +57,7 @@ export class CreatePlayerUserCareerStatsUseCase {
       totalFieldGoalsAttempted,
       totalFieldGoalsMade,
       playerUserId,
-    } = payload;
+    } = dto;
 
     const pUCStatsId: PUCStatsId = new PUCStatsId(id);
     const pUCStatsPlayerUserId: PUCStatsPlayerUserId = new PUCStatsPlayerUserId(playerUserId);

@@ -11,14 +11,14 @@ import { Mongoose, Schema } from 'mongoose';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
 import { IController } from '../../../../shared/infrastructure/server/controllers/IController';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
-import { CreateHostUserUseCase } from '../../application/use-cases/CreateHostUserUseCase';
 import { IMongooseHostUserDocument } from '../persistence/mongoose/IMongooseHostUserDocument';
 import { IMongooseConfig } from '../../../../shared/infrastructure/persistence/mongoose/IMongooseConfig';
+import { ICreateHostUserUseCase } from '../../application/use-cases/ports/ICreateHostUserUseCase';
 
 export interface IHostUserContainer {
   basePath: string;
   businessDateService: BusinessDateService;
-  createHostUserUseCase: CreateHostUserUseCase;
+  createHostUserUseCase: ICreateHostUserUseCase;
   createPasswordValueObjectService: ICreatePasswordValueObjectService;
   expressHostUserPostController: IController<Request, Response>;
   expressHostUserRouteManager: IRouteManager<Router>;

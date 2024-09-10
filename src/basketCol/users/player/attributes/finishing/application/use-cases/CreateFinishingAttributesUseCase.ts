@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateFinishingAttributesDTO } from '../dtos/CreateFinishingAttributesDTO';
+import { ICreateFinishingAttributesUseCase } from './ports/ICreateFinishingAttributesUseCase';
 
-export class CreateFinishingAttributesUseCase {
+export class CreateFinishingAttributesUseCase implements ICreateFinishingAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserValidationService: PlayerUserValidationService;
@@ -34,7 +35,7 @@ export class CreateFinishingAttributesUseCase {
     this.#playerUserFinishingAttributesRepository = dependencies.playerUserFinishingAttributesRepository;
   }
 
-  public async run(payload: CreateFinishingAttributesDTO): Promise<void> {
+  public async execute(dto: CreateFinishingAttributesDTO): Promise<void> {
     const {
       id,
       drivingLayup,
@@ -42,7 +43,7 @@ export class CreateFinishingAttributesUseCase {
       standingDunk,
       postControl,
       playerUserId,
-    } = payload;
+    } = dto;
 
     const pUFAId: PUFAId = new PUFAId(id);
     const pUFAReferencedPlayerUserId: PUFAReferencedPlayerUserId = new PUFAReferencedPlayerUserId(playerUserId);

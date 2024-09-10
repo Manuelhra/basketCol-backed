@@ -14,8 +14,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateLeagueSeasonFixtureDTO } from '../dtos/CreateLeagueSeasonFixtureDTO';
+import { ICreateLeagueSeasonFixtureUseCase } from './ports/ICreateLeagueSeasonFixtureUseCase';
 
-export class CreateLeagueSeasonFixtureUseCase {
+export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixtureUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #leagueSeasonValidationService: LeagueSeasonValidationService;
@@ -40,13 +41,13 @@ export class CreateLeagueSeasonFixtureUseCase {
     this.#leagueSeasonFixtureRepository = dependencies.leagueSeasonFixtureRepository;
   }
 
-  public async run(payload: CreateLeagueSeasonFixtureDTO): Promise<void> {
+  public async execute(dto: CreateLeagueSeasonFixtureDTO): Promise<void> {
     const {
       id,
       date,
       name,
       leagueSeasonId,
-    } = payload;
+    } = dto;
 
     const lSFixtureId: LSFixtureId = new LSFixtureId(id);
     const lSFixtureDate: LSFixtureDate = new LSFixtureDate(date);

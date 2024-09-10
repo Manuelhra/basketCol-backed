@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateTeamAllTimeStatsDTO } from '../dtos/CreateTeamAllTimeStatsDTO';
+import { ICreateTeamAllTimeStatsUseCase } from './ports/ICreateTeamAllTimeStatsUseCase';
 
-export class CreateTeamAllTimeStatsUseCase {
+export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #teamValidationService: TeamValidationService;
@@ -34,7 +35,7 @@ export class CreateTeamAllTimeStatsUseCase {
     this.#teamAllTimeStatsRepository = dependencies.teamAllTimeStatsRepository;
   }
 
-  public async run(payload: CreateTeamAllTimeStatsDTO): Promise<void> {
+  public async execute(dto: CreateTeamAllTimeStatsDTO): Promise<void> {
     const {
       id,
       totalGamesPlayed,
@@ -56,7 +57,7 @@ export class CreateTeamAllTimeStatsUseCase {
       totalFieldGoalsAttempted,
       totalFieldGoalsMade,
       teamId,
-    } = payload;
+    } = dto;
 
     const tATStatsId: TATStatsId = new TATStatsId(id);
     const tATStatsTeamId: TATStatsTeamId = new TATStatsTeamId(teamId);

@@ -14,8 +14,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateTeamLeagueSeasonFixtureGameBoxScoreDTO } from '../dtos/CreateTeamLeagueSeasonFixtureGameBoxScoreDTO';
+import { ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase } from './ports/ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase';
 
-export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase {
+export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #leagueSeasonFixtureGameValidationService: LeagueSeasonFixtureGameValidationService;
@@ -40,7 +41,7 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase {
     this.#teamLeagueSeasonFixtureGameBoxScoreRepository = dependencies.teamLeagueSeasonFixtureGameBoxScoreRepository;
   }
 
-  public async run(payload: CreateTeamLeagueSeasonFixtureGameBoxScoreDTO): Promise<void> {
+  public async execute(dto: CreateTeamLeagueSeasonFixtureGameBoxScoreDTO): Promise<void> {
     const {
       id,
       points,
@@ -59,7 +60,7 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase {
       fieldGoalsMade,
       fixtureGameId,
       teamId,
-    } = payload;
+    } = dto;
 
     const tLSFGBoxScoreId: TLSFGBoxScoreId = new TLSFGBoxScoreId(id);
     const tLSFGBoxScoreFixtureGameId: TLSFGBoxScoreFixtureGameId = new TLSFGBoxScoreFixtureGameId(fixtureGameId);

@@ -21,8 +21,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateLeagueSeasonAwardsDTO } from '../dtos/CreateLeagueSeasonAwardsDTO';
+import { ICreateLeagueSeasonAwardsUseCase } from './ports/ICreateLeagueSeasonAwardsUseCase';
 
-export class CreateLeagueSeasonAwardsUseCase {
+export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAwardsUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserValidationService: PlayerUserValidationService;
@@ -51,7 +52,7 @@ export class CreateLeagueSeasonAwardsUseCase {
     this.#leagueSeasonAwardsRepository = dependencies.leagueSeasonAwardsRepository;
   }
 
-  public async run(payload: CreateLeagueSeasonAwardsDTO): Promise<void> {
+  public async execute(dto: CreateLeagueSeasonAwardsDTO): Promise<void> {
     const {
       id,
       bestThreePointShooterId,
@@ -62,7 +63,7 @@ export class CreateLeagueSeasonAwardsUseCase {
       bestDefensiveRebounderId,
       championTeamId,
       leagueSeasonId,
-    } = payload;
+    } = dto;
 
     const leagueSeasonAwardsId: LeagueSeasonAwardsId = new LeagueSeasonAwardsId(id);
     const lSABestThreePointShooterId: LSABestThreePointShooterId = new LSABestThreePointShooterId(bestThreePointShooterId);

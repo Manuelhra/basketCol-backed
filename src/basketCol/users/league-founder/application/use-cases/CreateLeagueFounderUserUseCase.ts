@@ -14,8 +14,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateLeagueFounderUserDTO } from '../dtos/CreateLeagueFounderUserDTO';
+import { ICreateLeagueFounderUserUseCase } from './ports/ICreateLeagueFounderUserUseCase';
 
-export class CreateLeagueFounderUserUseCase {
+export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserUseCase {
   readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
 
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -40,14 +41,14 @@ export class CreateLeagueFounderUserUseCase {
     this.#businessDateService = dependencies.businessDateService;
   }
 
-  public async run(payload: CreateLeagueFounderUserDTO): Promise<void> {
+  public async execute(dto: CreateLeagueFounderUserDTO): Promise<void> {
     const {
       id,
       email,
       name,
       biography,
       password,
-    } = payload;
+    } = dto;
 
     const leagueFounderUserId: LeagueFounderUserId = new LeagueFounderUserId(id);
     const leagueFounderUserEmail: LeagueFounderUserEmail = new LeagueFounderUserEmail({ value: email.value, verified: false });

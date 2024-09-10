@@ -14,8 +14,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateTeamFounderUserDTO } from '../dtos/CreateTeamFounderUserDTO';
+import { ICreateTeamFounderUserUseCase } from './ports/ICreateTeamFounderUserUseCase';
 
-export class CreateTeamFounderUserUseCase {
+export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
@@ -40,14 +41,14 @@ export class CreateTeamFounderUserUseCase {
     this.#tFURepository = dependencies.tFURepository;
   }
 
-  public async run(payload: CreateTeamFounderUserDTO): Promise<void> {
+  public async execute(dto: CreateTeamFounderUserDTO): Promise<void> {
     const {
       id,
       name,
       biography,
       email,
       password,
-    } = payload;
+    } = dto;
 
     const teamFounderUserId: TeamFounderUserId = new TeamFounderUserId(id);
     const tFUEmail: TFUEmail = new TFUEmail({ value: email.value, verified: false });

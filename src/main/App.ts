@@ -47,3 +47,5 @@ export class App {
 // También crear en todas las entidades el método de update y crear la entidad Either
 // Y todos los métodos de los casos de uso que se pasen de llamar run a execute
 // Asegurarme que todos los casos de uso hereden o implementen el método execute
+// Validar que exceptions de dominio se usan en el repo de dominio para dejarlas allá y las que se usen en el repo de backend traerlas para acá y
+// guardarlas en la respectiva capa deonde se usen

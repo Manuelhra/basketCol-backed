@@ -1,5 +1,6 @@
 import {
   HostUser,
+  HostUserEmail,
   HostUserId,
   IHostUser,
   IHostUserRepository,
@@ -60,6 +61,23 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
     const Model = await this.model();
 
     const document = await Model.findById<IMongooseHostUserDocument>(hostUserId.value);
+
+    return document === null ? null : new HostUser(
+      document.id.valueOf(),
+      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
+      document.biography.valueOf(),
+      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
+      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      document.active.valueOf(),
+      document.createdAt.valueOf(),
+      document.updatedAt.valueOf(),
+    );
+  }
+
+  public async searchByEmail(hostUserEmail: HostUserEmail): Promise<Nullable<HostUser>> {
+    const Model = await this.model();
+
+    const document = await Model.findById<IMongooseHostUserDocument>(hostUserEmail.value);
 
     return document === null ? null : new HostUser(
       document.id.valueOf(),
