@@ -53,7 +53,7 @@ export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCa
     const pUSASkillAttributesCreatedAt: PUSASkillAttributesCreatedAt = this.#businessDateService.getCurrentDate();
     const pUSASkillAttributesUpdatedAt: PUSASkillAttributesUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserSkillAttributes: PlayerUserSkillAttributes = new PlayerUserSkillAttributes(
+    const playerUserSkillAttributes: PlayerUserSkillAttributes = PlayerUserSkillAttributes.create(
       pUSASkillAttributesId.value,
       passAccuracy,
       ballHandle,

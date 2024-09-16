@@ -1,3 +1,3 @@
-export interface IServerErrorHandle<Response> {
-  run(response: Response, error: Error): void;
+export interface IServerErrorHandler {
+  run(response: any, error: Error): void;
 }

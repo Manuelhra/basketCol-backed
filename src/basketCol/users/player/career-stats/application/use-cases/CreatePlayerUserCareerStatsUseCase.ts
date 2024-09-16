@@ -68,7 +68,7 @@ export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCare
     const pUCStatsCreatedAt: PUCStatsCreatedAt = this.#businessDateService.getCurrentDate();
     const pUCStatsUpdatedAt: PUCStatsUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserCareerStats: PlayerUserCareerStats = new PlayerUserCareerStats(
+    const playerUserCareerStats: PlayerUserCareerStats = PlayerUserCareerStats.create(
       pUCStatsId.value,
       totalGamesPlayed,
       totalGamesWon,

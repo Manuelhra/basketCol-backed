@@ -52,7 +52,7 @@ export class CreateReboundingAttributesUseCase implements ICreateReboundingAttri
     const pURACreatedAt: PURACreatedAt = this.#businessDateService.getCurrentDate();
     const pURAUpdatedAt: PURAUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserReboundingAttributes: PlayerUserReboundingAttributes = new PlayerUserReboundingAttributes(
+    const playerUserReboundingAttributes: PlayerUserReboundingAttributes = PlayerUserReboundingAttributes.create(
       playerUserReboundingAttributesId.value,
       offensiveRebound,
       defensiveRebound,

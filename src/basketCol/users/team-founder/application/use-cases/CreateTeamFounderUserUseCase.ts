@@ -61,7 +61,7 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
     const tFUCreatedAt: TFUCreatedAt = this.#businessDateService.getCurrentDate();
     const tFUUpdatedAt: TFUUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const teamFounderUser: TeamFounderUser = new TeamFounderUser(
+    const teamFounderUser: TeamFounderUser = TeamFounderUser.create(
       teamFounderUserId.value,
       name,
       biography,

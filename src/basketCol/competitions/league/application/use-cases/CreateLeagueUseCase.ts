@@ -72,7 +72,7 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
     const leagueCreatedAt: LeagueCreatedAt = this.#businessDateService.getCurrentDate();
     const leagueUpdatedAt: LeagueUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const league: League = new League(
+    const league: League = League.create(
       leagueId.value,
       name,
       description,

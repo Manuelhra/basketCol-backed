@@ -54,7 +54,7 @@ export class CreateShootingAttributesUseCase implements ICreateShootingAttribute
     const pUShootingAttributesCreatedAt: PUShootingAttributesCreatedAt = this.#businessDateService.getCurrentDate();
     const pUShootingAttributesUpdatedAt: PUShootingAttributesUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserShootingAttributes: PlayerUserShootingAttributes = new PlayerUserShootingAttributes(
+    const playerUserShootingAttributes: PlayerUserShootingAttributes = PlayerUserShootingAttributes.create(
       pUShootingAttributesId.value,
       closeShot,
       midRangeShot,

@@ -4,5 +4,3 @@ export interface AuthenticateUserDTO {
   password: string;
   type: string;
 }
-
-// TODO: Crear value object de username para los usuarios

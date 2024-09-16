@@ -1,3 +1,3 @@
-export interface IRouteManager<Router> {
-  registerRoutes(router: Router): void;
+export interface IRouteManager {
+  registerRoutes(router: any): void;
 }

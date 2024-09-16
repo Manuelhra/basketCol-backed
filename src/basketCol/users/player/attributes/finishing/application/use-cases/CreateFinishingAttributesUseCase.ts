@@ -54,7 +54,7 @@ export class CreateFinishingAttributesUseCase implements ICreateFinishingAttribu
     const pUFACreatedAt: PUFACreatedAt = this.#businessDateService.getCurrentDate();
     const pUFAUpdatedAt: PUFAUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserFinishingAttributes: PlayerUserFinishingAttributes = new PlayerUserFinishingAttributes(
+    const playerUserFinishingAttributes: PlayerUserFinishingAttributes = PlayerUserFinishingAttributes.create(
       pUFAId.value,
       drivingLayup,
       drivingDunk,

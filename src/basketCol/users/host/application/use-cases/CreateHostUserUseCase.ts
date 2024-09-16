@@ -5,13 +5,13 @@ import {
   HostUserPassword,
   HostUserUpdatedAt,
   IHostUserRepository,
-  MultipleHostUsersException,
   Nullable,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 
 import { CreateHostUserDTO } from '../dtos/CreateHostUserDTO';
 import { ICreateHostUserUseCase } from './ports/ICreateHostUserUseCase';
+import { MultipleHostUsersException } from '../exceptions/MultipleHostUsersException';
 
 export class CreateHostUserUseCase implements ICreateHostUserUseCase {
   readonly #hostUserRepository: IHostUserRepository;
@@ -50,7 +50,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
     const hostUserCreatedAt: HostUserCreatedAt = this.#businessDateService.getCurrentDate();
     const hostUserUpdatedAt: HostUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const hostUser: HostUser = new HostUser(
+    const hostUser: HostUser = HostUser.create(
       id,
       name,
       biography,

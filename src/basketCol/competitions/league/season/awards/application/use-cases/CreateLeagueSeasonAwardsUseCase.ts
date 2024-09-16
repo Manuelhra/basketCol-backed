@@ -88,7 +88,7 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
     const lSACreatedAt: LSACreatedAt = this.#businessDateService.getCurrentDate();
     const lSAUpdatedAt: LSAUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const leagueSeasonAwards: LeagueSeasonAwards = new LeagueSeasonAwards(
+    const leagueSeasonAwards: LeagueSeasonAwards = LeagueSeasonAwards.create(
       leagueSeasonAwardsId.value,
       lSABestThreePointShooterId.playerUserIdAsString,
       lSABestTwoPointShooterId.playerUserIdAsString,

@@ -61,7 +61,7 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
     const refereeUserCreatedAt: RefereeUserCreatedAt = this.#businessDateService.getCurrentDate();
     const refereeUserUpdatedAt: RefereeUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const refereeUser: RefereeUser = new RefereeUser(
+    const refereeUser: RefereeUser = RefereeUser.create(
       refereeUserId.value,
       name,
       biography,

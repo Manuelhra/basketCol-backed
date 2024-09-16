@@ -73,7 +73,7 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
     const tLSFGBoxScoreCreatedAt: TLSFGBoxScoreCreatedAt = this.#businessDateService.getCurrentDate();
     const tLSFGBoxScoreUpdatedAt: TLSFGBoxScoreUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const teamLeagueSeasonFixtureGameBoxScore: TeamLeagueSeasonFixtureGameBoxScore = new TeamLeagueSeasonFixtureGameBoxScore(
+    const teamLeagueSeasonFixtureGameBoxScore: TeamLeagueSeasonFixtureGameBoxScore = TeamLeagueSeasonFixtureGameBoxScore.create(
       id,
       points,
       offensiveRebounds,

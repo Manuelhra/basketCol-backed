@@ -57,7 +57,7 @@ export class CreateGymUseCase implements ICreateGymUseCase {
     const gymCreatedAt: GymCreatedAt = this.#businessDateService.getCurrentDate();
     const gymUpdatedAt: GymUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const gym: Gym = new Gym(
+    const gym: Gym = Gym.create(
       gymId.value,
       officialName,
       location,

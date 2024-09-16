@@ -6,5 +6,11 @@ export interface IConvictProps {
   mongoose: {
     uri: string;
     database: string;
-  }
+  },
+  jwt: {
+    secretKeys: {
+      authenticateUserSecretKey: string;
+      refreshTokenSecretKey: string;
+    }
+  };
 }

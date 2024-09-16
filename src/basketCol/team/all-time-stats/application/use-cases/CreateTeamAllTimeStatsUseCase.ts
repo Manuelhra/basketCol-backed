@@ -68,7 +68,7 @@ export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUse
     const tATStatsCreatedAt: TATStatsCreatedAt = this.#businessDateService.getCurrentDate();
     const tATStatsUpdatedAt: TATStatsUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const teamAllTimeStats: TeamAllTimeStats = new TeamAllTimeStats(
+    const teamAllTimeStats: TeamAllTimeStats = TeamAllTimeStats.create(
       tATStatsId.value,
       totalGamesPlayed,
       totalGamesWon,

@@ -73,7 +73,7 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
       await this.#gymValidationService.ensureGymExists(courtNullableFacilityId.value);
     }
 
-    const court: Court = new Court(
+    const court: Court = Court.create(
       courtId.value,
       officialName,
       courtEstablishmentDate.value,

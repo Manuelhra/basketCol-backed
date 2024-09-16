@@ -73,7 +73,7 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
     const pLSFGBoxScoreCreatedAt: PLSFGBoxScoreCreatedAt = this.#businessDateService.getCurrentDate();
     const pLSFGBoxScoreUpdatedAt: PLSFGBoxScoreUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserLeagueSeasonFixtureGameBoxScore: PlayerUserLeagueSeasonFixtureGameBoxScore = new PlayerUserLeagueSeasonFixtureGameBoxScore(
+    const playerUserLeagueSeasonFixtureGameBoxScore: PlayerUserLeagueSeasonFixtureGameBoxScore = PlayerUserLeagueSeasonFixtureGameBoxScore.create(
       pLSFGBoxScoreId.value,
       points,
       offensiveRebounds,

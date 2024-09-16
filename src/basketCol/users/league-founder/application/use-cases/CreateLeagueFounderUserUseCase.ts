@@ -61,7 +61,7 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
     const leagueFounderUserCreatedAt: LeagueFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
     const leagueFounderUserUpdatedAt: LeagueFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const leagueFounderUser: LeagueFounderUser = new LeagueFounderUser(
+    const leagueFounderUser: LeagueFounderUser = LeagueFounderUser.create(
       leagueFounderUserId.value,
       name,
       biography,

@@ -1,7 +1,7 @@
 import { HttpStatus } from '@basketcol/domain';
 import { urlencoded, json } from 'body-parser';
 import compression from 'compression';
-import express, { Application, Response } from 'express';
+import express, { Application } from 'express';
 import errorHandler from 'errorhandler';
 import Router from 'express-promise-router';
 import helmet from 'helmet';
@@ -9,9 +9,9 @@ import * as http from 'http';
 
 import { IServer } from '../..';
 import { IRouteManager } from '../../routes/IRouteManager';
-import { IServerErrorHandle } from '../../IServerErrorHandler';
+import { IServerErrorHandler } from '../../IServerErrorHandler';
 
-export class ExpressServer implements IServer<express.Router, Response> {
+export class ExpressServer implements IServer {
   readonly #app: Application;
 
   readonly #router: express.Router;
@@ -55,11 +55,11 @@ export class ExpressServer implements IServer<express.Router, Response> {
     return this.httpServer;
   }
 
-  public registerRoutes(routeManager: IRouteManager<express.Router>[]): void {
+  public registerRoutes(routeManager: IRouteManager[]): void {
     routeManager.forEach((manager) => manager.registerRoutes(this.#router));
   }
 
-  public handleErrors(expressServerErrorHandlerList: IServerErrorHandle<Response>[]): void {
+  public handleErrors(expressServerErrorHandlerList: IServerErrorHandler[]): void {
     this.#router.use((error: Error, _req: express.Request, res: express.Response, next: express.NextFunction): void => {
       if (error !== undefined && error !== null) {
         console.log(error);

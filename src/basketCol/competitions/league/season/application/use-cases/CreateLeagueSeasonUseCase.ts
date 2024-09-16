@@ -63,7 +63,7 @@ export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
     const leagueSeasonCreatedAt: LeagueSeasonCreatedAt = this.#businessDateService.getCurrentDate();
     const leagueSeasonUpdatedAt: LeagueSeasonUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const leagueSeason: LeagueSeason = new LeagueSeason(
+    const leagueSeason: LeagueSeason = LeagueSeason.create(
       leagueSeasonId.value,
       name,
       startDate,

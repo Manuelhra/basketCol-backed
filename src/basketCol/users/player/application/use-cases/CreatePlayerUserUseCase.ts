@@ -71,7 +71,7 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     const playerUserCreatedAt: PlayerUserCreatedAt = this.#businessDateService.getCurrentDate();
     const playerUserUpdatedAt: PlayerUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUser: PlayerUser = new PlayerUser(
+    const playerUser: PlayerUser = PlayerUser.create(
       playerUserId.value,
       name,
       biography,

@@ -54,7 +54,7 @@ export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttribu
     const pUDACreatedAt: PUDACreatedAt = this.#businessDateService.getCurrentDate();
     const pUDAUpdatedAt: PUDAUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserDefensiveAttributes: PlayerUserDefensiveAttributes = new PlayerUserDefensiveAttributes(
+    const playerUserDefensiveAttributes: PlayerUserDefensiveAttributes = PlayerUserDefensiveAttributes.create(
       pUDAId.value,
       interiorDefense,
       perimeterDefense,

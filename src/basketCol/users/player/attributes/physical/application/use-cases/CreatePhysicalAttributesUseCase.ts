@@ -55,7 +55,7 @@ export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttribute
     const pUPACreatedAt: PUPACreatedAt = this.#businessDateService.getCurrentDate();
     const pUPAUpdatedAt: PUPAUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserPhysicalAttributes: PlayerUserPhysicalAttributes = new PlayerUserPhysicalAttributes(
+    const playerUserPhysicalAttributes: PlayerUserPhysicalAttributes = PlayerUserPhysicalAttributes.create(
       physicalAttributesId.value,
       speed,
       acceleration,

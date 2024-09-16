@@ -60,7 +60,7 @@ export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixt
     const lSFixtureCreatedAt: LSFixtureCreatedAt = this.#businessDateService.getCurrentDate();
     const lSFixtureUpdatedAt: LSFixtureUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const leagueSeasonFixture: LeagueSeasonFixture = new LeagueSeasonFixture(
+    const leagueSeasonFixture: LeagueSeasonFixture = LeagueSeasonFixture.create(
       lSFixtureId.value,
       lSFixtureDate.dateAsString,
       name,

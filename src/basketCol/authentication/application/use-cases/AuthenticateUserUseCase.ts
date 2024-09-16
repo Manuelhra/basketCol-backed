@@ -38,15 +38,37 @@ import { InvalidCredentialsError } from '../exceptions/InvalidCredentialsError';
 import { IAuthenticateUserUseCase, SomethingUser } from './ports/IAuthenticateUserUseCase';
 
 export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
-  constructor(
-    private readonly playerUserRepository: IPlayerUserRepository,
-    private readonly hostUserRepository: IHostUserRepository,
-    private readonly refereeUserRepository: IRefereeUserRepository,
-    private readonly teamFounderUserRepository: ITFURepository,
-    private readonly leagueFounderUserRepository: ILeagueFounderUserRepository,
-    private readonly passwordValidationService: PasswordValidationService,
-    private readonly tokenGeneratorService: ITokenGeneratorService,
-  ) {}
+  readonly #playerUserRepository: IPlayerUserRepository;
+
+  readonly #hostUserRepository: IHostUserRepository;
+
+  readonly #refereeUserRepository: IRefereeUserRepository;
+
+  readonly #teamFounderUserRepository: ITFURepository;
+
+  readonly #leagueFounderUserRepository: ILeagueFounderUserRepository;
+
+  readonly #passwordValidationService: PasswordValidationService;
+
+  readonly #tokenGeneratorService: ITokenGeneratorService;
+
+  constructor(dependencies: {
+    playerUserRepository: IPlayerUserRepository;
+    hostUserRepository: IHostUserRepository;
+    refereeUserRepository: IRefereeUserRepository;
+    teamFounderUserRepository: ITFURepository;
+    leagueFounderUserRepository: ILeagueFounderUserRepository;
+    passwordValidationService: PasswordValidationService;
+    tokenGeneratorService: ITokenGeneratorService;
+  }) {
+    this.#playerUserRepository = dependencies.playerUserRepository;
+    this.#hostUserRepository = dependencies.hostUserRepository;
+    this.#refereeUserRepository = dependencies.refereeUserRepository;
+    this.#teamFounderUserRepository = dependencies.teamFounderUserRepository;
+    this.#leagueFounderUserRepository = dependencies.leagueFounderUserRepository;
+    this.#passwordValidationService = dependencies.passwordValidationService;
+    this.#tokenGeneratorService = dependencies.tokenGeneratorService;
+  }
 
   public async execute(dto: AuthenticateUserDTO): Promise<{ user: SomethingUser; authenticationToken: string; }> {
     const {
@@ -120,7 +142,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
     return {
       user,
-      authenticationToken: this.tokenGeneratorService.generateAuthenticationToken(user),
+      authenticationToken: this.#tokenGeneratorService.generateAuthenticationToken(user),
     };
   }
 
@@ -136,36 +158,36 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     let user: Nullable<PlayerUser> = null;
 
     if (playerUserNickname !== undefined && playerUserNickname !== null) {
-      user = await this.playerUserRepository.searchByNickname(playerUserNickname);
+      user = await this.#playerUserRepository.searchByNickname(playerUserNickname);
     } else if (playerUserEmail !== undefined && playerUserEmail !== null) {
-      user = await this.playerUserRepository.searchByEmail(playerUserEmail);
+      user = await this.#playerUserRepository.searchByEmail(playerUserEmail);
     }
 
     if (user === null || user === undefined) {
       return null;
     }
 
-    const isPasswordValid = this.passwordValidationService.validate(playerUserPassword, user.getPassword());
+    const isPasswordValid = this.#passwordValidationService.validate(playerUserPassword, user.getPassword());
     return isPasswordValid ? user : null;
   }
 
   private async authenticateHostUser(hostUserEmail: HostUserEmail, hostUserPassword: HostUserPassword): Promise<Nullable<HostUser>> {
-    const user = await this.hostUserRepository.searchByEmail(hostUserEmail);
+    const user = await this.#hostUserRepository.searchByEmail(hostUserEmail);
     if (user === null || user === undefined) {
       return null;
     }
 
-    const isPasswordValid = this.passwordValidationService.validate(hostUserPassword, user.getPassword());
+    const isPasswordValid = this.#passwordValidationService.validate(hostUserPassword, user.getPassword());
     return isPasswordValid ? user : null;
   }
 
   private async authenticateRefereeUser(refereeUserEmail: RefereeUserEmail, refereeUserPassword: RefereeUserPassword): Promise<Nullable<RefereeUser>> {
-    const user = await this.refereeUserRepository.searchByEmail(refereeUserEmail);
+    const user = await this.#refereeUserRepository.searchByEmail(refereeUserEmail);
     if (user === null || user === undefined) {
       return null;
     }
 
-    const isPasswordValid = await this.passwordValidationService.validate(refereeUserPassword, user.getPassword());
+    const isPasswordValid = await this.#passwordValidationService.validate(refereeUserPassword, user.getPassword());
     return isPasswordValid ? user : null;
   }
 
@@ -173,22 +195,22 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     leagueFounderUserEmail: LeagueFounderUserEmail,
     leagueFounderUserPassword: LeagueFounderUserPassword,
   ): Promise<Nullable<LeagueFounderUser>> {
-    const user = await this.leagueFounderUserRepository.searchByEmail(leagueFounderUserEmail);
+    const user = await this.#leagueFounderUserRepository.searchByEmail(leagueFounderUserEmail);
     if (user === null || user === undefined) {
       return null;
     }
 
-    const isPasswordValid = this.passwordValidationService.validate(leagueFounderUserPassword, user.getPassword());
+    const isPasswordValid = this.#passwordValidationService.validate(leagueFounderUserPassword, user.getPassword());
     return isPasswordValid ? user : null;
   }
 
   private async authenticateTeamFounderUser(teamFounderUserEmail: TFUEmail, teamFounderUserPassword: TFUPassword): Promise<Nullable<TeamFounderUser>> {
-    const user = await this.teamFounderUserRepository.searchByEmail(teamFounderUserEmail);
+    const user = await this.#teamFounderUserRepository.searchByEmail(teamFounderUserEmail);
     if (user === null || user === undefined) {
       return null;
     }
 
-    const isPasswordValid = this.passwordValidationService.validate(teamFounderUserPassword, user.getPassword());
+    const isPasswordValid = this.#passwordValidationService.validate(teamFounderUserPassword, user.getPassword());
     return isPasswordValid ? user : null;
   }
 }

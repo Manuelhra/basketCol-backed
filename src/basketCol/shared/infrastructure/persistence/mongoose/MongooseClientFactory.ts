@@ -1,36 +1,45 @@
 import { Mongoose } from 'mongoose';
+
 import { IMongooseConfig } from './IMongooseConfig';
+import { MongooseConfigFactory } from './MongooseConfigFactory';
+import { DatabaseConnectionFailedError } from '../../exceptions/DatabaseConnectionFailedError';
 
 export abstract class MongooseClientFactory {
   static #client: Mongoose | null = null;
 
-  public static async createMongooseClient(params: { mongooseConfig: IMongooseConfig }): Promise<Mongoose> {
-    let client: Mongoose | null = MongooseClientFactory.getMongooseClient();
+  static #connectionPromise: Promise<Mongoose> | null = null;
 
-    if (client === null) {
-      client = await MongooseClientFactory.createAndConnectMongooseClient(params.mongooseConfig);
-
-      MongooseClientFactory.registerMongooseClient(client);
+  public static async createMongooseClient(): Promise<Mongoose> {
+    if (MongooseClientFactory.#client) {
+      return MongooseClientFactory.#client;
     }
 
-    return client;
-  }
+    if (MongooseClientFactory.#connectionPromise) {
+      return MongooseClientFactory.#connectionPromise;
+    }
 
-  private static getMongooseClient(): Mongoose | null {
-    return MongooseClientFactory.#client;
+    const mongooseConfig: IMongooseConfig = MongooseConfigFactory.createMongooseConfig();
+    MongooseClientFactory.#connectionPromise = MongooseClientFactory.createAndConnectMongooseClient(mongooseConfig);
+
+    try {
+      MongooseClientFactory.#client = await MongooseClientFactory.#connectionPromise;
+      return MongooseClientFactory.#client;
+    } catch (error) {
+      MongooseClientFactory.#connectionPromise = null;
+      throw error;
+    }
   }
 
   private static async createAndConnectMongooseClient(config: IMongooseConfig): Promise<Mongoose> {
     const mongooseClient: Mongoose = new Mongoose();
 
-    await mongooseClient.connect(`${config.uri}/${config.database}`);
-
-    console.log(`Successfully established connection to the ${config.database} database.`);
-
-    return mongooseClient;
-  }
-
-  private static registerMongooseClient(mongooseClient: Mongoose): void {
-    MongooseClientFactory.#client = mongooseClient;
+    try {
+      await mongooseClient.connect(`${config.uri}/${config.database}`);
+      console.log(`Successfully established connection to the ${config.database} database.`);
+      return mongooseClient;
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      throw new DatabaseConnectionFailedError(errorMessage);
+    }
   }
 }

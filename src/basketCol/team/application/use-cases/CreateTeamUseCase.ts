@@ -51,7 +51,7 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
     const teamCreatedAt: TeamCreatedAt = this.#businessDateService.getCurrentDate();
     const teamUpdatedAt: TeamUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const team: Team = new Team(
+    const team: Team = Team.create(
       teamId.value,
       officialName,
       tReferencedTeamFounderUserId.teamFounderUserIdAsString,

@@ -97,7 +97,7 @@ export class CreateLeagueSeasonFixtureGameUseCase implements ICreateLeagueSeason
     const lSFGameCreatedAt: LSFGameCreatedAt = this.#businessDateService.getCurrentDate();
     const lSFGameUpdatedAt: LSFGameUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const leagueSeasonFixtureGame: LeagueSeasonFixtureGame = new LeagueSeasonFixtureGame(
+    const leagueSeasonFixtureGame: LeagueSeasonFixtureGame = LeagueSeasonFixtureGame.create(
       lSFGameId.value,
       startTime,
       endTime,
