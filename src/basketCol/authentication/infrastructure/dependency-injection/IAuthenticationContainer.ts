@@ -5,7 +5,7 @@ import {
   IPasswordEncrypterService,
   IPlayerUserRepository,
   IRefereeUserRepository,
-  ITFURepository as ITeamFounderUserRepository,
+  ITeamFounderUserRepository,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 import { Mongoose, Schema } from 'mongoose';

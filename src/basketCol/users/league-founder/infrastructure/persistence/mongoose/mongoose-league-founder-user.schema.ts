@@ -38,9 +38,13 @@ export const mongooseLeagueFounderUserSchema = new Schema<IMongooseLeagueFounder
     type: String,
     required: [true, "The league founder user's type is required"],
   },
-  active: {
-    type: Boolean,
-    required: [true, "The league founder user's active status is required"],
+  accountStatus: {
+    type: String,
+    required: [true, "The league founder user's accountStatus status is required"],
+  },
+  subscriptionType: {
+    type: String,
+    required: [true, "The league founder user's subscriptionType status is required"],
   },
   createdAt: {
     type: String,

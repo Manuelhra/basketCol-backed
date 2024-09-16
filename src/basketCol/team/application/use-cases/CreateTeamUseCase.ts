@@ -7,7 +7,7 @@ import {
   TeamCreatedAt,
   TeamId,
   TeamUpdatedAt,
-  TFUValidationService,
+  TeamFounderUserValidationService,
   TReferencedTeamFounderUserId,
 } from '@basketcol/domain';
 
@@ -17,7 +17,7 @@ import { ICreateTeamUseCase } from './ports/ICreateTeamUseCase';
 export class CreateTeamUseCase implements ICreateTeamUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
-  readonly #tFUValidationService: TFUValidationService;
+  readonly #teamFounderUserValidationService: TeamFounderUserValidationService;
 
   readonly #businessDateService: BusinessDateService;
 
@@ -25,12 +25,12 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
 
   constructor(dependencies: {
     idUniquenessValidatorService: IdUniquenessValidatorService;
-    tFUValidationService: TFUValidationService;
+    teamFounderUserValidationService: TeamFounderUserValidationService;
     businessDateService: BusinessDateService;
     teamRepository: ITeamRepository;
   }) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#tFUValidationService = dependencies.tFUValidationService;
+    this.#teamFounderUserValidationService = dependencies.teamFounderUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#teamRepository = dependencies.teamRepository;
   }
@@ -46,7 +46,7 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
     const tReferencedTeamFounderUserId: TReferencedTeamFounderUserId = new TReferencedTeamFounderUserId(teamFounderUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<TeamId, ITeam, Team>(teamId);
-    await this.#tFUValidationService.ensureTeamFounderUserExists(tReferencedTeamFounderUserId.value);
+    await this.#teamFounderUserValidationService.ensureTeamFounderUserExists(tReferencedTeamFounderUserId.value);
 
     const teamCreatedAt: TeamCreatedAt = this.#businessDateService.getCurrentDate();
     const teamUpdatedAt: TeamUpdatedAt = this.#businessDateService.getCurrentDate();

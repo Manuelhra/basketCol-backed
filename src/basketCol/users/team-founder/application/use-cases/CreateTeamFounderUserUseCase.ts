@@ -3,14 +3,16 @@ import {
   EmailUniquenessValidatorService,
   IdUniquenessValidatorService,
   ITeamFounderUser,
-  ITFURepository,
+  ITeamFounderUserRepository,
   SecurePasswordCreationService,
   TeamFounderUser,
   TeamFounderUserId,
-  TFUCreatedAt,
-  TFUEmail,
-  TFUPassword,
-  TFUUpdatedAt,
+  TeamFounderUserCreatedAt,
+  TeamFounderUserEmail,
+  TeamFounderUserPassword,
+  TeamFounderUserUpdatedAt,
+  TeamFounderUserAccountState,
+  TeamFounderUserSubscriptionType,
 } from '@basketcol/domain';
 
 import { CreateTeamFounderUserDTO } from '../dtos/CreateTeamFounderUserDTO';
@@ -25,14 +27,14 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
 
   readonly #businessDateService: BusinessDateService;
 
-  readonly #tFURepository: ITFURepository;
+  readonly #tFURepository: ITeamFounderUserRepository;
 
   constructor(dependencies: {
     idUniquenessValidatorService: IdUniquenessValidatorService;
     emailUniquenessValidatorService: EmailUniquenessValidatorService;
     securePasswordCreationService: SecurePasswordCreationService;
     businessDateService: BusinessDateService;
-    tFURepository: ITFURepository;
+    tFURepository: ITeamFounderUserRepository;
   }) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
@@ -51,25 +53,27 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
     } = dto;
 
     const teamFounderUserId: TeamFounderUserId = new TeamFounderUserId(id);
-    const tFUEmail: TFUEmail = new TFUEmail({ value: email.value, verified: false });
+    const teamFounderUserEmail: TeamFounderUserEmail = new TeamFounderUserEmail({ value: email.value, verified: false });
 
     await this.#idUniquenessValidatorService.ensureUniqueId<TeamFounderUserId, ITeamFounderUser, TeamFounderUser>(teamFounderUserId);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<TFUEmail, ITeamFounderUser, TeamFounderUser>(tFUEmail);
+    await this.#emailUniquenessValidatorService.ensureUniqueEmail<TeamFounderUserEmail, ITeamFounderUser, TeamFounderUser>(teamFounderUserEmail);
 
-    const active: boolean = true;
-    const tFUPassword: TFUPassword = this.#securePasswordCreationService.createFromPlainText<TFUPassword>(password);
-    const tFUCreatedAt: TFUCreatedAt = this.#businessDateService.getCurrentDate();
-    const tFUUpdatedAt: TFUUpdatedAt = this.#businessDateService.getCurrentDate();
+    const accountState: string = TeamFounderUserAccountState.active;
+    const subscriptionType: string = TeamFounderUserSubscriptionType.free;
+    const teamFounderUserPassword: TeamFounderUserPassword = this.#securePasswordCreationService.createFromPlainText<TeamFounderUserPassword>(password);
+    const teamFounderUserCreatedAt: TeamFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
+    const teamFounderUserUpdatedAt: TeamFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
     const teamFounderUser: TeamFounderUser = TeamFounderUser.create(
       teamFounderUserId.value,
       name,
       biography,
-      tFUEmail.value,
-      tFUPassword.value,
-      active,
-      tFUCreatedAt.value,
-      tFUUpdatedAt.value,
+      teamFounderUserEmail.value,
+      teamFounderUserPassword.value,
+      accountState,
+      subscriptionType,
+      teamFounderUserCreatedAt.value,
+      teamFounderUserUpdatedAt.value,
     );
 
     return this.#tFURepository.save(teamFounderUser);

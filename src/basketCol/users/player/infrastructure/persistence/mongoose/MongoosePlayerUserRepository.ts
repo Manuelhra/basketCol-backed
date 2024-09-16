@@ -45,7 +45,8 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
-      document.active.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -63,7 +64,8 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
-      document.active.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -81,7 +83,8 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
-      document.active.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );

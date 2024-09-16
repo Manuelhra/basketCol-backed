@@ -5,12 +5,14 @@ import {
   IPlayerUser,
   IPlayerUserRepository,
   PlayerUser,
+  PlayerUserAccountState,
   PlayerUserCreatedAt,
   PlayerUserEmail,
   PlayerUserId,
   PlayerUserNickname,
   PlayerUserNicknameValidationService,
   PlayerUserPassword,
+  PlayerUserSubscriptionType,
   PlayerUserUpdatedAt,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
@@ -66,7 +68,8 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     await this.#playerUserNicknameValidationService.ensureNicknameIsUnique(playerUserNickname);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<PlayerUserEmail, IPlayerUser, PlayerUser>(playerUserEmail);
 
-    const active: boolean = true;
+    const accountState: string = PlayerUserAccountState.active;
+    const subscriptionType: string = PlayerUserSubscriptionType.free;
     const playerUserPassword: PlayerUserPassword = this.#securePasswordCreationService.createFromPlainText<PlayerUserPassword>(password);
     const playerUserCreatedAt: PlayerUserCreatedAt = this.#businessDateService.getCurrentDate();
     const playerUserUpdatedAt: PlayerUserUpdatedAt = this.#businessDateService.getCurrentDate();
@@ -78,7 +81,8 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
       nickname,
       playerUserEmail.value,
       playerUserPassword.value,
-      active,
+      accountState,
+      subscriptionType,
       playerUserCreatedAt.value,
       playerUserUpdatedAt.value,
     );

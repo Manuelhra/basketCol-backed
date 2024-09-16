@@ -6,7 +6,7 @@ import {
   IPasswordEncrypterService,
   IPlayerUserRepository,
   IRefereeUserRepository,
-  ITFURepository,
+  ITeamFounderUserRepository,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 import { Mongoose, Schema } from 'mongoose';
@@ -73,7 +73,7 @@ export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInje
       refereeUserRepository: AwilixDependencyInjector.registerAsClass<IRefereeUserRepository>(MongooseRefereeUserRepository).singleton(),
       securePasswordCreationService: AwilixDependencyInjector.registerAsClass<SecurePasswordCreationService>(SecurePasswordCreationService).singleton(),
       teamFounderUserMongooseSchema: AwilixDependencyInjector.registerAsValue<Schema<IMongooseTeamFounderUserDocument>>(mongooseTeamFounderUserSchema),
-      teamFounderUserRepository: AwilixDependencyInjector.registerAsClass<ITFURepository>(MongooseTeamFounderUserRepository).singleton(),
+      teamFounderUserRepository: AwilixDependencyInjector.registerAsClass<ITeamFounderUserRepository>(MongooseTeamFounderUserRepository).singleton(),
       tokenGeneratorService: AwilixDependencyInjector.registerAsClass<ITokenGeneratorService>(JwtTokenGeneratorService).singleton(),
     });
   }

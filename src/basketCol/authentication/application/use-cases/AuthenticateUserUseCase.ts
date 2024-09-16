@@ -8,7 +8,7 @@ import {
   InvalidUserTypeError,
   IPlayerUserRepository,
   IRefereeUserRepository,
-  ITFURepository,
+  ITeamFounderUserRepository,
   LeagueFounderUser,
   LeagueFounderUserEmail,
   LeagueFounderUserPassword,
@@ -24,9 +24,9 @@ import {
   RefereeUserPassword,
   RefereeUserType,
   TeamFounderUser,
-  TFUEmail,
-  TFUPassword,
-  TFUType,
+  TeamFounderUserEmail,
+  TeamFounderUserPassword,
+  TeamFounderUserType,
 } from '@basketcol/domain';
 
 import { AuthenticateUserDTO } from '../dtos/AuthenticateUserDTO';
@@ -44,7 +44,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
   readonly #refereeUserRepository: IRefereeUserRepository;
 
-  readonly #teamFounderUserRepository: ITFURepository;
+  readonly #teamFounderUserRepository: ITeamFounderUserRepository;
 
   readonly #leagueFounderUserRepository: ILeagueFounderUserRepository;
 
@@ -56,7 +56,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     playerUserRepository: IPlayerUserRepository;
     hostUserRepository: IHostUserRepository;
     refereeUserRepository: IRefereeUserRepository;
-    teamFounderUserRepository: ITFURepository;
+    teamFounderUserRepository: ITeamFounderUserRepository;
     leagueFounderUserRepository: ILeagueFounderUserRepository;
     passwordValidationService: PasswordValidationService;
     tokenGeneratorService: ITokenGeneratorService;
@@ -121,13 +121,13 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
         user = await this.authenticateRefereeUser(refereeUserEmail, refereeUserPassword);
         break;
       }
-      case TFUType.getType(): {
+      case TeamFounderUserType.getType(): {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
         }
 
-        const teamFounderUserEmail = new TFUEmail({ value: email, verified: true });
-        const teamFounderUserPassword = new TFUPassword(password);
+        const teamFounderUserEmail = new TeamFounderUserEmail({ value: email, verified: true });
+        const teamFounderUserPassword = new TeamFounderUserPassword(password);
 
         user = await this.authenticateTeamFounderUser(teamFounderUserEmail, teamFounderUserPassword);
         break;
@@ -204,7 +204,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     return isPasswordValid ? user : null;
   }
 
-  private async authenticateTeamFounderUser(teamFounderUserEmail: TFUEmail, teamFounderUserPassword: TFUPassword): Promise<Nullable<TeamFounderUser>> {
+  private async authenticateTeamFounderUser(teamFounderUserEmail: TeamFounderUserEmail, teamFounderUserPassword: TeamFounderUserPassword): Promise<Nullable<TeamFounderUser>> {
     const user = await this.#teamFounderUserRepository.searchByEmail(teamFounderUserEmail);
     if (user === null || user === undefined) {
       return null;

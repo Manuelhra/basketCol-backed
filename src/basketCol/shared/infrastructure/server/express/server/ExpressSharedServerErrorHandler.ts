@@ -13,6 +13,7 @@ import {
   InvalidCourtIdListElementError,
   InvalidDateFormatError,
   InvalidDomainIdError,
+  InvalidEnumValueError,
   InvalidFacilityIdInstanceError,
   InvalidGymIdListElementError,
   InvalidHostUserIdInstanceError,
@@ -103,6 +104,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         isInstanceof = true;
         break;
 
+      case error instanceof InvalidEnumValueError:
       case error instanceof UndefinedValueError:
       case error instanceof PropertyLengthTooShortError:
       case error instanceof PropertyLengthExceededError:
