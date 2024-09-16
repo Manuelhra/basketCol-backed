@@ -5,10 +5,12 @@ import {
   ILeagueFounderUser,
   ILeagueFounderUserRepository,
   LeagueFounderUser,
+  LeagueFounderUserAccountState,
   LeagueFounderUserCreatedAt,
   LeagueFounderUserEmail,
   LeagueFounderUserId,
   LeagueFounderUserPassword,
+  LeagueFounderUserSubscriptionType,
   LeagueFounderUserUpdatedAt,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
@@ -56,7 +58,8 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
     await this.#idUniquenessValidatorService.ensureUniqueId<LeagueFounderUserId, ILeagueFounderUser, LeagueFounderUser>(leagueFounderUserId);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<LeagueFounderUserEmail, ILeagueFounderUser, LeagueFounderUser>(leagueFounderUserEmail);
 
-    const active: boolean = true;
+    const accountState: string = LeagueFounderUserAccountState.active;
+    const subscriptionType: string = LeagueFounderUserSubscriptionType.free;
     const leagueFounderUserPassword: LeagueFounderUserPassword = this.#securePasswordCreationService.createFromPlainText<LeagueFounderUserPassword>(password);
     const leagueFounderUserCreatedAt: LeagueFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
     const leagueFounderUserUpdatedAt: LeagueFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
@@ -67,7 +70,8 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
       biography,
       leagueFounderUserEmail.value,
       leagueFounderUserPassword.value,
-      active,
+      accountState,
+      subscriptionType,
       leagueFounderUserCreatedAt.value,
       leagueFounderUserUpdatedAt.value,
     );

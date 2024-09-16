@@ -1,8 +1,10 @@
 import {
   BusinessDateService,
   HostUser,
+  HostUserAccountState,
   HostUserCreatedAt,
   HostUserPassword,
+  HostUserSubscriptionType,
   HostUserUpdatedAt,
   IHostUserRepository,
   Nullable,
@@ -45,7 +47,8 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       password,
     } = dto;
 
-    const active: boolean = true;
+    const accountState: string = HostUserAccountState.active;
+    const subscriptionType: string = HostUserSubscriptionType.free;
     const hostUserPassword: HostUserPassword = this.#securePasswordCreationService.createFromPlainText<HostUserPassword>(password);
     const hostUserCreatedAt: HostUserCreatedAt = this.#businessDateService.getCurrentDate();
     const hostUserUpdatedAt: HostUserUpdatedAt = this.#businessDateService.getCurrentDate();
@@ -56,7 +59,8 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       biography,
       { value: email.value, verified: false },
       hostUserPassword.value,
-      active,
+      accountState,
+      subscriptionType,
       hostUserCreatedAt.value,
       hostUserUpdatedAt.value,
     );

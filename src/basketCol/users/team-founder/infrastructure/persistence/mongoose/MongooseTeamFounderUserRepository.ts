@@ -1,18 +1,18 @@
 import {
   ITeamFounderUser,
-  ITFURepository,
+  ITeamFounderUserRepository,
   Nullable,
   SecurePasswordCreationService,
   TeamFounderUser,
   TeamFounderUserId,
-  TFUEmail,
+  TeamFounderUserEmail,
 } from '@basketcol/domain';
 import { Mongoose, Schema } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongooseTeamFounderUserDocument } from './IMongooseTeamFounderUserDocument';
 
-export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamFounderUser, TeamFounderUser> implements ITFURepository {
+export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamFounderUser, TeamFounderUser> implements ITeamFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
@@ -43,13 +43,14 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
-      document.active.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
   }
 
-  public async searchByEmail(teamFounderUserEmail: TFUEmail): Promise<Nullable<TeamFounderUser>> {
+  public async searchByEmail(teamFounderUserEmail: TeamFounderUserEmail): Promise<Nullable<TeamFounderUser>> {
     const Model = await this.model();
 
     const document: Nullable<IMongooseTeamFounderUserDocument> = await Model.findOne<IMongooseTeamFounderUserDocument>({ 'email.value': teamFounderUserEmail.value.value });
@@ -60,7 +61,8 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
-      document.active.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );

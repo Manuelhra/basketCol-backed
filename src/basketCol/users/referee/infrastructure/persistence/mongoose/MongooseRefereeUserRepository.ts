@@ -43,7 +43,8 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
-      document.active.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -60,7 +61,8 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
-      document.active.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );

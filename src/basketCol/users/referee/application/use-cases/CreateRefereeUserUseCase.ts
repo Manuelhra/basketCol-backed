@@ -5,10 +5,12 @@ import {
   IRefereeUser,
   IRefereeUserRepository,
   RefereeUser,
+  RefereeUserAccountState,
   RefereeUserCreatedAt,
   RefereeUserEmail,
   RefereeUserId,
   RefereeUserPassword,
+  RefereeUserSubscriptionType,
   RefereeUserUpdatedAt,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
@@ -56,7 +58,8 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
     await this.#idUniquenessValidatorService.ensureUniqueId<RefereeUserId, IRefereeUser, RefereeUser>(refereeUserId);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<RefereeUserEmail, IRefereeUser, RefereeUser>(refereeUserEmail);
 
-    const active: boolean = true;
+    const accountState: string = RefereeUserAccountState.active;
+    const subscriptionType: string = RefereeUserSubscriptionType.free;
     const refereeUserPassword: RefereeUserPassword = this.#securePasswordCreationService.createFromPlainText<RefereeUserPassword>(password);
     const refereeUserCreatedAt: RefereeUserCreatedAt = this.#businessDateService.getCurrentDate();
     const refereeUserUpdatedAt: RefereeUserUpdatedAt = this.#businessDateService.getCurrentDate();
@@ -67,7 +70,8 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
       biography,
       refereeUserEmail.value,
       refereeUserPassword.value,
-      active,
+      accountState,
+      subscriptionType,
       refereeUserCreatedAt.value,
       refereeUserUpdatedAt.value,
     );
