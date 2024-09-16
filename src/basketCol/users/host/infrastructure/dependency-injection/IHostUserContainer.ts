@@ -5,28 +5,29 @@ import {
   IPasswordEncrypterService,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Request, Response, Router } from 'express';
 import { Mongoose, Schema } from 'mongoose';
 
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
 import { IController } from '../../../../shared/infrastructure/server/controllers/IController';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
-import { CreateHostUserUseCase } from '../../application/use-cases/CreateHostUserUseCase';
 import { IMongooseHostUserDocument } from '../persistence/mongoose/IMongooseHostUserDocument';
-import { IMongooseConfig } from '../../../../shared/infrastructure/persistence/mongoose/IMongooseConfig';
+import { ICreateHostUserUseCase } from '../../application/use-cases/ports/ICreateHostUserUseCase';
+import { IHttpResponseHandler } from '../../../../shared/application/http/IHttpResponseHandler';
+import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
 
 export interface IHostUserContainer {
   basePath: string;
   businessDateService: BusinessDateService;
-  createHostUserUseCase: CreateHostUserUseCase;
+  createHostUserUseCase: ICreateHostUserUseCase;
   createPasswordValueObjectService: ICreatePasswordValueObjectService;
-  expressHostUserPostController: IController<Request, Response>;
-  expressHostUserRouteManager: IRouteManager<Router>;
   fileSystem: IFileSystem;
+  hostUserMongooseSchema: Schema<IMongooseHostUserDocument>;
+  hostUserPOSTController: IController;
   hostUserRepository: IHostUserRepository;
+  hostUserRouteManager: IRouteManager;
+  httpResponseHandler: IHttpResponseHandler;
   mongooseClient: Promise<Mongoose>;
-  mongooseConfig: IMongooseConfig;
-  mongooseSchema: Schema<IMongooseHostUserDocument>;
   passwordEncrypterService: IPasswordEncrypterService;
   securePasswordCreationService: SecurePasswordCreationService;
+  hostUserServerErrorHandler: IServerErrorHandler;
 }

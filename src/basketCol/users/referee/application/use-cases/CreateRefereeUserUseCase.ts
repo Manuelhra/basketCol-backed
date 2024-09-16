@@ -14,8 +14,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateRefereeUserDTO } from '../dtos/CreateRefereeUserDTO';
+import { ICreateRefereeUserUseCase } from './ports/ICreateRefereeUserUseCase';
 
-export class CreateRefereeUserUseCase {
+export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
@@ -40,14 +41,14 @@ export class CreateRefereeUserUseCase {
     this.#refereeUserRepository = dependencies.refereeUserRepository;
   }
 
-  public async run(payload: CreateRefereeUserDTO): Promise<void> {
+  public async execute(dto: CreateRefereeUserDTO): Promise<void> {
     const {
       id,
       name,
       biography,
       email,
       password,
-    } = payload;
+    } = dto;
 
     const refereeUserId: RefereeUserId = new RefereeUserId(id);
     const refereeUserEmail: RefereeUserEmail = new RefereeUserEmail({ value: email.value, verified: false });
@@ -60,7 +61,7 @@ export class CreateRefereeUserUseCase {
     const refereeUserCreatedAt: RefereeUserCreatedAt = this.#businessDateService.getCurrentDate();
     const refereeUserUpdatedAt: RefereeUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const refereeUser: RefereeUser = new RefereeUser(
+    const refereeUser: RefereeUser = RefereeUser.create(
       refereeUserId.value,
       name,
       biography,

@@ -1,13 +1,25 @@
-import { Router, Response } from 'express';
-
-import { expressServerStatusRouteManager } from '../basketCol/server-status/infrastructure/dependency-injection';
-import { expressSharedServerErrorHandler } from '../basketCol/shared/infrastructure/dependency-injection';
+import { serverStatusRouteManager } from '../basketCol/server-status/infrastructure/dependency-injection';
+import { sharedServerErrorHandler } from '../basketCol/shared/infrastructure/dependency-injection';
 import { IServer } from '../basketCol/shared/infrastructure/server';
 import { ExpressServer } from '../basketCol/shared/infrastructure/server/express/server/ExpressServer';
-import { expressHostUserRouteManager } from '../basketCol/users/host/infrastructure/dependency-injection';
+import { hostUserRouteManager } from '../basketCol/users/host/infrastructure/dependency-injection';
+import { authenticationRouteManager, authenticationServerErrorHandler } from '../basketCol/authentication/infrastructure/dependency-injection';
+import { usersSharedServerErrorHandler } from '../basketCol/users/shared/infrastructure/dependency-injection';
+import { leagueFounderUserServerErrorHandler } from '../basketCol/users/league-founder/infrastructure/dependency-injection';
+import { playerUserServerErrorHandler } from '../basketCol/users/player/infrastructure/dependency-injection';
+import { refereeUserServerErrorHandler } from '../basketCol/users/referee/infrastructure/dependency-injection';
+import { teamFounderUserServerErrorHandler } from '../basketCol/users/team-founder/infrastructure/dependency-injection';
+import { teamServerErrorHandler } from '../basketCol/team/infrastructure/dependency-injection';
+import { gymServerErrorHandler } from '../basketCol/facilities/gym/infrastructure/dependency-injection';
+import { courtServerErrorHandler } from '../basketCol/facilities/court/infrastructure/dependency-injection';
+import { competitionsSharedServerErrorHandler } from '../basketCol/competitions/shared/infrastructure/dependency-injection';
+import { leagueServerErrorHandler } from '../basketCol/competitions/league/infrastructure/dependency-injection';
+import { leagueSeasonServerErrorHandler } from '../basketCol/competitions/league/season/infrastructure/dependency-injection';
+import { leagueSeasonFixtureServerErrorHandler } from '../basketCol/competitions/league/season/fixture/infrastructure/dependency-injection';
+import { leagueSeasonFixtureGameServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/infrastructure/dependency-injection';
 
 export class App {
-  readonly #server: IServer<Router, Response>;
+  readonly #server: IServer;
 
   constructor() {
     this.#server = new ExpressServer();
@@ -26,23 +38,31 @@ export class App {
 
   private setUpRoutes(): void {
     this.#server.registerRoutes([
-      expressServerStatusRouteManager,
-      expressHostUserRouteManager,
+      serverStatusRouteManager,
+      hostUserRouteManager,
+      authenticationRouteManager,
     ]);
   }
 
   private handleErrors(): void {
     this.#server.handleErrors([
-      expressSharedServerErrorHandler,
+      sharedServerErrorHandler,
+      authenticationServerErrorHandler,
+      usersSharedServerErrorHandler,
+      leagueFounderUserServerErrorHandler,
+      playerUserServerErrorHandler,
+      refereeUserServerErrorHandler,
+      teamFounderUserServerErrorHandler,
+      teamServerErrorHandler,
+      gymServerErrorHandler,
+      courtServerErrorHandler,
+      competitionsSharedServerErrorHandler,
+      leagueServerErrorHandler,
+      leagueSeasonServerErrorHandler,
+      leagueSeasonFixtureServerErrorHandler,
+      leagueSeasonFixtureGameServerErrorHandler,
     ]);
   }
 }
 
-// TODO: Lo primero que tengo que hacer es sacar el back de acá, y crear un archivo index que me exporte todos los módulos que quiero usar en el proyecto mobile y backend
-// después volve a crear el pryecto mobile
-// TODO: Handle error on all context file
-// TODO: Quitar todo lo del back y dejar solo la capa de dominio y application acá
-// publica el code en npm private y crear otro repo para backend y otro para front
-// Crear el método static en todas las entidades de create y reemplazar en todos los casos de uso new por .create
-// También crear en todas las entidades el método de update y crear la entidad Either
-// Y todos los métodos de los casos de uso que se pasen de llamar run a execute
+// TODO: crear Either

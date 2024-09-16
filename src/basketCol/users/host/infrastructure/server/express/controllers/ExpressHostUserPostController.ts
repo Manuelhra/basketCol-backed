@@ -1,15 +1,15 @@
 import { HttpStatus } from '@basketcol/domain';
 import { Request, Response } from 'express';
 
-import { CreateHostUserUseCase } from '../../../../application/use-cases/CreateHostUserUseCase';
 import { CreateHostUserDTO } from '../../../../application/dtos/CreateHostUserDTO';
-import { IController } from '../../../../../../shared/infrastructure/server/controllers/IController';
+import { ICreateHostUserUseCase } from '../../../../application/use-cases/ports/ICreateHostUserUseCase';
+import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 
-export class ExpressHostUserPostController implements IController<Request, Response> {
-  readonly #createHostUserUseCase: CreateHostUserUseCase;
+export class ExpressHostUserPOSTController implements ExpressBaseController {
+  readonly #createHostUserUseCase: ICreateHostUserUseCase;
 
   public constructor(dependencies: {
-    createHostUserUseCase: CreateHostUserUseCase;
+    createHostUserUseCase: ICreateHostUserUseCase;
   }) {
     this.#createHostUserUseCase = dependencies.createHostUserUseCase;
   }

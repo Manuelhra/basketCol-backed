@@ -1,3 +1,3 @@
-export interface IController<Req, Res> {
-  run(request: Req, response: Res): Promise<void>;
+export interface IController {
+  run(request: any, response: any): Promise<void>;
 }

@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreatePhysicalAttributesDTO } from '../dtos/CreatePhysicalAttributesDTO';
+import { ICreatePhysicalAttributesUseCase } from './ports/ICreatePhysicalAttributesUseCase';
 
-export class CreatePhysicalAttributesUseCase {
+export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserValidationService: PlayerUserValidationService;
@@ -34,7 +35,7 @@ export class CreatePhysicalAttributesUseCase {
     this.#playerUserPhysicalAttributesRepository = dependencies.playerUserPhysicalAttributesRepository;
   }
 
-  public async run(payload: CreatePhysicalAttributesDTO): Promise<void> {
+  public async execute(dto: CreatePhysicalAttributesDTO): Promise<void> {
     const {
       id,
       speed,
@@ -43,7 +44,7 @@ export class CreatePhysicalAttributesUseCase {
       vertical,
       stamina,
       playerUserId,
-    } = payload;
+    } = dto;
 
     const physicalAttributesId: PUPAId = new PUPAId(id);
     const pUPAReferencedPlayerUserId: PUPAReferencedPlayerUserId = new PUPAReferencedPlayerUserId(playerUserId);
@@ -54,7 +55,7 @@ export class CreatePhysicalAttributesUseCase {
     const pUPACreatedAt: PUPACreatedAt = this.#businessDateService.getCurrentDate();
     const pUPAUpdatedAt: PUPAUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserPhysicalAttributes: PlayerUserPhysicalAttributes = new PlayerUserPhysicalAttributes(
+    const playerUserPhysicalAttributes: PlayerUserPhysicalAttributes = PlayerUserPhysicalAttributes.create(
       physicalAttributesId.value,
       speed,
       acceleration,

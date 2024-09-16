@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateShootingAttributesDTO } from '../dtos/CreateShootingAttributesDTO';
+import { ICreateShootingAttributesUseCase } from './ports/ICreateShootingAttributesUseCase';
 
-export class CreateShootingAttributesUseCase {
+export class CreateShootingAttributesUseCase implements ICreateShootingAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #playerUserValidationService: PlayerUserValidationService;
@@ -34,7 +35,7 @@ export class CreateShootingAttributesUseCase {
     this.#playerUserShootingAttributesRepository = dependencies.playerUserShootingAttributesRepository;
   }
 
-  public async run(payload: CreateShootingAttributesDTO): Promise<void> {
+  public async execute(dto: CreateShootingAttributesDTO): Promise<void> {
     const {
       id,
       closeShot,
@@ -42,7 +43,7 @@ export class CreateShootingAttributesUseCase {
       threePointShot,
       freeThrow,
       playerUserId,
-    } = payload;
+    } = dto;
 
     const pUShootingAttributesId: PUShootingAttributesId = new PUShootingAttributesId(id);
     const pUShootingAttributesReferencedPlayerUserId: PUShootingAttributesReferencedPlayerUserId = new PUShootingAttributesReferencedPlayerUserId(playerUserId);
@@ -53,7 +54,7 @@ export class CreateShootingAttributesUseCase {
     const pUShootingAttributesCreatedAt: PUShootingAttributesCreatedAt = this.#businessDateService.getCurrentDate();
     const pUShootingAttributesUpdatedAt: PUShootingAttributesUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const playerUserShootingAttributes: PlayerUserShootingAttributes = new PlayerUserShootingAttributes(
+    const playerUserShootingAttributes: PlayerUserShootingAttributes = PlayerUserShootingAttributes.create(
       pUShootingAttributesId.value,
       closeShot,
       midRangeShot,

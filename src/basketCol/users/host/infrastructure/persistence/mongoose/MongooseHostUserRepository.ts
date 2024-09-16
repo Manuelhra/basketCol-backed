@@ -1,5 +1,6 @@
 import {
   HostUser,
+  HostUserEmail,
   HostUserId,
   IHostUser,
   IHostUserRepository,
@@ -20,19 +21,15 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
 
   constructor(dependencies: {
     mongooseClient: Promise<Mongoose>;
-    mongooseSchema: Schema<IMongooseHostUserDocument>;
+    hostUserMongooseSchema: Schema<IMongooseHostUserDocument>;
     securePasswordCreationService: SecurePasswordCreationService;
   }) {
     super({
       mongooseClient: dependencies.mongooseClient,
-      mongooseSchema: dependencies.mongooseSchema,
+      mongooseSchema: dependencies.hostUserMongooseSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
-  }
-
-  public async save(hostUser: HostUser): Promise<void> {
-    return this.persist(hostUser);
   }
 
   public async search(): Promise<Nullable<HostUser>> {
@@ -44,7 +41,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
 
     const document = documentList[0];
 
-    return document === null ? null : new HostUser(
+    return document === null ? null : HostUser.create(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
@@ -59,9 +56,9 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
   public async searchById(hostUserId: HostUserId): Promise<Nullable<HostUser>> {
     const Model = await this.model();
 
-    const document = await Model.findById<IMongooseHostUserDocument>(hostUserId.value);
+    const document: Nullable<IMongooseHostUserDocument> = await Model.findById<IMongooseHostUserDocument>(hostUserId.value);
 
-    return document === null ? null : new HostUser(
+    return document === null ? null : HostUser.create(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
@@ -71,5 +68,26 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
+  }
+
+  public async searchByEmail(hostUserEmail: HostUserEmail): Promise<Nullable<HostUser>> {
+    const Model = await this.model();
+
+    const document = await Model.findOne<IMongooseHostUserDocument>({ 'email.value': hostUserEmail.value.value });
+
+    return document === null ? null : HostUser.create(
+      document.id.valueOf(),
+      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
+      document.biography.valueOf(),
+      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
+      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      document.active.valueOf(),
+      document.createdAt.valueOf(),
+      document.updatedAt.valueOf(),
+    );
+  }
+
+  public save(hostUser: HostUser): Promise<void> {
+    return this.persist(hostUser);
   }
 }

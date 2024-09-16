@@ -19,7 +19,11 @@ export const mongooseHostUserSchema = new Schema<IMongooseHostUserDocument>({
     },
   },
   email: {
-    value: { type: String, required: [true, "The host user's email is required"] },
+    value: {
+      type: String,
+      required: [true, "The host user's email is required"],
+      unique: [true, "The host user's email must be unique"],
+    },
     verified: { type: Boolean, required: [true, "The host user's email verification status is required"] },
   },
   password: {

@@ -12,8 +12,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateTeamDTO } from '../dtos/CreateTeamDTO';
+import { ICreateTeamUseCase } from './ports/ICreateTeamUseCase';
 
-export class CreateTeamUseCase {
+export class CreateTeamUseCase implements ICreateTeamUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #tFUValidationService: TFUValidationService;
@@ -34,12 +35,12 @@ export class CreateTeamUseCase {
     this.#teamRepository = dependencies.teamRepository;
   }
 
-  public async run(payload: CreateTeamDTO): Promise<void> {
+  public async execute(dto: CreateTeamDTO): Promise<void> {
     const {
       id,
       officialName,
       teamFounderUserId,
-    } = payload;
+    } = dto;
 
     const teamId: TeamId = new TeamId(id);
     const tReferencedTeamFounderUserId: TReferencedTeamFounderUserId = new TReferencedTeamFounderUserId(teamFounderUserId);
@@ -50,7 +51,7 @@ export class CreateTeamUseCase {
     const teamCreatedAt: TeamCreatedAt = this.#businessDateService.getCurrentDate();
     const teamUpdatedAt: TeamUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const team: Team = new Team(
+    const team: Team = Team.create(
       teamId.value,
       officialName,
       tReferencedTeamFounderUserId.teamFounderUserIdAsString,

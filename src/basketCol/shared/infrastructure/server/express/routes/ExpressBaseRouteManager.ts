@@ -13,7 +13,7 @@ export abstract class ExpressBaseRouteManager {
   }
 
   public registerRoutes(router: Router): void {
-    const routes: string[] = this.#fileSystem.getFiles('**/*.route.*', {});
+    const routes: string[] = this.#fileSystem.getFiles('**/*.routes.*', {});
     routes.forEach((route) => this.registerRoute(route, router));
   }
 

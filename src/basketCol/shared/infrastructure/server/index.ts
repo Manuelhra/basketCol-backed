@@ -1,9 +1,9 @@
-import { IServerErrorHandle } from './IServerErrorHandler';
+import { IServerErrorHandler } from './IServerErrorHandler';
 import { IRouteManager } from './routes/IRouteManager';
 
-export interface IServer<Router, Response> {
+export interface IServer {
   listen(port: string): Promise<void>;
   stop(): Promise<void>;
-  registerRoutes(routerManager: IRouteManager<Router>[]) : void;
-  handleErrors(serverErrorHandlerList: IServerErrorHandle<Response>[]): void;
+  registerRoutes(routerManager: IRouteManager[]) : void;
+  handleErrors(serverErrorHandlerList: IServerErrorHandler[]): void;
 }

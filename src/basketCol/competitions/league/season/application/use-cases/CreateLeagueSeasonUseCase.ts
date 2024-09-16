@@ -15,8 +15,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateLeagueSeasonDTO } from '../dtos/CreateLeagueSeasonDTO';
+import { ICreateLeagueSeasonUseCase } from './ports/ICreateLeagueSeasonUseCase';
 
-export class CreateLeagueSeasonUseCase {
+export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #leagueSeasonRepository: ILeagueSeasonRepository;
@@ -41,18 +42,18 @@ export class CreateLeagueSeasonUseCase {
     this.#courtValidationService = dependencies.courtValidationService;
   }
 
-  public async run(payload: CreateLeagueSeasonDTO): Promise<void> {
+  public async execute(dto: CreateLeagueSeasonDTO): Promise<void> {
     const {
       id,
       name,
       startDate,
       endDate,
       courtIdList,
-    } = payload;
+    } = dto;
 
     const leagueSeasonId: LeagueSeasonId = new LeagueSeasonId(id);
     const leagueSeasonStatus: LeagueSeasonStatus = LeagueSeasonStatus.createUpcoming();
-    const leagueId: LeagueId = new LeagueId(payload.leagueId);
+    const leagueId: LeagueId = new LeagueId(dto.leagueId);
     const leagueSeasonCourtIdList: LSReferencedCourtIdList = new LSReferencedCourtIdList(courtIdList);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonId, ILeagueSeason, LeagueSeason>(leagueSeasonId);
@@ -62,7 +63,7 @@ export class CreateLeagueSeasonUseCase {
     const leagueSeasonCreatedAt: LeagueSeasonCreatedAt = this.#businessDateService.getCurrentDate();
     const leagueSeasonUpdatedAt: LeagueSeasonUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const leagueSeason: LeagueSeason = new LeagueSeason(
+    const leagueSeason: LeagueSeason = LeagueSeason.create(
       leagueSeasonId.value,
       name,
       startDate,

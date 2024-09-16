@@ -16,8 +16,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateLeagueDTO } from '../dtos/CreateLeagueDTO';
+import { ICreateLeagueUseCase } from './ports/ICreateLeagueUseCase';
 
-export class CreateLeagueUseCase {
+export class CreateLeagueUseCase implements ICreateLeagueUseCase {
   readonly #businessDateService: BusinessDateService;
 
   readonly #leagueValidationNameService: LeagueValidationNameService;
@@ -42,7 +43,7 @@ export class CreateLeagueUseCase {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
   }
 
-  public async run(payload: CreateLeagueDTO): Promise<void> {
+  public async execute(dto: CreateLeagueDTO): Promise<void> {
     const {
       id,
       name,
@@ -52,7 +53,7 @@ export class CreateLeagueUseCase {
       location,
       establishmentDate,
       leagueFounderUserId,
-    } = payload;
+    } = dto;
 
     const leagueId: LeagueId = new LeagueId(id);
     const leagueName: LeagueName = new LeagueName(name);
@@ -71,7 +72,7 @@ export class CreateLeagueUseCase {
     const leagueCreatedAt: LeagueCreatedAt = this.#businessDateService.getCurrentDate();
     const leagueUpdatedAt: LeagueUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const league: League = new League(
+    const league: League = League.create(
       leagueId.value,
       name,
       description,

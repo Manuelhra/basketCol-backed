@@ -23,8 +23,9 @@ import {
 } from '@basketcol/domain';
 
 import { CreateLeagueSeasonFixtureGameDTO } from '../dtos/CreateLeagueSeasonFixtureGameDTO';
+import { ICreateLeagueSeasonFixtureGameUseCase } from './ports/ICreateLeagueSeasonFixtureGameUseCase';
 
-export class CreateLeagueSeasonFixtureGameUseCase {
+export class CreateLeagueSeasonFixtureGameUseCase implements ICreateLeagueSeasonFixtureGameUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   readonly #teamValidationService: TeamValidationService;
@@ -57,7 +58,7 @@ export class CreateLeagueSeasonFixtureGameUseCase {
     this.#leagueSeasonFixtureGameRepository = dependencies.leagueSeasonFixtureGameRepository;
   }
 
-  public async run(payload: CreateLeagueSeasonFixtureGameDTO): Promise<void> {
+  public async execute(dto: CreateLeagueSeasonFixtureGameDTO): Promise<void> {
     const {
       id,
       startTime,
@@ -72,7 +73,7 @@ export class CreateLeagueSeasonFixtureGameUseCase {
       assistantRefereeId,
       courtId,
       fixtureId,
-    } = payload;
+    } = dto;
 
     const lSFGameId: LSFGameId = new LSFGameId(id);
     const lSFGameHomeTeamId: LSFGameHomeTeamId = new LSFGameHomeTeamId(homeTeamId);
@@ -96,7 +97,7 @@ export class CreateLeagueSeasonFixtureGameUseCase {
     const lSFGameCreatedAt: LSFGameCreatedAt = this.#businessDateService.getCurrentDate();
     const lSFGameUpdatedAt: LSFGameUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const leagueSeasonFixtureGame: LeagueSeasonFixtureGame = new LeagueSeasonFixtureGame(
+    const leagueSeasonFixtureGame: LeagueSeasonFixtureGame = LeagueSeasonFixtureGame.create(
       lSFGameId.value,
       startTime,
       endTime,

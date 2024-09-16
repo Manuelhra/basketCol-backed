@@ -5,14 +5,15 @@ import {
   HostUserPassword,
   HostUserUpdatedAt,
   IHostUserRepository,
-  MultipleHostUsersException,
   Nullable,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 
 import { CreateHostUserDTO } from '../dtos/CreateHostUserDTO';
+import { ICreateHostUserUseCase } from './ports/ICreateHostUserUseCase';
+import { MultipleHostUsersException } from '../exceptions/MultipleHostUsersException';
 
-export class CreateHostUserUseCase {
+export class CreateHostUserUseCase implements ICreateHostUserUseCase {
   readonly #hostUserRepository: IHostUserRepository;
 
   readonly #securePasswordCreationService: SecurePasswordCreationService;
@@ -29,7 +30,7 @@ export class CreateHostUserUseCase {
     this.#businessDateService = dependencies.businessDateService;
   }
 
-  public async execute(payload: CreateHostUserDTO): Promise<void> {
+  public async execute(dto: CreateHostUserDTO): Promise<void> {
     const hostUserFound: Nullable<HostUser> = await this.#hostUserRepository.search();
 
     if (hostUserFound) {
@@ -42,14 +43,14 @@ export class CreateHostUserUseCase {
       biography,
       email,
       password,
-    } = payload;
+    } = dto;
 
     const active: boolean = true;
     const hostUserPassword: HostUserPassword = this.#securePasswordCreationService.createFromPlainText<HostUserPassword>(password);
     const hostUserCreatedAt: HostUserCreatedAt = this.#businessDateService.getCurrentDate();
     const hostUserUpdatedAt: HostUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const hostUser: HostUser = new HostUser(
+    const hostUser: HostUser = HostUser.create(
       id,
       name,
       biography,

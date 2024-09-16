@@ -30,6 +30,22 @@ export const convictConfig = convict<IConvictProps>({
       default: 'basketcol-dev',
     },
   },
+  jwt: {
+    secretKeys: {
+      authenticateUserSecretKey: {
+        doc: 'The secret key for the authenticate user token',
+        format: String,
+        env: 'JWT_AUTHENTICATE_USER_SECRET_KEY',
+        default: 'authenticateUserSecretKey',
+      },
+      refreshTokenSecretKey: {
+        doc: 'The secret key for the refresh token',
+        format: String,
+        env: 'JWT_REFRESH_TOKEN_SECRET_KEY',
+        default: 'refreshTokenSecretKey',
+      },
+    },
+  },
 });
 
 convictConfig.loadFile(`${__dirname}/${convictConfig.get('env')}.json`);
