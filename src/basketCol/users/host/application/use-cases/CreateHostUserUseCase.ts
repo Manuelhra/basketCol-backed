@@ -1,14 +1,14 @@
 import {
   BusinessDateService,
   HostUser,
-  HostUserAccountState,
   HostUserCreatedAt,
   HostUserPassword,
-  HostUserSubscriptionType,
   HostUserUpdatedAt,
   IHostUserRepository,
   Nullable,
   SecurePasswordCreationService,
+  UserAccountState,
+  UserSubscriptionType,
 } from '@basketcol/domain';
 
 import { CreateHostUserDTO } from '../dtos/CreateHostUserDTO';
@@ -47,8 +47,8 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       password,
     } = dto;
 
-    const accountState: string = HostUserAccountState.active;
-    const subscriptionType: string = HostUserSubscriptionType.free;
+    const accountState: string = UserAccountState.active;
+    const subscriptionType: string = UserSubscriptionType.free;
     const hostUserPassword: HostUserPassword = this.#securePasswordCreationService.createFromPlainText<HostUserPassword>(password);
     const hostUserCreatedAt: HostUserCreatedAt = this.#businessDateService.getCurrentDate();
     const hostUserUpdatedAt: HostUserUpdatedAt = this.#businessDateService.getCurrentDate();
@@ -57,7 +57,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       id,
       name,
       biography,
-      { value: email.value, verified: false },
+      { value: email.value, verified: true },
       hostUserPassword.value,
       accountState,
       subscriptionType,

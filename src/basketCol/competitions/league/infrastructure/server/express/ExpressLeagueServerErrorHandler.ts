@@ -24,7 +24,7 @@ export class ExpressLeagueServerErrorHandler implements IServerErrorHandler {
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
-          error: { name: error.name, details: error.message },
+          errors: { name: error.name, details: error.message },
         });
         status = HttpStatus.CONFLICT;
         isInstanceof = true;
@@ -34,7 +34,7 @@ export class ExpressLeagueServerErrorHandler implements IServerErrorHandler {
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
-          error: { name: error.name, details: error.message },
+          errors: { name: error.name, details: error.message },
         });
         status = HttpStatus.NOT_FOUND;
         isInstanceof = true;

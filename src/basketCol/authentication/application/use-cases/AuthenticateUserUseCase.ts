@@ -75,12 +75,12 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       nickname,
       email,
       password,
-      type,
+      userType,
     } = dto;
 
     let user: Nullable<SomethingUser>;
 
-    switch (type) {
+    switch (userType) {
       case PlayerUserType.getType():
         user = await this.authenticatePlayerUser(
           new PlayerUserPassword(password),
@@ -133,7 +133,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
         break;
       }
       default:
-        throw new InvalidUserTypeError(type);
+        throw new InvalidUserTypeError(userType);
     }
 
     if (user === null || user === undefined) {

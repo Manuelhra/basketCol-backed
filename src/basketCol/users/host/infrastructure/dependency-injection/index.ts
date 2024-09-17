@@ -7,6 +7,6 @@ if (awilixHostUserContainer === null) {
   throw new DependencyContainerNotInitializedError();
 }
 
-export const hostUserPOSTController = awilixHostUserContainer.resolve('hostUserPOSTController');
+export const createHostUserPOSTController = awilixHostUserContainer.resolve('createHostUserPOSTController');
 export const hostUserRouteManager = awilixHostUserContainer.resolve('hostUserRouteManager');
 export const hostUserServerErrorHandler = awilixHostUserContainer.resolve('hostUserServerErrorHandler');

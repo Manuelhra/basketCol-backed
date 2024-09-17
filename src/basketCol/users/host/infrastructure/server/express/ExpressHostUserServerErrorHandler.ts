@@ -4,6 +4,7 @@ import { Response } from 'express';
 import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
 import { IErrorApiResponse } from '../../../../../shared/application/http/IErrorApiResponse';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
+import { MultipleHostUsersException } from '../../../application/exceptions/MultipleHostUsersException';
 
 export class ExpressHostUserServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
@@ -20,11 +21,21 @@ export class ExpressHostUserServerErrorHandler implements IServerErrorHandler {
     let isInstanceof: boolean = false;
 
     switch (true) {
+      case error instanceof MultipleHostUsersException:
+        errorResponse = this.httpResponseHandler.handleErrorResponse({
+          code: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: HttpStatus.getMessage(HttpStatus.INTERNAL_SERVER_ERROR),
+          errors: { name: error.name, details: error.message },
+        });
+        status = HttpStatus.INTERNAL_SERVER_ERROR;
+        isInstanceof = true;
+        break;
+
       case error instanceof HostUserNotFoundError:
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
-          error: { name: error.name, details: error.message },
+          errors: { name: error.name, details: error.message },
         });
         status = HttpStatus.NOT_FOUND;
         isInstanceof = true;

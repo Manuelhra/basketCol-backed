@@ -94,7 +94,3 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
     return this.persist(playerUser);
   }
 }
-
-// TODO: Cambiar la propiedad active las props de abajo en los documentos de los usuarios
-//   private accountStatus: AccountStatus;
-// private deletedAt: DateTime | null;
