@@ -5,7 +5,7 @@ import { CreateHostUserDTO } from '../../../../application/dtos/CreateHostUserDT
 import { ICreateHostUserUseCase } from '../../../../application/use-cases/ports/ICreateHostUserUseCase';
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 
-export class ExpressHostUserPOSTController implements ExpressBaseController {
+export class ExpressCreateHostUserPOSTController implements ExpressBaseController {
   readonly #createHostUserUseCase: ICreateHostUserUseCase;
 
   public constructor(dependencies: {

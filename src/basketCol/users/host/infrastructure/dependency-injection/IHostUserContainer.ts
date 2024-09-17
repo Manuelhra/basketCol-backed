@@ -22,7 +22,7 @@ export interface IHostUserContainer {
   createPasswordValueObjectService: ICreatePasswordValueObjectService;
   fileSystem: IFileSystem;
   hostUserMongooseSchema: Schema<IMongooseHostUserDocument>;
-  hostUserPOSTController: IController;
+  createHostUserPOSTController: IController;
   hostUserRepository: IHostUserRepository;
   hostUserRouteManager: IRouteManager;
   httpResponseHandler: IHttpResponseHandler;

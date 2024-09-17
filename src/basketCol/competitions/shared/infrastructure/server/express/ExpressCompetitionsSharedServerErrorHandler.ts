@@ -31,7 +31,7 @@ export class ExpressCompetitionsSharedServerErrorHandler implements IServerError
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
-          error: { name: error.name, details: error.message },
+          errors: { name: error.name, details: error.message },
         });
         status = HttpStatus.BAD_REQUEST;
         isInstanceof = true;

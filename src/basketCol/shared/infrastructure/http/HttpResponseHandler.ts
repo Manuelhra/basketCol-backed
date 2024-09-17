@@ -1,4 +1,4 @@
-import { IErrorApiResponse } from '../../application/http/IErrorApiResponse';
+import { IErrorApiResponse, IErrorDetail } from '../../application/http/IErrorApiResponse';
 import { IHttpResponseHandler } from '../../application/http/IHttpResponseHandler';
 import { ISuccessApiResponse } from '../../application/http/ISuccessApiResponse';
 
@@ -11,11 +11,15 @@ export class HttpResponseHandler implements IHttpResponseHandler {
     };
   }
 
-  public handleErrorResponse(body: { code: number; message: string; error: { name: string; details: string; }; }): IErrorApiResponse {
+  public handleErrorResponse(body: {
+    code: number;
+    message: string;
+    errors: IErrorDetail | IErrorDetail[];
+  }): IErrorApiResponse {
     return {
       code: body.code,
       message: body.message,
-      error: body.error,
+      errors: body.errors,
     };
   }
 }

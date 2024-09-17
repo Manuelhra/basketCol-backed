@@ -21,7 +21,7 @@ import { BcryptPasswordEncrypter } from '../../../../../shared/infrastructure/se
 import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
 import { IMongooseHostUserDocument } from '../../persistence/mongoose/IMongooseHostUserDocument';
 import { mongooseHostUserSchema } from '../../persistence/mongoose/mongoose-host-user.schema';
-import { ExpressHostUserPOSTController } from '../../server/express/controllers/ExpressHostUserPOSTController';
+import { ExpressCreateHostUserPOSTController } from '../../server/express/controllers/ExpressCreateHostUserPOSTController';
 import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
 import { HttpResponseHandler } from '../../../../../shared/infrastructure/http/HttpResponseHandler';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
@@ -39,7 +39,7 @@ export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<I
       createPasswordValueObjectService: AwilixDependencyInjector.registerAsClass<ICreatePasswordValueObjectService>(CreatePasswordValueObjectService).singleton(),
       fileSystem: AwilixDependencyInjector.registerAsClass<IFileSystem>(GlobFileSystem).singleton(),
       hostUserMongooseSchema: AwilixDependencyInjector.registerAsValue<Schema<IMongooseHostUserDocument>>(mongooseHostUserSchema),
-      hostUserPOSTController: AwilixDependencyInjector.registerAsClass<IController>(ExpressHostUserPOSTController).singleton(),
+      createHostUserPOSTController: AwilixDependencyInjector.registerAsClass<IController>(ExpressCreateHostUserPOSTController).singleton(),
       hostUserRepository: AwilixDependencyInjector.registerAsClass<IHostUserRepository>(MongooseHostUserRepository).singleton(),
       hostUserRouteManager: AwilixDependencyInjector.registerAsClass<IRouteManager>(ExpressHostUserRouteManager).singleton(),
       hostUserServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressHostUserServerErrorHandler).singleton(),
