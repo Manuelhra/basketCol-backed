@@ -2,7 +2,6 @@ import {
   BusinessDateService,
   HostUser,
   HostUserCreatedAt,
-  HostUserPassword,
   HostUserUpdatedAt,
   IHostUserRepository,
   Nullable,
@@ -14,21 +13,24 @@ import {
 import { CreateHostUserDTO } from '../dtos/CreateHostUserDTO';
 import { ICreateHostUserUseCase } from './ports/ICreateHostUserUseCase';
 import { MultipleHostUsersException } from '../exceptions/MultipleHostUsersException';
+import { InvalidHostUserCredentialsError } from '../exceptions/InvalidHostUserCredentialsError';
+import { IHostUserConfigFactory } from '../ports/IHostUserConfigFactory';
 
 export class CreateHostUserUseCase implements ICreateHostUserUseCase {
-  readonly #hostUserRepository: IHostUserRepository;
+  readonly #hostUserConfigFactory: IHostUserConfigFactory;
 
-  readonly #securePasswordCreationService: SecurePasswordCreationService;
+  readonly #hostUserRepository: IHostUserRepository;
 
   readonly #businessDateService: BusinessDateService;
 
   constructor(dependencies: {
+    hostUserConfigFactory: IHostUserConfigFactory;
     hostUserRepository: IHostUserRepository;
     securePasswordCreationService: SecurePasswordCreationService;
     businessDateService: BusinessDateService;
   }) {
+    this.#hostUserConfigFactory = dependencies.hostUserConfigFactory;
     this.#hostUserRepository = dependencies.hostUserRepository;
-    this.#securePasswordCreationService = dependencies.securePasswordCreationService;
     this.#businessDateService = dependencies.businessDateService;
   }
 
@@ -47,9 +49,17 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       password,
     } = dto;
 
+    const hostUserCredentials = this.#hostUserConfigFactory.createHostUserCredentials();
+
+    const isValidEmail: boolean = email.value === hostUserCredentials.email.value;
+    const isValidPassword: boolean = password === hostUserCredentials.password;
+
+    if (isValidEmail === false || isValidPassword === false) {
+      throw new InvalidHostUserCredentialsError();
+    }
+
     const accountState: string = UserAccountState.active;
-    const subscriptionType: string = UserSubscriptionType.free;
-    const hostUserPassword: HostUserPassword = this.#securePasswordCreationService.createFromPlainText<HostUserPassword>(password);
+    const subscriptionType: string = UserSubscriptionType.premium;
     const hostUserCreatedAt: HostUserCreatedAt = this.#businessDateService.getCurrentDate();
     const hostUserUpdatedAt: HostUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
@@ -58,7 +68,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       name,
       biography,
       { value: email.value, verified: true },
-      hostUserPassword.value,
+      password,
       accountState,
       subscriptionType,
       hostUserCreatedAt.value,

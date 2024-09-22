@@ -75,16 +75,16 @@ export class CreateLeagueSeasonFixtureGameUseCase implements ICreateLeagueSeason
       fixtureId,
     } = dto;
 
-    const lSFGameId: LSFGameId = new LSFGameId(id);
-    const lSFGameHomeTeamId: LSFGameHomeTeamId = new LSFGameHomeTeamId(homeTeamId);
-    const lSFGameAwayTeamId: LSFGameAwayTeamId = new LSFGameAwayTeamId(awayTeamId);
-    const lSFGameHomeScore: LSFGameHomeScore = new LSFGameHomeScore(homeScore);
-    const lSFGameAwayScore: LSFGameAwayScore = new LSFGameAwayScore(awayScore);
-    const lSFGameType: LSFGameType = new LSFGameType(gameType);
-    const lSFGameHeadRefereeId: LSFGameHeadRefereeId = new LSFGameHeadRefereeId(headRefereeId);
-    const lSFGameAssistantRefereeId: LSFGameAssistantRefereeId = new LSFGameAssistantRefereeId(assistantRefereeId);
-    const lSFGameCourtId: LSFGameCourtId = new LSFGameCourtId(courtId);
-    const lSFGameFixtureId: LSFGameFixtureId = new LSFGameFixtureId(fixtureId);
+    const lSFGameId: LSFGameId = LSFGameId.create(id);
+    const lSFGameHomeTeamId: LSFGameHomeTeamId = LSFGameHomeTeamId.create(homeTeamId);
+    const lSFGameAwayTeamId: LSFGameAwayTeamId = LSFGameAwayTeamId.create(awayTeamId);
+    const lSFGameHomeScore: LSFGameHomeScore = LSFGameHomeScore.create(homeScore);
+    const lSFGameAwayScore: LSFGameAwayScore = LSFGameAwayScore.create(awayScore);
+    const lSFGameType: LSFGameType = LSFGameType.create(gameType);
+    const lSFGameHeadRefereeId: LSFGameHeadRefereeId = LSFGameHeadRefereeId.create(headRefereeId);
+    const lSFGameAssistantRefereeId: LSFGameAssistantRefereeId = LSFGameAssistantRefereeId.create(assistantRefereeId);
+    const lSFGameCourtId: LSFGameCourtId = LSFGameCourtId.create(courtId);
+    const lSFGameFixtureId: LSFGameFixtureId = LSFGameFixtureId.create(fixtureId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<LSFGameId, ILeagueSeasonFixtureGame, LeagueSeasonFixtureGame>(lSFGameId);
     await this.#teamValidationService.ensureTeamExists(lSFGameHomeTeamId.value);

@@ -51,10 +51,10 @@ export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
       courtIdList,
     } = dto;
 
-    const leagueSeasonId: LeagueSeasonId = new LeagueSeasonId(id);
+    const leagueSeasonId: LeagueSeasonId = LeagueSeasonId.create(id);
     const leagueSeasonStatus: LeagueSeasonStatus = LeagueSeasonStatus.createUpcoming();
-    const leagueId: LeagueId = new LeagueId(dto.leagueId);
-    const leagueSeasonCourtIdList: LSReferencedCourtIdList = new LSReferencedCourtIdList(courtIdList);
+    const leagueId: LeagueId = LeagueId.create(dto.leagueId);
+    const leagueSeasonCourtIdList: LSReferencedCourtIdList = LSReferencedCourtIdList.create(courtIdList);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonId, ILeagueSeason, LeagueSeason>(leagueSeasonId);
     await this.#leagueValidationService.ensureLeagueExist(leagueId);

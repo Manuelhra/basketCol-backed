@@ -24,7 +24,7 @@ export const expressInputValidationMiddleware = (
     return;
   }
 
-  const httpResponseHandler: IHttpResponseHandler = new HttpResponseHandler();
+  const httpResponseHandler: IHttpResponseHandler = HttpResponseHandler.create();
   const formattedErrors: IErrorDetail[] = errors.array().map(parseError);
 
   const errorResponse = httpResponseHandler.handleErrorResponse({

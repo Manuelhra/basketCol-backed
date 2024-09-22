@@ -45,8 +45,8 @@ export class CreateShootingAttributesUseCase implements ICreateShootingAttribute
       playerUserId,
     } = dto;
 
-    const pUShootingAttributesId: PUShootingAttributesId = new PUShootingAttributesId(id);
-    const pUShootingAttributesReferencedPlayerUserId: PUShootingAttributesReferencedPlayerUserId = new PUShootingAttributesReferencedPlayerUserId(playerUserId);
+    const pUShootingAttributesId: PUShootingAttributesId = PUShootingAttributesId.create(id);
+    const pUShootingAttributesReferencedPlayerUserId: PUShootingAttributesReferencedPlayerUserId = PUShootingAttributesReferencedPlayerUserId.create(playerUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PUShootingAttributesId, IPlayerUserShootingAttributes, PlayerUserShootingAttributes>(pUShootingAttributesId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUShootingAttributesReferencedPlayerUserId.value);

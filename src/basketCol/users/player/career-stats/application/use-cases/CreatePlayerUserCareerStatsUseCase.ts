@@ -59,8 +59,8 @@ export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCare
       playerUserId,
     } = dto;
 
-    const pUCStatsId: PUCStatsId = new PUCStatsId(id);
-    const pUCStatsPlayerUserId: PUCStatsPlayerUserId = new PUCStatsPlayerUserId(playerUserId);
+    const pUCStatsId: PUCStatsId = PUCStatsId.create(id);
+    const pUCStatsPlayerUserId: PUCStatsPlayerUserId = PUCStatsPlayerUserId.create(playerUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PUCStatsId, IPlayerUserCareerStats, PlayerUserCareerStats>(pUCStatsId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUCStatsPlayerUserId.value);

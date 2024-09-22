@@ -59,8 +59,8 @@ export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUse
       teamId,
     } = dto;
 
-    const tATStatsId: TATStatsId = new TATStatsId(id);
-    const tATStatsTeamId: TATStatsTeamId = new TATStatsTeamId(teamId);
+    const tATStatsId: TATStatsId = TATStatsId.create(id);
+    const tATStatsTeamId: TATStatsTeamId = TATStatsTeamId.create(teamId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<TATStatsId, ITeamAllTimeStats, TeamAllTimeStats>(tATStatsId);
     await this.#teamValidationService.ensureTeamExists(tATStatsTeamId.value);

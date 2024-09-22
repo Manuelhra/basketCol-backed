@@ -81,53 +81,53 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     let user: Nullable<SomethingUser>;
 
     switch (userType) {
-      case PlayerUserType.getType():
+      case PlayerUserType.value:
         user = await this.authenticatePlayerUser(
-          new PlayerUserPassword(password),
-          nickname !== undefined ? new PlayerUserNickname(nickname) : undefined,
-          email !== undefined ? new PlayerUserEmail({ value: email, verified: true }) : undefined,
+          PlayerUserPassword.create(password),
+          nickname !== undefined ? PlayerUserNickname.create(nickname) : undefined,
+          email !== undefined ? PlayerUserEmail.create({ value: email, verified: true }) : undefined,
         );
         break;
-      case HostUserType.getType(): {
+      case HostUserType.value: {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
         }
 
-        const hostUserEmail = new HostUserEmail({ value: email, verified: true });
-        const hostUserPassword = new HostUserPassword(password);
+        const hostUserEmail = HostUserEmail.create({ value: email, verified: true });
+        const hostUserPassword = HostUserPassword.create(password);
 
         user = await this.authenticateHostUser(hostUserEmail, hostUserPassword);
         break;
       }
-      case LeagueFounderUserType.getType(): {
+      case LeagueFounderUserType.value: {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
         }
 
-        const leagueFounderUserEmail = new LeagueFounderUserEmail({ value: email, verified: true });
-        const leagueFounderUserPassword = new LeagueFounderUserPassword(password);
+        const leagueFounderUserEmail = LeagueFounderUserEmail.create({ value: email, verified: true });
+        const leagueFounderUserPassword = LeagueFounderUserPassword.create(password);
 
         user = await this.authenticateLeagueFounderUser(leagueFounderUserEmail, leagueFounderUserPassword);
         break;
       }
-      case RefereeUserType.getType(): {
+      case RefereeUserType.value: {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
         }
 
-        const refereeUserEmail = new RefereeUserEmail({ value: email, verified: true });
-        const refereeUserPassword = new RefereeUserPassword(password);
+        const refereeUserEmail = RefereeUserEmail.create({ value: email, verified: true });
+        const refereeUserPassword = RefereeUserPassword.create(password);
 
         user = await this.authenticateRefereeUser(refereeUserEmail, refereeUserPassword);
         break;
       }
-      case TeamFounderUserType.getType(): {
+      case TeamFounderUserType.value: {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
         }
 
-        const teamFounderUserEmail = new TeamFounderUserEmail({ value: email, verified: true });
-        const teamFounderUserPassword = new TeamFounderUserPassword(password);
+        const teamFounderUserEmail = TeamFounderUserEmail.create({ value: email, verified: true });
+        const teamFounderUserPassword = TeamFounderUserPassword.create(password);
 
         user = await this.authenticateTeamFounderUser(teamFounderUserEmail, teamFounderUserPassword);
         break;
@@ -167,7 +167,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       return null;
     }
 
-    const isPasswordValid = this.#passwordValidationService.validate(playerUserPassword, user.getPassword());
+    const isPasswordValid = await this.#passwordValidationService.validate(playerUserPassword, user.password);
     return isPasswordValid ? user : null;
   }
 
@@ -177,7 +177,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       return null;
     }
 
-    const isPasswordValid = this.#passwordValidationService.validate(hostUserPassword, user.getPassword());
+    const isPasswordValid = await this.#passwordValidationService.validate(hostUserPassword, user.password);
     return isPasswordValid ? user : null;
   }
 
@@ -187,7 +187,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       return null;
     }
 
-    const isPasswordValid = await this.#passwordValidationService.validate(refereeUserPassword, user.getPassword());
+    const isPasswordValid = await await this.#passwordValidationService.validate(refereeUserPassword, user.password);
     return isPasswordValid ? user : null;
   }
 
@@ -200,7 +200,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       return null;
     }
 
-    const isPasswordValid = this.#passwordValidationService.validate(leagueFounderUserPassword, user.getPassword());
+    const isPasswordValid = await this.#passwordValidationService.validate(leagueFounderUserPassword, user.password);
     return isPasswordValid ? user : null;
   }
 
@@ -210,7 +210,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       return null;
     }
 
-    const isPasswordValid = this.#passwordValidationService.validate(teamFounderUserPassword, user.getPassword());
+    const isPasswordValid = await this.#passwordValidationService.validate(teamFounderUserPassword, user.password);
     return isPasswordValid ? user : null;
   }
 }

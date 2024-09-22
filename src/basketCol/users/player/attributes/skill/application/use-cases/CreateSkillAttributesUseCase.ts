@@ -44,8 +44,8 @@ export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCa
       playerUserId,
     } = dto;
 
-    const pUSASkillAttributesId: PUSASkillAttributesId = new PUSASkillAttributesId(id);
-    const pUSASkillAttributesReferencedPlayerUserId: PUSASkillAttributesReferencedPlayerUserId = new PUSASkillAttributesReferencedPlayerUserId(playerUserId);
+    const pUSASkillAttributesId: PUSASkillAttributesId = PUSASkillAttributesId.create(id);
+    const pUSASkillAttributesReferencedPlayerUserId: PUSASkillAttributesReferencedPlayerUserId = PUSASkillAttributesReferencedPlayerUserId.create(playerUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PUSASkillAttributesId, IPlayerUserSkillAttributes, PlayerUserSkillAttributes>(pUSASkillAttributesId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUSASkillAttributesReferencedPlayerUserId.value);

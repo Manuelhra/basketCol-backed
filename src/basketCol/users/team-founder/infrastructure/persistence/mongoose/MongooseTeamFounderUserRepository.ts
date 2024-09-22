@@ -7,7 +7,7 @@ import {
   TeamFounderUserId,
   TeamFounderUserEmail,
 } from '@basketcol/domain';
-import { Mongoose, Schema } from 'mongoose';
+import { Model, Mongoose, Schema } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongooseTeamFounderUserDocument } from './IMongooseTeamFounderUserDocument';
@@ -33,16 +33,16 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
   }
 
   public async searchById(teamFounderUserId: TeamFounderUserId): Promise<Nullable<TeamFounderUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongooseTeamFounderUserDocument> = await Model.findById<IMongooseTeamFounderUserDocument>(teamFounderUserId.value);
+    const document: Nullable<IMongooseTeamFounderUserDocument> = await MyModel.findById<IMongooseTeamFounderUserDocument>(teamFounderUserId.value);
 
     return document === null ? null : TeamFounderUser.create(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -51,16 +51,16 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
   }
 
   public async searchByEmail(teamFounderUserEmail: TeamFounderUserEmail): Promise<Nullable<TeamFounderUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongooseTeamFounderUserDocument> = await Model.findOne<IMongooseTeamFounderUserDocument>({ 'email.value': teamFounderUserEmail.value.value });
+    const document: Nullable<IMongooseTeamFounderUserDocument> = await MyModel.findOne<IMongooseTeamFounderUserDocument>({ 'email.value': teamFounderUserEmail.value.value });
 
     return document === null ? null : TeamFounderUser.create(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -70,5 +70,23 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
 
   public save(teamFounderUser: TeamFounderUser): Promise<void> {
     return this.persist(teamFounderUser);
+  }
+
+  protected override async persist(aggregate: TeamFounderUser): Promise<void> {
+    const MyModel:Model<{ [key: string]: any }> = await this.model();
+    const userHashedPassword = await this.#securePasswordCreationService.createFromPlainText(aggregate.password);
+
+    const {
+      id,
+      password,
+      ...props
+    } = aggregate.toPrimitives();
+
+    await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
+  }
+
+  private async createSecurePassword(hashedPassword: string): Promise<string> {
+    const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
+    return securePassword.value;
   }
 }

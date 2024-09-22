@@ -8,11 +8,11 @@ import {
 import { ValidationChain, body } from 'express-validator';
 
 const validUserTypes:string[] = [
-  PlayerUserType.getType(),
-  HostUserType.getType(),
-  LeagueFounderUserType.getType(),
-  RefereeUserType.getType(),
-  TeamFounderUserType.getType(),
+  PlayerUserType.value,
+  HostUserType.value,
+  LeagueFounderUserType.value,
+  RefereeUserType.value,
+  TeamFounderUserType.value,
 ];
 
 export const authenticateUserPOSTControllerValidations: ValidationChain[] = [

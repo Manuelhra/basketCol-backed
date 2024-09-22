@@ -1,15 +1,15 @@
-import { IPasswordEncrypterService, UserPassword } from '@basketcol/domain';
+import { IPasswordHashingService, UserPassword } from '@basketcol/domain';
 
 export class PasswordValidationService {
-  readonly #passwordEncrypterService: IPasswordEncrypterService;
+  readonly #passwordHashingService: IPasswordHashingService;
 
   public constructor(dependencies:{
-    passwordEncrypterService: IPasswordEncrypterService;
+    passwordHashingService: IPasswordHashingService;
   }) {
-    this.#passwordEncrypterService = dependencies.passwordEncrypterService;
+    this.#passwordHashingService = dependencies.passwordHashingService;
   }
 
-  public validate<T extends UserPassword>(plainTextPassword: T, hashedPassword: T): boolean {
-    return this.#passwordEncrypterService.compareEncryptedString(plainTextPassword.value, hashedPassword.value);
+  public validate<T extends UserPassword>(plainTextPassword: T, hashedPassword: T): Promise<boolean> {
+    return this.#passwordHashingService.verifyPassword(plainTextPassword.value, hashedPassword.value);
   }
 }

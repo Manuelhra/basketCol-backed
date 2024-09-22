@@ -62,9 +62,9 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
       teamId,
     } = dto;
 
-    const tLSFGBoxScoreId: TLSFGBoxScoreId = new TLSFGBoxScoreId(id);
-    const tLSFGBoxScoreFixtureGameId: TLSFGBoxScoreFixtureGameId = new TLSFGBoxScoreFixtureGameId(fixtureGameId);
-    const tLSFGBoxScoreTeamId: TLSFGBoxScoreTeamId = new TLSFGBoxScoreTeamId(teamId);
+    const tLSFGBoxScoreId: TLSFGBoxScoreId = TLSFGBoxScoreId.create(id);
+    const tLSFGBoxScoreFixtureGameId: TLSFGBoxScoreFixtureGameId = TLSFGBoxScoreFixtureGameId.create(fixtureGameId);
+    const tLSFGBoxScoreTeamId: TLSFGBoxScoreTeamId = TLSFGBoxScoreTeamId.create(teamId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<TLSFGBoxScoreId, ITeamLeagueSeasonFixtureGameBoxScore, TeamLeagueSeasonFixtureGameBoxScore>(tLSFGBoxScoreId);
     await this.#leagueSeasonFixtureGameValidationService.ensureLeagueSeasonFixtureGameExists(tLSFGBoxScoreFixtureGameId.value);

@@ -43,8 +43,8 @@ export class CreateReboundingAttributesUseCase implements ICreateReboundingAttri
       playerUserId,
     } = dto;
 
-    const playerUserReboundingAttributesId: PURAId = new PURAId(id);
-    const pURAReferencedPlayerUserId: PURAReferencedPlayerUserId = new PURAReferencedPlayerUserId(playerUserId);
+    const playerUserReboundingAttributesId: PURAId = PURAId.create(id);
+    const pURAReferencedPlayerUserId: PURAReferencedPlayerUserId = PURAReferencedPlayerUserId.create(playerUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PURAId, IPlayerUserReboundingAttributes, PlayerUserReboundingAttributes>(playerUserReboundingAttributesId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pURAReferencedPlayerUserId.value);

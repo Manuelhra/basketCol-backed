@@ -3,6 +3,10 @@ import { IHttpResponseHandler } from '../../application/http/IHttpResponseHandle
 import { ISuccessApiResponse } from '../../application/http/ISuccessApiResponse';
 
 export class HttpResponseHandler implements IHttpResponseHandler {
+  public static create(): HttpResponseHandler {
+    return new HttpResponseHandler();
+  }
+
   public handleSuccessResponse<T>(body: { code: number; message: string; data: T; }): ISuccessApiResponse<T> {
     return {
       code: body.code,

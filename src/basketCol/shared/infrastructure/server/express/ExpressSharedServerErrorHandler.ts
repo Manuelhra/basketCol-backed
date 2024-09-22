@@ -39,11 +39,12 @@ import {
 } from '@basketcol/domain';
 import { Response } from 'express';
 
-import { IHttpResponseHandler } from '../../../../application/http/IHttpResponseHandler';
-import { IServerErrorHandler } from '../../IServerErrorHandler';
-import { IErrorApiResponse } from '../../../../application/http/IErrorApiResponse';
-import { DatabaseConnectionFailedError } from '../../../exceptions/DatabaseConnectionFailedError';
-import { DependencyContainerNotInitializedError } from '../../../exceptions/DependencyContainerNotInitializedError';
+import { IHttpResponseHandler } from '../../../application/http/IHttpResponseHandler';
+import { IServerErrorHandler } from '../IServerErrorHandler';
+import { IErrorApiResponse } from '../../../application/http/IErrorApiResponse';
+import { DatabaseConnectionFailedError } from '../../exceptions/DatabaseConnectionFailedError';
+import { DependencyContainerNotInitializedError } from '../../exceptions/DependencyContainerNotInitializedError';
+import { UnauthorizedAccessError } from '../../../application/exceptions/UnauthorizedAccessError';
 
 export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
@@ -103,6 +104,17 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         status = HttpStatus.NOT_FOUND;
         isInstanceof = true;
         break;
+
+      case error instanceof UnauthorizedAccessError: {
+        errorResponse = this.httpResponseHandler.handleErrorResponse({
+          code: HttpStatus.UNAUTHORIZED,
+          message: HttpStatus.getMessage(HttpStatus.UNAUTHORIZED),
+          errors: { name: error.name, details: error.message },
+        });
+        status = HttpStatus.UNAUTHORIZED;
+        isInstanceof = true;
+        break;
+      }
 
       case error instanceof InvalidEnumValueError:
       case error instanceof UndefinedValueError:

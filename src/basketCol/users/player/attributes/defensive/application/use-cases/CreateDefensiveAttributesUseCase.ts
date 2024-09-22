@@ -45,8 +45,8 @@ export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttribu
       playerUserId,
     } = dto;
 
-    const pUDAId: PUDAId = new PUDAId(id);
-    const pUDAReferencedPlayerUserId: PUDAReferencedPlayerUserId = new PUDAReferencedPlayerUserId(playerUserId);
+    const pUDAId: PUDAId = PUDAId.create(id);
+    const pUDAReferencedPlayerUserId: PUDAReferencedPlayerUserId = PUDAReferencedPlayerUserId.create(playerUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PUDAId, IPlayerUserDefensiveAttributes, PlayerUserDefensiveAttributes>(pUDAId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUDAReferencedPlayerUserId.value);

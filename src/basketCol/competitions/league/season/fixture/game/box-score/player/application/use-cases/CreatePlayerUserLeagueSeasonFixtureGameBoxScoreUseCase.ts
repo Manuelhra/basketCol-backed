@@ -62,9 +62,9 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
       playerUserId,
     } = dto;
 
-    const pLSFGBoxScoreId: PLSFGBoxScoreId = new PLSFGBoxScoreId(id);
-    const pLSFGBoxScoreFixtureGameId: PLSFGBoxScoreFixtureGameId = new PLSFGBoxScoreFixtureGameId(fixtureGameId);
-    const pLSFGBoxScorePlayerUserId: PLSFGBoxScorePlayerUserId = new PLSFGBoxScorePlayerUserId(playerUserId);
+    const pLSFGBoxScoreId: PLSFGBoxScoreId = PLSFGBoxScoreId.create(id);
+    const pLSFGBoxScoreFixtureGameId: PLSFGBoxScoreFixtureGameId = PLSFGBoxScoreFixtureGameId.create(fixtureGameId);
+    const pLSFGBoxScorePlayerUserId: PLSFGBoxScorePlayerUserId = PLSFGBoxScorePlayerUserId.create(playerUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PLSFGBoxScoreId, IPlayerUserLeagueSeasonFixtureGameBoxScore, PlayerUserLeagueSeasonFixtureGameBoxScore>(pLSFGBoxScoreId);
     await this.#leagueSeasonFixtureGameValidationService.ensureLeagueSeasonFixtureGameExists(pLSFGBoxScoreFixtureGameId.value);

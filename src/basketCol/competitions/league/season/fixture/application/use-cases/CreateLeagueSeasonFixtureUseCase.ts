@@ -49,9 +49,9 @@ export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixt
       leagueSeasonId,
     } = dto;
 
-    const lSFixtureId: LSFixtureId = new LSFixtureId(id);
-    const lSFixtureDate: LSFixtureDate = new LSFixtureDate(date);
-    const lSFixtureLeagueSeasonId: LSFixtureLeagueSeasonId = new LSFixtureLeagueSeasonId(leagueSeasonId);
+    const lSFixtureId: LSFixtureId = LSFixtureId.create(id);
+    const lSFixtureDate: LSFixtureDate = LSFixtureDate.create(date);
+    const lSFixtureLeagueSeasonId: LSFixtureLeagueSeasonId = LSFixtureLeagueSeasonId.create(leagueSeasonId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<LSFixtureId, ILeagueSeasonFixture, LeagueSeasonFixture>(lSFixtureId);
     await this.#leagueSeasonValidationService.ensureLeagueSeasonExists(lSFixtureLeagueSeasonId.value);

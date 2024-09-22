@@ -46,6 +46,22 @@ export const convictConfig = convict<IConvictProps>({
       },
     },
   },
+  hostUserCredentials: {
+    email: {
+      value: {
+        doc: 'The host user email',
+        format: String,
+        env: 'HOST_USER_EMAIL',
+        default: 'basket.dev@gmail.com',
+      },
+    },
+    password: {
+      doc: 'The host user password',
+      format: String,
+      env: 'HOST_USER_PASSWORD',
+      default: 'BasketColDev2024',
+    },
+  },
 });
 
 convictConfig.loadFile(`${__dirname}/${convictConfig.get('env')}.json`);

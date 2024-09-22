@@ -55,10 +55,10 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
       leagueFounderUserId,
     } = dto;
 
-    const leagueId: LeagueId = new LeagueId(id);
-    const leagueName: LeagueName = new LeagueName(name);
-    const lReferencedLeagueFounderUserId: LReferencedLeagueFounderUserId = new LReferencedLeagueFounderUserId(leagueFounderUserId);
-    const leagueEstablishmentDate: LeagueEstablishmentDate = new LeagueEstablishmentDate(establishmentDate);
+    const leagueId: LeagueId = LeagueId.create(id);
+    const leagueName: LeagueName = LeagueName.create(name);
+    const lReferencedLeagueFounderUserId: LReferencedLeagueFounderUserId = LReferencedLeagueFounderUserId.create(leagueFounderUserId);
+    const leagueEstablishmentDate: LeagueEstablishmentDate = LeagueEstablishmentDate.create(establishmentDate);
     const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
 
     await this.#idUniquenessValidatorService.ensureUniqueId<LeagueId, ILeague, League>(leagueId);

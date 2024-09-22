@@ -3,17 +3,14 @@ import jwt from 'jsonwebtoken';
 
 import { ITokenGeneratorService } from '../../../application/services/ITokenGeneratorService';
 import { UserAuthenticationJwtConfigFactory } from './UserAuthenticationJwtConfigFactory';
+import { IUserAuthenticationTokenPayload } from '../../../application/services/IUserAuthenticationTokenPayload';
 
 export class JwtTokenGeneratorService implements ITokenGeneratorService {
   public generateAuthenticationToken<IT extends IUser, T extends User<IT>>(user: T): string {
-    const payload: {
-      id: string;
-      email: { value: string; verified: boolean };
-      type: string;
-    } = {
-      id: user.getId().value,
-      email: user.getEmail().value,
-      type: user.getType().value,
+    const payload: IUserAuthenticationTokenPayload = {
+      userId: user.id.value,
+      userEmail: user.email.value,
+      userType: user.type.value,
     };
 
     const { secretKey, expiresIn } = UserAuthenticationJwtConfigFactory.createAuthenticateUserConfig();

@@ -1,6 +1,6 @@
 import { IHttpResponseHandler } from '../../../application/http/IHttpResponseHandler';
 import { HttpResponseHandler } from '../../http/HttpResponseHandler';
-import { ExpressSharedServerErrorHandler } from '../../server/express/server/ExpressSharedServerErrorHandler';
+import { ExpressSharedServerErrorHandler } from '../../server/express/ExpressSharedServerErrorHandler';
 import { IServerErrorHandler } from '../../server/IServerErrorHandler';
 import { ISharedContainer } from '../ISharedContainer';
 import { AwilixDependencyInjector } from './AwilixDependencyInjector';

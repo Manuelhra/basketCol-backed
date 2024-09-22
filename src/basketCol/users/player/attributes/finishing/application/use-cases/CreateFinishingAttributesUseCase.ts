@@ -45,8 +45,8 @@ export class CreateFinishingAttributesUseCase implements ICreateFinishingAttribu
       playerUserId,
     } = dto;
 
-    const pUFAId: PUFAId = new PUFAId(id);
-    const pUFAReferencedPlayerUserId: PUFAReferencedPlayerUserId = new PUFAReferencedPlayerUserId(playerUserId);
+    const pUFAId: PUFAId = PUFAId.create(id);
+    const pUFAReferencedPlayerUserId: PUFAReferencedPlayerUserId = PUFAReferencedPlayerUserId.create(playerUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PUFAId, IPlayerUserFinishingAttributes, PlayerUserFinishingAttributes>(pUFAId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUFAReferencedPlayerUserId.value);
