@@ -5,6 +5,7 @@ import { IHttpResponseHandler } from '../../../../../shared/application/http/IHt
 import { IErrorApiResponse } from '../../../../../shared/application/http/IErrorApiResponse';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
 import { MultipleHostUsersException } from '../../../application/exceptions/MultipleHostUsersException';
+import { InvalidHostUserCredentialsError } from '../../../application/exceptions/InvalidHostUserCredentialsError';
 
 export class ExpressHostUserServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
@@ -38,6 +39,16 @@ export class ExpressHostUserServerErrorHandler implements IServerErrorHandler {
           errors: { name: error.name, details: error.message },
         });
         status = HttpStatus.NOT_FOUND;
+        isInstanceof = true;
+        break;
+
+      case error instanceof InvalidHostUserCredentialsError:
+        errorResponse = this.httpResponseHandler.handleErrorResponse({
+          code: HttpStatus.UNAUTHORIZED,
+          message: HttpStatus.getMessage(HttpStatus.UNAUTHORIZED),
+          errors: { name: error.name, details: error.message },
+        });
+        status = HttpStatus.UNAUTHORIZED;
         isInstanceof = true;
         break;
     }

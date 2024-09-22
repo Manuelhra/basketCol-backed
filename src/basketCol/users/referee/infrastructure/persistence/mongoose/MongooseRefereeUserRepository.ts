@@ -7,7 +7,7 @@ import {
   RefereeUserId,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Mongoose, Schema } from 'mongoose';
+import { Model, Mongoose, Schema } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongooseRefereeUserDocument } from './IMongooseRefereeUserDocument';
@@ -33,16 +33,16 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
   }
 
   public async searchById(refereeUserId: RefereeUserId): Promise<Nullable<RefereeUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongooseRefereeUserDocument> = await Model.findById<IMongooseRefereeUserDocument>(refereeUserId.value);
+    const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findById<IMongooseRefereeUserDocument>(refereeUserId.value);
 
     return document === null ? null : RefereeUser.create(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -51,16 +51,16 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
   }
 
   public async searchByEmail(refereeUserEmail: RefereeUserEmail): Promise<Nullable<RefereeUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongooseRefereeUserDocument> = await Model.findOne<IMongooseRefereeUserDocument>({ 'email.value': refereeUserEmail.value.value });
+    const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findOne<IMongooseRefereeUserDocument>({ 'email.value': refereeUserEmail.value.value });
 
     return document === null ? null : RefereeUser.create(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -70,5 +70,23 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
 
   public save(refereeUser: RefereeUser): Promise<void> {
     return this.persist(refereeUser);
+  }
+
+  protected override async persist(aggregate: RefereeUser): Promise<void> {
+    const MyModel:Model<{ [key: string]: any }> = await this.model();
+    const userHashedPassword = await this.#securePasswordCreationService.createFromPlainText(aggregate.password);
+
+    const {
+      id,
+      password,
+      ...props
+    } = aggregate.toPrimitives();
+
+    await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
+  }
+
+  private async createSecurePassword(hashedPassword: string): Promise<string> {
+    const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
+    return securePassword.value;
   }
 }

@@ -4,12 +4,10 @@ import {
   IdUniquenessValidatorService,
   ITeamFounderUser,
   ITeamFounderUserRepository,
-  SecurePasswordCreationService,
   TeamFounderUser,
   TeamFounderUserId,
   TeamFounderUserCreatedAt,
   TeamFounderUserEmail,
-  TeamFounderUserPassword,
   TeamFounderUserUpdatedAt,
   TeamFounderUserAccountState,
   TeamFounderUserSubscriptionType,
@@ -23,8 +21,6 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
 
   readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
 
-  readonly #securePasswordCreationService: SecurePasswordCreationService;
-
   readonly #businessDateService: BusinessDateService;
 
   readonly #tFURepository: ITeamFounderUserRepository;
@@ -32,13 +28,11 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
   constructor(dependencies: {
     idUniquenessValidatorService: IdUniquenessValidatorService;
     emailUniquenessValidatorService: EmailUniquenessValidatorService;
-    securePasswordCreationService: SecurePasswordCreationService;
     businessDateService: BusinessDateService;
     tFURepository: ITeamFounderUserRepository;
   }) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
-    this.#securePasswordCreationService = dependencies.securePasswordCreationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#tFURepository = dependencies.tFURepository;
   }
@@ -52,15 +46,14 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
       password,
     } = dto;
 
-    const teamFounderUserId: TeamFounderUserId = new TeamFounderUserId(id);
-    const teamFounderUserEmail: TeamFounderUserEmail = new TeamFounderUserEmail({ value: email.value, verified: false });
+    const teamFounderUserId: TeamFounderUserId = TeamFounderUserId.create(id);
+    const teamFounderUserEmail: TeamFounderUserEmail = TeamFounderUserEmail.create({ value: email.value, verified: false });
 
     await this.#idUniquenessValidatorService.ensureUniqueId<TeamFounderUserId, ITeamFounderUser, TeamFounderUser>(teamFounderUserId);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<TeamFounderUserEmail, ITeamFounderUser, TeamFounderUser>(teamFounderUserEmail);
 
     const accountState: string = TeamFounderUserAccountState.active;
     const subscriptionType: string = TeamFounderUserSubscriptionType.free;
-    const teamFounderUserPassword: TeamFounderUserPassword = this.#securePasswordCreationService.createFromPlainText<TeamFounderUserPassword>(password);
     const teamFounderUserCreatedAt: TeamFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
     const teamFounderUserUpdatedAt: TeamFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
@@ -69,7 +62,7 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
       name,
       biography,
       teamFounderUserEmail.value,
-      teamFounderUserPassword.value,
+      password,
       accountState,
       subscriptionType,
       teamFounderUserCreatedAt.value,

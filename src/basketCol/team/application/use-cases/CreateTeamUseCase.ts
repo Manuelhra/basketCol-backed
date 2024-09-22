@@ -42,8 +42,8 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
       teamFounderUserId,
     } = dto;
 
-    const teamId: TeamId = new TeamId(id);
-    const tReferencedTeamFounderUserId: TReferencedTeamFounderUserId = new TReferencedTeamFounderUserId(teamFounderUserId);
+    const teamId: TeamId = TeamId.create(id);
+    const tReferencedTeamFounderUserId: TReferencedTeamFounderUserId = TReferencedTeamFounderUserId.create(teamFounderUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<TeamId, ITeam, Team>(teamId);
     await this.#teamFounderUserValidationService.ensureTeamFounderUserExists(tReferencedTeamFounderUserId.value);

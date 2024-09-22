@@ -7,9 +7,9 @@ import Router from 'express-promise-router';
 import helmet from 'helmet';
 import * as http from 'http';
 
-import { IServer } from '../..';
-import { IRouteManager } from '../../routes/IRouteManager';
-import { IServerErrorHandler } from '../../IServerErrorHandler';
+import { IRouteManager } from '../routes/IRouteManager';
+import { IServerErrorHandler } from '../IServerErrorHandler';
+import { IServer } from '..';
 
 export class ExpressServer implements IServer {
   readonly #app: Application;
@@ -25,6 +25,10 @@ export class ExpressServer implements IServer {
     this.setUpMiddlewares();
     this.#router.use(errorHandler());
     this.#app.use(this.#router);
+  }
+
+  public static create(): ExpressServer {
+    return new ExpressServer();
   }
 
   public async listen(port: string): Promise<void> {

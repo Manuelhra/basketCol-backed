@@ -1,4 +1,8 @@
+import { UserPassword } from '@basketcol/domain';
 import { body, ValidationChain } from 'express-validator';
+
+import { hostUserCredentialsEmailValidation } from './custom/host-user-credentials-email.validation.custom';
+import { hostUserCredentialsPasswordValidation } from './custom/host-user-credentials-password.validation.custom';
 
 export const createHostUserPOSTControllerValidations: ValidationChain[] = [
   body('id')
@@ -25,12 +29,13 @@ export const createHostUserPOSTControllerValidations: ValidationChain[] = [
     .isString()
     .withMessage('Biography must be a string'),
 
-  body('email')
+  body('email.value')
     .notEmpty()
     .withMessage('Email is required')
     .isEmail()
-    .normalizeEmail()
-    .withMessage('Must provide a valid email address'),
+    .withMessage('Must provide a valid email address')
+    .normalizeEmail({ all_lowercase: true, gmail_remove_dots: false })
+    .custom((email) => hostUserCredentialsEmailValidation(email)),
 
   body('password')
     .notEmpty()
@@ -38,6 +43,7 @@ export const createHostUserPOSTControllerValidations: ValidationChain[] = [
     .isString()
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters long')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
-    .withMessage('Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character'),
+    .matches(UserPassword.passwordRegExp)
+    .withMessage(UserPassword.getRequirementsAsString())
+    .custom((password) => hostUserCredentialsPasswordValidation(password)),
 ];

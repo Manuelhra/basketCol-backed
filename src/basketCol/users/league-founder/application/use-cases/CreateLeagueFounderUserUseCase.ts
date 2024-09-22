@@ -9,10 +9,8 @@ import {
   LeagueFounderUserCreatedAt,
   LeagueFounderUserEmail,
   LeagueFounderUserId,
-  LeagueFounderUserPassword,
   LeagueFounderUserSubscriptionType,
   LeagueFounderUserUpdatedAt,
-  SecurePasswordCreationService,
 } from '@basketcol/domain';
 
 import { CreateLeagueFounderUserDTO } from '../dtos/CreateLeagueFounderUserDTO';
@@ -23,8 +21,6 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
 
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
-  readonly #securePasswordCreationService: SecurePasswordCreationService;
-
   readonly #leagueFounderUserRepository: ILeagueFounderUserRepository;
 
   readonly #businessDateService: BusinessDateService;
@@ -32,13 +28,11 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
   constructor(dependencies: {
     emailUniquenessValidatorService: EmailUniquenessValidatorService
     idUniquenessValidatorService: IdUniquenessValidatorService;
-    securePasswordCreationService: SecurePasswordCreationService;
     leagueFounderUserRepository: ILeagueFounderUserRepository;
     businessDateService: BusinessDateService;
   }) {
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#securePasswordCreationService = dependencies.securePasswordCreationService;
     this.#leagueFounderUserRepository = dependencies.leagueFounderUserRepository;
     this.#businessDateService = dependencies.businessDateService;
   }
@@ -52,15 +46,14 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
       password,
     } = dto;
 
-    const leagueFounderUserId: LeagueFounderUserId = new LeagueFounderUserId(id);
-    const leagueFounderUserEmail: LeagueFounderUserEmail = new LeagueFounderUserEmail({ value: email.value, verified: false });
+    const leagueFounderUserId: LeagueFounderUserId = LeagueFounderUserId.create(id);
+    const leagueFounderUserEmail: LeagueFounderUserEmail = LeagueFounderUserEmail.create({ value: email.value, verified: false });
 
     await this.#idUniquenessValidatorService.ensureUniqueId<LeagueFounderUserId, ILeagueFounderUser, LeagueFounderUser>(leagueFounderUserId);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<LeagueFounderUserEmail, ILeagueFounderUser, LeagueFounderUser>(leagueFounderUserEmail);
 
     const accountState: string = LeagueFounderUserAccountState.active;
     const subscriptionType: string = LeagueFounderUserSubscriptionType.free;
-    const leagueFounderUserPassword: LeagueFounderUserPassword = this.#securePasswordCreationService.createFromPlainText<LeagueFounderUserPassword>(password);
     const leagueFounderUserCreatedAt: LeagueFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
     const leagueFounderUserUpdatedAt: LeagueFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
@@ -69,7 +62,7 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
       name,
       biography,
       leagueFounderUserEmail.value,
-      leagueFounderUserPassword.value,
+      password,
       accountState,
       subscriptionType,
       leagueFounderUserCreatedAt.value,

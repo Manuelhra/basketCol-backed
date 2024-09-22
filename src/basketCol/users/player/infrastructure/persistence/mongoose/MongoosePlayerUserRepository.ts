@@ -8,7 +8,7 @@ import {
   PlayerUserNickname,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Mongoose, Schema } from 'mongoose';
+import { Model, Mongoose, Schema } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongoosePlayerUserDocument } from './IMongoosePlayerUserDocument';
@@ -34,9 +34,9 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
   }
 
   public async searchById(playerUserId: PlayerUserId): Promise<Nullable<PlayerUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongoosePlayerUserDocument> = await Model.findById<IMongoosePlayerUserDocument>(playerUserId.value);
+    const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findById<IMongoosePlayerUserDocument>(playerUserId.value);
 
     return document === null ? null : PlayerUser.create(
       document.id.valueOf(),
@@ -44,7 +44,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -53,9 +53,9 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
   }
 
   public async searchByEmail(playerUserEmail: PlayerUserEmail): Promise<Nullable<PlayerUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongoosePlayerUserDocument> = await Model.findOne<IMongoosePlayerUserDocument>({ 'email.value': playerUserEmail.value.value });
+    const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ 'email.value': playerUserEmail.value.value });
 
     return document === null ? null : PlayerUser.create(
       document.id.valueOf(),
@@ -63,7 +63,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -72,9 +72,9 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
   }
 
   public async searchByNickname(playerUserNickname: PlayerUserNickname): Promise<Nullable<PlayerUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongoosePlayerUserDocument> = await Model.findOne<IMongoosePlayerUserDocument>({ nickname: playerUserNickname.value });
+    const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ nickname: playerUserNickname.value });
 
     return document === null ? null : PlayerUser.create(
       document.id.valueOf(),
@@ -82,7 +82,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -92,5 +92,23 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
 
   public save(playerUser: PlayerUser): Promise<void> {
     return this.persist(playerUser);
+  }
+
+  protected override async persist(aggregate: PlayerUser): Promise<void> {
+    const MyModel:Model<{ [key: string]: any }> = await this.model();
+    const userHashedPassword = await this.#securePasswordCreationService.createFromPlainText(aggregate.password);
+
+    const {
+      id,
+      password,
+      ...props
+    } = aggregate.toPrimitives();
+
+    await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
+  }
+
+  private async createSecurePassword(hashedPassword: string): Promise<string> {
+    const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
+    return securePassword.value;
   }
 }

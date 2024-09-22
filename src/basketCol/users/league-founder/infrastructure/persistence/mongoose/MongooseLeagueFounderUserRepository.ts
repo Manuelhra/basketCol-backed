@@ -7,7 +7,7 @@ import {
   Nullable,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Mongoose, Schema } from 'mongoose';
+import { Model, Mongoose, Schema } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongooseLeagueFounderUserDocument } from './IMongooseLeagueFounderUserDocument';
@@ -33,16 +33,16 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
   }
 
   public async searchById(leagueFounderUserId: LeagueFounderUserId): Promise<Nullable<LeagueFounderUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongooseLeagueFounderUserDocument> = await Model.findById<IMongooseLeagueFounderUserDocument>(leagueFounderUserId.value);
+    const document: Nullable<IMongooseLeagueFounderUserDocument> = await MyModel.findById<IMongooseLeagueFounderUserDocument>(leagueFounderUserId.value);
 
     return document === null ? null : LeagueFounderUser.create(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -51,16 +51,16 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
   }
 
   public async searchByEmail(leagueFounderUserEmail: LeagueFounderUserEmail): Promise<Nullable<LeagueFounderUser>> {
-    const Model = await this.model();
+    const MyModel = await this.model();
 
-    const document: Nullable<IMongooseLeagueFounderUserDocument> = await Model.findOne<IMongooseLeagueFounderUserDocument>({ 'email.value': leagueFounderUserEmail.value.value });
+    const document: Nullable<IMongooseLeagueFounderUserDocument> = await MyModel.findOne<IMongooseLeagueFounderUserDocument>({ 'email.value': leagueFounderUserEmail.value.value });
 
     return document === null ? null : LeagueFounderUser.create(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      this.#securePasswordCreationService.createFromHashedText(document.password.valueOf()).value,
+      await this.createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -68,7 +68,25 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
     );
   }
 
-  save(leagueFounderUser: LeagueFounderUser): Promise<void> {
+  public save(leagueFounderUser: LeagueFounderUser): Promise<void> {
     return this.persist(leagueFounderUser);
+  }
+
+  protected override async persist(aggregate: LeagueFounderUser): Promise<void> {
+    const MyModel:Model<{ [key: string]: any }> = await this.model();
+    const userHashedPassword = await this.#securePasswordCreationService.createFromPlainText(aggregate.password);
+
+    const {
+      id,
+      password,
+      ...props
+    } = aggregate.toPrimitives();
+
+    await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
+  }
+
+  private async createSecurePassword(hashedPassword: string): Promise<string> {
+    const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
+    return securePassword.value;
   }
 }

@@ -1,6 +1,7 @@
 import {
   BusinessDateService,
   EmailUniquenessValidatorService,
+  HostUserType,
   IdUniquenessValidatorService,
   IPlayerUser,
   IPlayerUserRepository,
@@ -11,14 +12,14 @@ import {
   PlayerUserId,
   PlayerUserNickname,
   PlayerUserNicknameValidationService,
-  PlayerUserPassword,
   PlayerUserSubscriptionType,
   PlayerUserUpdatedAt,
-  SecurePasswordCreationService,
 } from '@basketcol/domain';
 
 import { CreatePlayerUserDTO } from '../dtos/CreatePlayerUserDTO';
 import { ICreatePlayerUserUseCase } from './ports/ICreatePlayerUserUseCase';
+import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
+import { IUserContext } from '../../../../shared/application/context/IUserContext';
 
 export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -26,8 +27,6 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
   readonly #playerUserNicknameValidationService: PlayerUserNicknameValidationService;
 
   readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
-
-  readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   readonly #businessDateService: BusinessDateService;
 
@@ -37,7 +36,6 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     playerUserNicknameValidationService: PlayerUserNicknameValidationService;
     emailUniquenessValidatorService: EmailUniquenessValidatorService;
     idUniquenessValidatorService: IdUniquenessValidatorService;
-    securePasswordCreationService: SecurePasswordCreationService;
     playerUserRepository: IPlayerUserRepository;
     businessDateService: BusinessDateService;
   }) {
@@ -45,12 +43,15 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserRepository = dependencies.playerUserRepository;
-    this.#securePasswordCreationService = dependencies.securePasswordCreationService;
     this.#playerUserRepository = dependencies.playerUserRepository;
     this.#businessDateService = dependencies.businessDateService;
   }
 
-  public async execute(dto: CreatePlayerUserDTO): Promise<void> {
+  public async execute(dto: CreatePlayerUserDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw new UnauthorizedAccessError(userContext, HostUserType.value, 'create a player user');
+    }
+
     const {
       id,
       name,
@@ -60,9 +61,9 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
       password,
     } = dto;
 
-    const playerUserId: PlayerUserId = new PlayerUserId(id);
-    const playerUserNickname: PlayerUserNickname = new PlayerUserNickname(nickname);
-    const playerUserEmail: PlayerUserEmail = new PlayerUserEmail({ value: email.value, verified: false });
+    const playerUserId: PlayerUserId = PlayerUserId.create(id);
+    const playerUserNickname: PlayerUserNickname = PlayerUserNickname.create(nickname);
+    const playerUserEmail: PlayerUserEmail = PlayerUserEmail.create({ value: email.value, verified: false });
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PlayerUserId, IPlayerUser, PlayerUser>(playerUserId);
     await this.#playerUserNicknameValidationService.ensureNicknameIsUnique(playerUserNickname);
@@ -70,7 +71,6 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
 
     const accountState: string = PlayerUserAccountState.active;
     const subscriptionType: string = PlayerUserSubscriptionType.free;
-    const playerUserPassword: PlayerUserPassword = this.#securePasswordCreationService.createFromPlainText<PlayerUserPassword>(password);
     const playerUserCreatedAt: PlayerUserCreatedAt = this.#businessDateService.getCurrentDate();
     const playerUserUpdatedAt: PlayerUserUpdatedAt = this.#businessDateService.getCurrentDate();
 
@@ -80,7 +80,7 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
       biography,
       nickname,
       playerUserEmail.value,
-      playerUserPassword.value,
+      password,
       accountState,
       subscriptionType,
       playerUserCreatedAt.value,

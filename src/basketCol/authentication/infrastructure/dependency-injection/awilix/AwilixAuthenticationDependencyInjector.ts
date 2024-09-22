@@ -1,12 +1,12 @@
 import {
-  CreatePasswordValueObjectService,
-  ICreatePasswordValueObjectService,
   IHostUserRepository,
   ILeagueFounderUserRepository,
-  IPasswordEncrypterService,
+  IPasswordHashingService,
+  IPasswordValueObjectCreationService,
   IPlayerUserRepository,
   IRefereeUserRepository,
   ITeamFounderUserRepository,
+  PasswordValueObjectCreationService,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 import { Mongoose, Schema } from 'mongoose';
@@ -21,7 +21,6 @@ import { MongooseRefereeUserRepository } from '../../../../users/referee/infrast
 import { MongooseClientFactory } from '../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
 import { MongooseTeamFounderUserRepository } from '../../../../users/team-founder/infrastructure/persistence/mongoose/MongooseTeamFounderUserRepository';
 import { PasswordValidationService } from '../../../application/services/PasswordValidationService';
-import { BcryptPasswordEncrypter } from '../../../../shared/infrastructure/services/BcryptPasswordEncrypter';
 import { ITokenGeneratorService } from '../../../application/services/ITokenGeneratorService';
 import { JwtTokenGeneratorService } from '../../services/jwt/JwtTokenGeneratorService';
 import { IMongooseHostUserDocument } from '../../../../users/host/infrastructure/persistence/mongoose/IMongooseHostUserDocument';
@@ -45,6 +44,7 @@ import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFile
 import { GlobFileSystem } from '../../../../shared/infrastructure/file-system/GlobFileSystem';
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
 import { ExpressAuthenticationServerErrorHandler } from '../../server/express/ExpressAuthenticationServerErrorHandler';
+import { BcryptPasswordHashingService } from '../../../../shared/infrastructure/services/BcryptPasswordHashingService';
 
 export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInjector<IAuthenticationContainer> {
   public constructor() {
@@ -57,7 +57,7 @@ export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInje
       authenticateUserUseCase: AwilixDependencyInjector.registerAsClass<IAuthenticateUserUseCase>(AuthenticateUserUseCase).singleton(),
       authenticationRouteManager: AwilixDependencyInjector.registerAsClass<IRouteManager>(ExpressAuthenticationRouteManager).singleton(),
       basePath: AwilixDependencyInjector.registerAsValue<string>(__dirname),
-      createPasswordValueObjectService: AwilixDependencyInjector.registerAsClass<ICreatePasswordValueObjectService>(CreatePasswordValueObjectService).singleton(),
+      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsClass<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService).singleton(),
       fileSystem: AwilixDependencyInjector.registerAsClass<IFileSystem>(GlobFileSystem).singleton(),
       hostUserMongooseSchema: AwilixDependencyInjector.registerAsValue<Schema<IMongooseHostUserDocument>>(mongooseHostUserSchema),
       hostUserRepository: AwilixDependencyInjector.registerAsClass<IHostUserRepository>(MongooseHostUserRepository).singleton(),
@@ -65,7 +65,7 @@ export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInje
       leagueFounderUserMongooseSchema: AwilixDependencyInjector.registerAsValue<Schema<IMongooseLeagueFounderUserDocument>>(mongooseLeagueFounderUserSchema),
       leagueFounderUserRepository: AwilixDependencyInjector.registerAsClass<ILeagueFounderUserRepository>(MongooseLeagueFounderUserRepository).singleton(),
       mongooseClient: AwilixDependencyInjector.registerAsFunction<Promise<Mongoose>>(MongooseClientFactory.createMongooseClient).singleton(),
-      passwordEncrypterService: AwilixDependencyInjector.registerAsClass<IPasswordEncrypterService>(BcryptPasswordEncrypter).singleton(),
+      passwordHashingService: AwilixDependencyInjector.registerAsClass<IPasswordHashingService>(BcryptPasswordHashingService).singleton(),
       passwordValidationService: AwilixDependencyInjector.registerAsClass<PasswordValidationService>(PasswordValidationService).singleton(),
       playerUserMongooseSchema: AwilixDependencyInjector.registerAsValue<Schema<IMongoosePlayerUserDocument>>(mongoosePlayerUserSchema),
       playerUserRepository: AwilixDependencyInjector.registerAsClass<IPlayerUserRepository>(MongoosePlayerUserRepository).singleton(),

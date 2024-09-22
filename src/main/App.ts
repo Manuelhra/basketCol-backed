@@ -1,8 +1,7 @@
 import { serverStatusRouteManager } from '../basketCol/server-status/infrastructure/dependency-injection';
 import { sharedServerErrorHandler } from '../basketCol/shared/infrastructure/dependency-injection';
 import { IServer } from '../basketCol/shared/infrastructure/server';
-import { ExpressServer } from '../basketCol/shared/infrastructure/server/express/server/ExpressServer';
-import { hostUserRouteManager } from '../basketCol/users/host/infrastructure/dependency-injection';
+import { hostUserRouteManager, hostUserServerErrorHandler } from '../basketCol/users/host/infrastructure/dependency-injection';
 import { authenticationRouteManager, authenticationServerErrorHandler } from '../basketCol/authentication/infrastructure/dependency-injection';
 import { usersSharedServerErrorHandler } from '../basketCol/users/shared/infrastructure/dependency-injection';
 import { leagueFounderUserServerErrorHandler } from '../basketCol/users/league-founder/infrastructure/dependency-injection';
@@ -17,12 +16,13 @@ import { leagueServerErrorHandler } from '../basketCol/competitions/league/infra
 import { leagueSeasonServerErrorHandler } from '../basketCol/competitions/league/season/infrastructure/dependency-injection';
 import { leagueSeasonFixtureServerErrorHandler } from '../basketCol/competitions/league/season/fixture/infrastructure/dependency-injection';
 import { leagueSeasonFixtureGameServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/infrastructure/dependency-injection';
+import { ExpressServer } from '../basketCol/shared/infrastructure/server/express/ExpressServer';
 
 export class App {
   readonly #server: IServer;
 
   constructor() {
-    this.#server = new ExpressServer();
+    this.#server = ExpressServer.create();
 
     this.setUpRoutes();
     this.handleErrors();
@@ -49,6 +49,7 @@ export class App {
       sharedServerErrorHandler,
       authenticationServerErrorHandler,
       usersSharedServerErrorHandler,
+      hostUserServerErrorHandler,
       leagueFounderUserServerErrorHandler,
       playerUserServerErrorHandler,
       refereeUserServerErrorHandler,

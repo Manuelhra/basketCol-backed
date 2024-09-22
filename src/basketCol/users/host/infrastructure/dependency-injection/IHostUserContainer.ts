@@ -1,8 +1,8 @@
 import {
   BusinessDateService,
-  ICreatePasswordValueObjectService,
   IHostUserRepository,
-  IPasswordEncrypterService,
+  IPasswordHashingService,
+  IPasswordValueObjectCreationService,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 import { Mongoose, Schema } from 'mongoose';
@@ -14,20 +14,22 @@ import { IMongooseHostUserDocument } from '../persistence/mongoose/IMongooseHost
 import { ICreateHostUserUseCase } from '../../application/use-cases/ports/ICreateHostUserUseCase';
 import { IHttpResponseHandler } from '../../../../shared/application/http/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
+import { IHostUserConfigFactory } from '../../application/ports/IHostUserConfigFactory';
 
 export interface IHostUserContainer {
   basePath: string;
   businessDateService: BusinessDateService;
   createHostUserUseCase: ICreateHostUserUseCase;
-  createPasswordValueObjectService: ICreatePasswordValueObjectService;
+  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
   fileSystem: IFileSystem;
   hostUserMongooseSchema: Schema<IMongooseHostUserDocument>;
+  hostUserConfigFactory: IHostUserConfigFactory;
   createHostUserPOSTController: IController;
   hostUserRepository: IHostUserRepository;
   hostUserRouteManager: IRouteManager;
   httpResponseHandler: IHttpResponseHandler;
   mongooseClient: Promise<Mongoose>;
-  passwordEncrypterService: IPasswordEncrypterService;
+  passwordHashingService: IPasswordHashingService;
   securePasswordCreationService: SecurePasswordCreationService;
   hostUserServerErrorHandler: IServerErrorHandler;
 }

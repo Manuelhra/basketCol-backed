@@ -46,8 +46,8 @@ export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttribute
       playerUserId,
     } = dto;
 
-    const physicalAttributesId: PUPAId = new PUPAId(id);
-    const pUPAReferencedPlayerUserId: PUPAReferencedPlayerUserId = new PUPAReferencedPlayerUserId(playerUserId);
+    const physicalAttributesId: PUPAId = PUPAId.create(id);
+    const pUPAReferencedPlayerUserId: PUPAReferencedPlayerUserId = PUPAReferencedPlayerUserId.create(playerUserId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<PUPAId, IPlayerUserPhysicalAttributes, PlayerUserPhysicalAttributes>(physicalAttributesId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUPAReferencedPlayerUserId.value);

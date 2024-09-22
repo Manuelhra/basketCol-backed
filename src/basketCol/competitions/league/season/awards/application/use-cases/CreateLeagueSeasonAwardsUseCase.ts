@@ -65,15 +65,15 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
       leagueSeasonId,
     } = dto;
 
-    const leagueSeasonAwardsId: LeagueSeasonAwardsId = new LeagueSeasonAwardsId(id);
-    const lSABestThreePointShooterId: LSABestThreePointShooterId = new LSABestThreePointShooterId(bestThreePointShooterId);
-    const lSABestTwoPointShooterId: LSABestTwoPointShooterId = new LSABestTwoPointShooterId(bestTwoPointShooterId);
-    const lSABestFreeThrowShooterId: LSABestFreeThrowShooterId = new LSABestFreeThrowShooterId(bestFreeThrowShooterId);
-    const lSABestAssistProviderId: LSABestAssistProviderId = new LSABestAssistProviderId(bestAssistProviderId);
-    const lSABestOffensiveRebounderId: LSABestOffensiveRebounderId = new LSABestOffensiveRebounderId(bestOffensiveRebounderId);
-    const lSABestDefensiveRebounderId: LSABestDefensiveRebounderId = new LSABestDefensiveRebounderId(bestDefensiveRebounderId);
-    const lSAChampionTeamId: LSAChampionTeamId = new LSAChampionTeamId(championTeamId);
-    const lSALeagueSeasonId: LSAReferencedLeagueSeasonId = new LSAReferencedLeagueSeasonId(leagueSeasonId);
+    const leagueSeasonAwardsId: LeagueSeasonAwardsId = LeagueSeasonAwardsId.create(id);
+    const lSABestThreePointShooterId: LSABestThreePointShooterId = LSABestThreePointShooterId.create(bestThreePointShooterId);
+    const lSABestTwoPointShooterId: LSABestTwoPointShooterId = LSABestTwoPointShooterId.create(bestTwoPointShooterId);
+    const lSABestFreeThrowShooterId: LSABestFreeThrowShooterId = LSABestFreeThrowShooterId.create(bestFreeThrowShooterId);
+    const lSABestAssistProviderId: LSABestAssistProviderId = LSABestAssistProviderId.create(bestAssistProviderId);
+    const lSABestOffensiveRebounderId: LSABestOffensiveRebounderId = LSABestOffensiveRebounderId.create(bestOffensiveRebounderId);
+    const lSABestDefensiveRebounderId: LSABestDefensiveRebounderId = LSABestDefensiveRebounderId.create(bestDefensiveRebounderId);
+    const lSAChampionTeamId: LSAChampionTeamId = LSAChampionTeamId.create(championTeamId);
+    const lSALeagueSeasonId: LSAReferencedLeagueSeasonId = LSAReferencedLeagueSeasonId.create(leagueSeasonId);
 
     await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonAwardsId, ILeagueSeasonAwards, LeagueSeasonAwards>(leagueSeasonAwardsId);
     await this.#playerUserValidationService.ensurePlayerUserExists(lSABestThreePointShooterId.value);

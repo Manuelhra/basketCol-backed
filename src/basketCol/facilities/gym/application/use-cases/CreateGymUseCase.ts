@@ -45,9 +45,9 @@ export class CreateGymUseCase implements ICreateGymUseCase {
       establishmentDate,
       registeredById,
     } = dto;
-    const gymId: GymId = new GymId(id);
-    const gymRegisteredById: GymRegisteredById = new GymRegisteredById(registeredById);
-    const gymEstablishmentDate: GymEstablishmentDate = new GymEstablishmentDate(establishmentDate);
+    const gymId: GymId = GymId.create(id);
+    const gymRegisteredById: GymRegisteredById = GymRegisteredById.create(registeredById);
+    const gymEstablishmentDate: GymEstablishmentDate = GymEstablishmentDate.create(establishmentDate);
     const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
 
     await this.#idUniquenessValidatorService.ensureUniqueId<GymId, IGym, Gym>(gymId);

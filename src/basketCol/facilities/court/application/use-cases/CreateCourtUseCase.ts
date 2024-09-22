@@ -55,9 +55,9 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
       gymId,
     } = dto;
 
-    const courtId: CourtId = new CourtId(id);
-    const courtRegisteredById: CourtRegisteredById = new CourtRegisteredById(registeredById);
-    const courtEstablishmentDate: CourtEstablishmentDate = new CourtEstablishmentDate(establishmentDate);
+    const courtId: CourtId = CourtId.create(id);
+    const courtRegisteredById: CourtRegisteredById = CourtRegisteredById.create(registeredById);
+    const courtEstablishmentDate: CourtEstablishmentDate = CourtEstablishmentDate.create(establishmentDate);
     const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
 
     await this.#idUniquenessValidatorService.ensureUniqueId<CourtId, ICourt, Court>(courtId);
@@ -67,7 +67,7 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
     const courtCreatedAt: CourtCreatedAt = this.#businessDateService.getCurrentDate();
     const courtUpdatedAt: CourtUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const courtNullableFacilityId: CourtNullableFacilityId = new CourtNullableFacilityId(gymId);
+    const courtNullableFacilityId: CourtNullableFacilityId = CourtNullableFacilityId.create(gymId);
 
     if (courtNullableFacilityId.value !== null) {
       await this.#gymValidationService.ensureGymExists(courtNullableFacilityId.value);

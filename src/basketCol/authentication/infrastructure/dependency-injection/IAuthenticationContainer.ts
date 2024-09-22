@@ -1,8 +1,8 @@
 import {
-  ICreatePasswordValueObjectService,
   IHostUserRepository,
   ILeagueFounderUserRepository,
-  IPasswordEncrypterService,
+  IPasswordHashingService,
+  IPasswordValueObjectCreationService,
   IPlayerUserRepository,
   IRefereeUserRepository,
   ITeamFounderUserRepository,
@@ -30,7 +30,7 @@ export interface IAuthenticationContainer {
   authenticateUserUseCase: IAuthenticateUserUseCase;
   authenticationRouteManager: IRouteManager;
   basePath: string;
-  createPasswordValueObjectService: ICreatePasswordValueObjectService;
+  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
   fileSystem: IFileSystem;
   hostUserMongooseSchema: Schema<IMongooseHostUserDocument>;
   hostUserRepository: IHostUserRepository;
@@ -38,7 +38,7 @@ export interface IAuthenticationContainer {
   leagueFounderUserMongooseSchema: Schema<IMongooseLeagueFounderUserDocument>;
   leagueFounderUserRepository: ILeagueFounderUserRepository;
   mongooseClient: Promise<Mongoose>;
-  passwordEncrypterService: IPasswordEncrypterService;
+  passwordHashingService: IPasswordHashingService;
   passwordValidationService: PasswordValidationService;
   playerUserMongooseSchema: Schema<IMongoosePlayerUserDocument>;
   playerUserRepository: IPlayerUserRepository;
