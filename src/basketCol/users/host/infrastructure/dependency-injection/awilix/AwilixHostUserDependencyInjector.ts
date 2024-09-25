@@ -6,7 +6,6 @@ import {
   PasswordValueObjectCreationService,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Mongoose, Schema } from 'mongoose';
 
 import { AwilixDependencyInjector } from '../../../../../shared/infrastructure/dependency-injection/awilix/AwilixDependencyInjector';
 import { GlobFileSystem } from '../../../../../shared/infrastructure/file-system/GlobFileSystem';
@@ -17,9 +16,6 @@ import { IRouteManager } from '../../../../../shared/infrastructure/server/route
 import { ExpressHostUserRouteManager } from '../../server/express/routes/ExpressHostUserRouteManager';
 import { CreateHostUserUseCase } from '../../../application/use-cases/CreateHostUserUseCase';
 import { MongooseHostUserRepository } from '../../persistence/mongoose/MongooseHostUserRepository';
-import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
-import { IMongooseHostUserDocument } from '../../persistence/mongoose/IMongooseHostUserDocument';
-import { mongooseHostUserSchema } from '../../persistence/mongoose/mongoose-host-user.schema';
 import { ExpressCreateHostUserPOSTController } from '../../server/express/controllers/ExpressCreateHostUserPOSTController';
 import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
 import { HttpResponseHandler } from '../../../../../shared/infrastructure/http/HttpResponseHandler';
@@ -40,14 +36,12 @@ export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<I
       createHostUserUseCase: AwilixDependencyInjector.registerAsClass<CreateHostUserUseCase>(CreateHostUserUseCase).singleton(),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsClass<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService).singleton(),
       fileSystem: AwilixDependencyInjector.registerAsClass<IFileSystem>(GlobFileSystem).singleton(),
-      hostUserMongooseSchema: AwilixDependencyInjector.registerAsValue<Schema<IMongooseHostUserDocument>>(mongooseHostUserSchema),
       hostUserConfigFactory: AwilixDependencyInjector.registerAsClass<IHostUserConfigFactory>(HostUserConfigFactory),
       createHostUserPOSTController: AwilixDependencyInjector.registerAsClass<IController>(ExpressCreateHostUserPOSTController).singleton(),
       hostUserRepository: AwilixDependencyInjector.registerAsClass<IHostUserRepository>(MongooseHostUserRepository).singleton(),
       hostUserRouteManager: AwilixDependencyInjector.registerAsClass<IRouteManager>(ExpressHostUserRouteManager).singleton(),
       hostUserServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressHostUserServerErrorHandler).singleton(),
       httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      mongooseClient: AwilixDependencyInjector.registerAsFunction<Promise<Mongoose>>(MongooseClientFactory.createMongooseClient).singleton(),
       passwordHashingService: AwilixDependencyInjector.registerAsClass<IPasswordHashingService>(BcryptPasswordHashingService).singleton(),
       securePasswordCreationService: AwilixDependencyInjector.registerAsClass<SecurePasswordCreationService>(SecurePasswordCreationService).singleton(),
     });

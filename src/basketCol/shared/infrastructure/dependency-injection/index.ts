@@ -8,3 +8,5 @@ if (awilixSharedContainer === null) {
 }
 
 export const sharedServerErrorHandler = awilixSharedContainer.resolve('sharedServerErrorHandler');
+export const httpResponseHandler = awilixSharedContainer.resolve('httpResponseHandler');
+export const tokenValidatorService = awilixSharedContainer.resolve('tokenValidatorService');

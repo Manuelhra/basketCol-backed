@@ -5,8 +5,10 @@ import { createHostUserPOSTControllerValidations } from './validations/create-ho
 import { expressInputValidationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
 
 const register = (router: Router) => {
+  const pathPrefix: string = '/users';
+
   router.post(
-    '/host-user',
+    `${pathPrefix}/host`,
     createHostUserPOSTControllerValidations,
     expressInputValidationMiddleware,
     createHostUserPOSTController.run.bind(createHostUserPOSTController),

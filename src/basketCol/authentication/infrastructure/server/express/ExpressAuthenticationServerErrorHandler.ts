@@ -7,6 +7,7 @@ import { InvalidCredentialsError } from '../../../application/exceptions/Invalid
 import { IHttpResponseHandler } from '../../../../shared/application/http/IHttpResponseHandler';
 import { MissingCredentialsError } from '../../../application/exceptions/MissingCredentialsError';
 import { MissingEmailError } from '../../../application/exceptions/MissingEmailError';
+import { InvalidAuthenticationTokenError } from '../../exceptions/InvalidAuthenticationTokenError';
 
 export class ExpressAuthenticationServerErrorHandler implements IServerErrorHandler {
   readonly #httpResponseHandler: IHttpResponseHandler;
@@ -23,6 +24,16 @@ export class ExpressAuthenticationServerErrorHandler implements IServerErrorHand
     let isInstanceof: boolean = false;
 
     switch (true) {
+      case error instanceof InvalidAuthenticationTokenError:
+        errorResponse = this.#httpResponseHandler.handleErrorResponse({
+          code: HttpStatus.UNAUTHORIZED,
+          message: HttpStatus.getMessage(HttpStatus.UNAUTHORIZED),
+          errors: { name: error.name, details: error.message },
+        });
+        status = HttpStatus.UNAUTHORIZED;
+        isInstanceof = true;
+        break;
+
       case error instanceof MissingEmailError:
       case error instanceof MissingCredentialsError:
       case error instanceof InvalidCredentialsError:

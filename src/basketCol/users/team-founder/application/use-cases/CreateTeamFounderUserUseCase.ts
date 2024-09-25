@@ -9,8 +9,8 @@ import {
   TeamFounderUserCreatedAt,
   TeamFounderUserEmail,
   TeamFounderUserUpdatedAt,
-  TeamFounderUserAccountState,
-  TeamFounderUserSubscriptionType,
+  UserAccountState,
+  UserSubscriptionType,
 } from '@basketcol/domain';
 
 import { CreateTeamFounderUserDTO } from '../dtos/CreateTeamFounderUserDTO';
@@ -52,8 +52,8 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
     await this.#idUniquenessValidatorService.ensureUniqueId<TeamFounderUserId, ITeamFounderUser, TeamFounderUser>(teamFounderUserId);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<TeamFounderUserEmail, ITeamFounderUser, TeamFounderUser>(teamFounderUserEmail);
 
-    const accountState: string = TeamFounderUserAccountState.active;
-    const subscriptionType: string = TeamFounderUserSubscriptionType.free;
+    const accountState: string = UserAccountState.active;
+    const subscriptionType: string = UserSubscriptionType.free;
     const teamFounderUserCreatedAt: TeamFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
     const teamFounderUserUpdatedAt: TeamFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
 

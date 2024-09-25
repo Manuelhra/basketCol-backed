@@ -8,10 +8,12 @@ import {
   PlayerUserNickname,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Model, Mongoose, Schema } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongoosePlayerUserDocument } from './IMongoosePlayerUserDocument';
+import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
+import { mongoosePlayerUserSchema } from './mongoose-player-user.schema';
 
 export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser, PlayerUser> implements IPlayerUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
@@ -21,13 +23,11 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
   }
 
   constructor(dependencies: {
-    mongooseClient: Promise<Mongoose>;
-    playerUserMongooseSchema: Schema<IMongoosePlayerUserDocument>;
     securePasswordCreationService: SecurePasswordCreationService;
   }) {
     super({
-      mongooseClient: dependencies.mongooseClient,
-      mongooseSchema: dependencies.playerUserMongooseSchema,
+      mongooseClient: MongooseClientFactory.createMongooseClient(),
+      mongooseSchema: mongoosePlayerUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
@@ -36,7 +36,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
   public async searchById(playerUserId: PlayerUserId): Promise<Nullable<PlayerUser>> {
     const MyModel = await this.model();
 
-    const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findById<IMongoosePlayerUserDocument>(playerUserId.value);
+    const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ id: playerUserId.value });
 
     return document === null ? null : PlayerUser.create(
       document.id.valueOf(),
@@ -109,6 +109,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
 
   private async createSecurePassword(hashedPassword: string): Promise<string> {
     const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
+
     return securePassword.value;
   }
 }
