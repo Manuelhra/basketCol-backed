@@ -5,12 +5,12 @@ import {
   IRefereeUser,
   IRefereeUserRepository,
   RefereeUser,
-  RefereeUserAccountState,
   RefereeUserCreatedAt,
   RefereeUserEmail,
   RefereeUserId,
-  RefereeUserSubscriptionType,
   RefereeUserUpdatedAt,
+  UserAccountState,
+  UserSubscriptionType,
 } from '@basketcol/domain';
 
 import { CreateRefereeUserDTO } from '../dtos/CreateRefereeUserDTO';
@@ -52,8 +52,8 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
     await this.#idUniquenessValidatorService.ensureUniqueId<RefereeUserId, IRefereeUser, RefereeUser>(refereeUserId);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<RefereeUserEmail, IRefereeUser, RefereeUser>(refereeUserEmail);
 
-    const accountState: string = RefereeUserAccountState.active;
-    const subscriptionType: string = RefereeUserSubscriptionType.free;
+    const accountState: string = UserAccountState.active;
+    const subscriptionType: string = UserSubscriptionType.free;
     const refereeUserCreatedAt: RefereeUserCreatedAt = this.#businessDateService.getCurrentDate();
     const refereeUserUpdatedAt: RefereeUserUpdatedAt = this.#businessDateService.getCurrentDate();
 

@@ -5,12 +5,12 @@ import {
   ILeagueFounderUser,
   ILeagueFounderUserRepository,
   LeagueFounderUser,
-  LeagueFounderUserAccountState,
   LeagueFounderUserCreatedAt,
   LeagueFounderUserEmail,
   LeagueFounderUserId,
-  LeagueFounderUserSubscriptionType,
   LeagueFounderUserUpdatedAt,
+  UserAccountState,
+  UserSubscriptionType,
 } from '@basketcol/domain';
 
 import { CreateLeagueFounderUserDTO } from '../dtos/CreateLeagueFounderUserDTO';
@@ -52,8 +52,8 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
     await this.#idUniquenessValidatorService.ensureUniqueId<LeagueFounderUserId, ILeagueFounderUser, LeagueFounderUser>(leagueFounderUserId);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<LeagueFounderUserEmail, ILeagueFounderUser, LeagueFounderUser>(leagueFounderUserEmail);
 
-    const accountState: string = LeagueFounderUserAccountState.active;
-    const subscriptionType: string = LeagueFounderUserSubscriptionType.free;
+    const accountState: string = UserAccountState.active;
+    const subscriptionType: string = UserSubscriptionType.free;
     const leagueFounderUserCreatedAt: LeagueFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
     const leagueFounderUserUpdatedAt: LeagueFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
 

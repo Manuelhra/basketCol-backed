@@ -4,6 +4,7 @@ import {
   PlayerUserType,
   RefereeUserType,
   TeamFounderUserType,
+  UserPassword,
 } from '@basketcol/domain';
 import { ValidationChain, body } from 'express-validator';
 
@@ -26,8 +27,8 @@ export const authenticateUserPOSTControllerValidations: ValidationChain[] = [
   body('email')
     .optional()
     .isEmail()
-    .normalizeEmail()
-    .withMessage('Must provide a valid email address'),
+    .withMessage('Must provide a valid email address')
+    .normalizeEmail({ all_lowercase: true, gmail_remove_dots: false }),
 
   body('password')
     .notEmpty()
@@ -35,8 +36,8 @@ export const authenticateUserPOSTControllerValidations: ValidationChain[] = [
     .isString()
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters long')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
-    .withMessage('Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character'),
+    .matches(UserPassword.passwordRegExp)
+    .withMessage(UserPassword.getRequirementsAsString()),
 
   body('userType')
     .notEmpty()

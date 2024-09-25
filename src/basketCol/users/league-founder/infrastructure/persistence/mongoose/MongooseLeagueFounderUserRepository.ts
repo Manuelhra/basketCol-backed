@@ -7,10 +7,12 @@ import {
   Nullable,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Model, Mongoose, Schema } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongooseLeagueFounderUserDocument } from './IMongooseLeagueFounderUserDocument';
+import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
+import { mongooseLeagueFounderUserSchema } from './mongoose-league-founder-user.schema';
 
 export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILeagueFounderUser, LeagueFounderUser> implements ILeagueFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
@@ -20,13 +22,11 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
   }
 
   constructor(dependencies: {
-    mongooseClient: Promise<Mongoose>;
-    leagueFounderUserMongooseSchema: Schema<IMongooseLeagueFounderUserDocument>;
     securePasswordCreationService: SecurePasswordCreationService;
   }) {
     super({
-      mongooseClient: dependencies.mongooseClient,
-      mongooseSchema: dependencies.leagueFounderUserMongooseSchema,
+      mongooseClient: MongooseClientFactory.createMongooseClient(),
+      mongooseSchema: mongooseLeagueFounderUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
@@ -35,7 +35,7 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
   public async searchById(leagueFounderUserId: LeagueFounderUserId): Promise<Nullable<LeagueFounderUser>> {
     const MyModel = await this.model();
 
-    const document: Nullable<IMongooseLeagueFounderUserDocument> = await MyModel.findById<IMongooseLeagueFounderUserDocument>(leagueFounderUserId.value);
+    const document: Nullable<IMongooseLeagueFounderUserDocument> = await MyModel.findOne<IMongooseLeagueFounderUserDocument>({ id: leagueFounderUserId.value });
 
     return document === null ? null : LeagueFounderUser.create(
       document.id.valueOf(),

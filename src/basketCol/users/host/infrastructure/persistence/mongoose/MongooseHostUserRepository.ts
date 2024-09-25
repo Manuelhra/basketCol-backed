@@ -7,10 +7,12 @@ import {
   Nullable,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Model, Mongoose, Schema } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { IMongooseHostUserDocument } from './IMongooseHostUserDocument';
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
+import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
+import { mongooseHostUserSchema } from './mongoose-host-user.schema';
 
 export class MongooseHostUserRepository extends MongooseRepository<IHostUser, HostUser> implements IHostUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
@@ -20,13 +22,11 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
   }
 
   constructor(dependencies: {
-    mongooseClient: Promise<Mongoose>;
-    hostUserMongooseSchema: Schema<IMongooseHostUserDocument>;
     securePasswordCreationService: SecurePasswordCreationService;
   }) {
     super({
-      mongooseClient: dependencies.mongooseClient,
-      mongooseSchema: dependencies.hostUserMongooseSchema,
+      mongooseClient: MongooseClientFactory.createMongooseClient(),
+      mongooseSchema: mongooseHostUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
@@ -57,7 +57,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
   public async searchById(hostUserId: HostUserId): Promise<Nullable<HostUser>> {
     const MyModel = await this.model();
 
-    const document: Nullable<IMongooseHostUserDocument> = await MyModel.findById<IMongooseHostUserDocument>(hostUserId.value);
+    const document: Nullable<IMongooseHostUserDocument> = await MyModel.findOne<IMongooseHostUserDocument>({ id: hostUserId.value });
 
     return document === null ? null : HostUser.create(
       document.id.valueOf(),

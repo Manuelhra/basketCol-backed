@@ -28,7 +28,10 @@ export class ExpressAuthenticateUserPOSTController extends ExpressBaseController
     const successResult = this.#httpResponseHandler.handleSuccessResponse({
       code: HttpStatus.OK,
       message: HttpStatus.getMessage(HttpStatus.OK),
-      data: result,
+      data: {
+        user: result.user.toPrimitives(),
+        authenticationToken: result.authenticationToken,
+      },
     });
 
     response.status(HttpStatus.OK).json(successResult);

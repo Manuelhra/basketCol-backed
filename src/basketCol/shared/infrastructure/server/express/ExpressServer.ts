@@ -24,7 +24,6 @@ export class ExpressServer implements IServer {
 
     this.setUpMiddlewares();
     this.#router.use(errorHandler());
-    this.#app.use(this.#router);
   }
 
   public static create(): ExpressServer {
@@ -60,7 +59,11 @@ export class ExpressServer implements IServer {
   }
 
   public registerRoutes(routeManager: IRouteManager[]): void {
+    const apiPrefix: string = '/api/v1';
+
     routeManager.forEach((manager) => manager.registerRoutes(this.#router));
+
+    this.#app.use(apiPrefix, this.#router);
   }
 
   public handleErrors(expressServerErrorHandlerList: IServerErrorHandler[]): void {

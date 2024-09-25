@@ -3,13 +3,6 @@ import { HttpStatus } from '@basketcol/domain';
 
 import { ITokenValidatorService } from '../../../../../../authentication/application/services/ITokenValidatorService';
 import { IHttpResponseHandler } from '../../../../../application/http/IHttpResponseHandler';
-import { IUserContext } from '../../../../../application/context/IUserContext';
-
-declare module 'express' {
-  interface Request {
-    userContext?: IUserContext;
-  }
-}
 
 export const expressAuthenticationMiddleware = (
   tokenValidatorService: ITokenValidatorService,

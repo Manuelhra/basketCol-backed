@@ -6,14 +6,14 @@ import {
   IPlayerUser,
   IPlayerUserRepository,
   PlayerUser,
-  PlayerUserAccountState,
   PlayerUserCreatedAt,
   PlayerUserEmail,
   PlayerUserId,
   PlayerUserNickname,
   PlayerUserNicknameValidationService,
-  PlayerUserSubscriptionType,
   PlayerUserUpdatedAt,
+  UserAccountState,
+  UserSubscriptionType,
 } from '@basketcol/domain';
 
 import { CreatePlayerUserDTO } from '../dtos/CreatePlayerUserDTO';
@@ -69,8 +69,8 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     await this.#playerUserNicknameValidationService.ensureNicknameIsUnique(playerUserNickname);
     await this.#emailUniquenessValidatorService.ensureUniqueEmail<PlayerUserEmail, IPlayerUser, PlayerUser>(playerUserEmail);
 
-    const accountState: string = PlayerUserAccountState.active;
-    const subscriptionType: string = PlayerUserSubscriptionType.free;
+    const accountState: string = UserAccountState.active;
+    const subscriptionType: string = UserSubscriptionType.free;
     const playerUserCreatedAt: PlayerUserCreatedAt = this.#businessDateService.getCurrentDate();
     const playerUserUpdatedAt: PlayerUserUpdatedAt = this.#businessDateService.getCurrentDate();
 

@@ -187,7 +187,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       return null;
     }
 
-    const isPasswordValid = await await this.#passwordValidationService.validate(refereeUserPassword, user.password);
+    const isPasswordValid = await this.#passwordValidationService.validate(refereeUserPassword, user.password);
     return isPasswordValid ? user : null;
   }
 

@@ -7,10 +7,12 @@ import {
   RefereeUserId,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
-import { Model, Mongoose, Schema } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongooseRefereeUserDocument } from './IMongooseRefereeUserDocument';
+import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
+import { mongooseRefereeUserSchema } from './mongoose-referee-user.schema';
 
 export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUser, RefereeUser> implements IRefereeUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
@@ -20,13 +22,11 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
   }
 
   constructor(dependencies: {
-    mongooseClient: Promise<Mongoose>;
-    refereeUserMongooseSchema: Schema<IMongooseRefereeUserDocument>;
     securePasswordCreationService: SecurePasswordCreationService;
   }) {
     super({
-      mongooseClient: dependencies.mongooseClient,
-      mongooseSchema: dependencies.refereeUserMongooseSchema,
+      mongooseClient: MongooseClientFactory.createMongooseClient(),
+      mongooseSchema: mongooseRefereeUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
@@ -35,7 +35,7 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
   public async searchById(refereeUserId: RefereeUserId): Promise<Nullable<RefereeUser>> {
     const MyModel = await this.model();
 
-    const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findById<IMongooseRefereeUserDocument>(refereeUserId.value);
+    const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findOne<IMongooseRefereeUserDocument>({ id: refereeUserId.value });
 
     return document === null ? null : RefereeUser.create(
       document.id.valueOf(),

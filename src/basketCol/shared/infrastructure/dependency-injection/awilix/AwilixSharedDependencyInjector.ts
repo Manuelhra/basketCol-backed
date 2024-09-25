@@ -1,3 +1,5 @@
+import { ITokenValidatorService } from '../../../../authentication/application/services/ITokenValidatorService';
+import { JwtTokenValidatorService } from '../../../../authentication/infrastructure/services/jwt/JwtTokenValidatorService';
 import { IHttpResponseHandler } from '../../../application/http/IHttpResponseHandler';
 import { HttpResponseHandler } from '../../http/HttpResponseHandler';
 import { ExpressSharedServerErrorHandler } from '../../server/express/ExpressSharedServerErrorHandler';
@@ -13,6 +15,7 @@ export class AwilixSharedDependencyInjector extends AwilixDependencyInjector<ISh
     this.registerDependencies({
       httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
       sharedServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressSharedServerErrorHandler).singleton(),
+      tokenValidatorService: AwilixDependencyInjector.registerAsClass<ITokenValidatorService>(JwtTokenValidatorService).singleton(),
     });
   }
 }

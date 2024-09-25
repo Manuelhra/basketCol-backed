@@ -7,10 +7,12 @@ import {
   TeamFounderUserId,
   TeamFounderUserEmail,
 } from '@basketcol/domain';
-import { Model, Mongoose, Schema } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
 import { IMongooseTeamFounderUserDocument } from './IMongooseTeamFounderUserDocument';
+import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
+import { mongooseTeamFounderUserSchema } from './mongoose-team-founder-user.schema';
 
 export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamFounderUser, TeamFounderUser> implements ITeamFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
@@ -20,13 +22,11 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
   }
 
   constructor(dependencies: {
-    mongooseClient: Promise<Mongoose>;
-    teamFounderUserMongooseSchema: Schema<IMongooseTeamFounderUserDocument>;
     securePasswordCreationService: SecurePasswordCreationService;
   }) {
     super({
-      mongooseClient: dependencies.mongooseClient,
-      mongooseSchema: dependencies.teamFounderUserMongooseSchema,
+      mongooseClient: MongooseClientFactory.createMongooseClient(),
+      mongooseSchema: mongooseTeamFounderUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
@@ -35,7 +35,7 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
   public async searchById(teamFounderUserId: TeamFounderUserId): Promise<Nullable<TeamFounderUser>> {
     const MyModel = await this.model();
 
-    const document: Nullable<IMongooseTeamFounderUserDocument> = await MyModel.findById<IMongooseTeamFounderUserDocument>(teamFounderUserId.value);
+    const document: Nullable<IMongooseTeamFounderUserDocument> = await MyModel.findOne<IMongooseTeamFounderUserDocument>({ id: teamFounderUserId.value });
 
     return document === null ? null : TeamFounderUser.create(
       document.id.valueOf(),
