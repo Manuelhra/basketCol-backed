@@ -5,12 +5,14 @@ import { ExpressBaseController } from '../../../../../../shared/infrastructure/s
 import { CreatePlayerUserDTO } from '../../../../application/dtos/CreatePlayerUserDTO';
 import { ICreatePlayerUserUseCase } from '../../../../application/use-cases/ports/ICreatePlayerUserUseCase';
 
+type Dependencies = {
+  createPlayerUserUseCase: ICreatePlayerUserUseCase;
+};
+
 export class ExpressCreatePlayerUserPOSTController implements ExpressBaseController {
   readonly #createPlayerUserUseCase: ICreatePlayerUserUseCase;
 
-  public constructor(dependencies: {
-    createPlayerUserUseCase: ICreatePlayerUserUseCase;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.#createPlayerUserUseCase = dependencies.createPlayerUserUseCase;
   }
 

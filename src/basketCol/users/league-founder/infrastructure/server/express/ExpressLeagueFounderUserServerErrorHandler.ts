@@ -5,12 +5,14 @@ import { IHttpResponseHandler } from '../../../../../shared/application/http/IHt
 import { IErrorApiResponse } from '../../../../../shared/application/http/IErrorApiResponse';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
 
+type Dependencies = {
+  httpResponseHandler: IHttpResponseHandler;
+};
+
 export class ExpressLeagueFounderUserServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: {
-    httpResponseHandler: IHttpResponseHandler;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.httpResponseHandler = dependencies.httpResponseHandler;
   }
 

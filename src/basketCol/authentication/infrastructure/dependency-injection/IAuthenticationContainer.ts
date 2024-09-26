@@ -17,6 +17,8 @@ import { IHttpResponseHandler } from '../../../shared/application/http/IHttpResp
 import { IRouteManager } from '../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../shared/infrastructure/file-system/IFileSystem';
 import { IServerErrorHandler } from '../../../shared/infrastructure/server/IServerErrorHandler';
+import { IValidateAndRefreshAuthenticationTokenUseCase } from '../../application/use-cases/ports/IValidateAndRefreshAuthenticationTokenUseCase';
+import { ITokenValidatorService } from '../../application/services/ITokenValidatorService';
 
 export interface IAuthenticationContainer {
   authenticationServerErrorHandler: IServerErrorHandler;
@@ -36,4 +38,7 @@ export interface IAuthenticationContainer {
   securePasswordCreationService: SecurePasswordCreationService;
   teamFounderUserRepository: ITeamFounderUserRepository;
   tokenGeneratorService: ITokenGeneratorService;
+  validateAndRefreshAuthenticationTokenPOSTController: IController;
+  validateAndRefreshAuthenticationTokenUseCase:IValidateAndRefreshAuthenticationTokenUseCase;
+  tokenValidatorService: ITokenValidatorService;
 }

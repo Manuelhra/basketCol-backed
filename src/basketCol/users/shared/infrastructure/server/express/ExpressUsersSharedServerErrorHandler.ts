@@ -10,13 +10,16 @@ import { Response } from 'express';
 import { IErrorApiResponse } from '../../../../../shared/application/http/IErrorApiResponse';
 import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
+import { UserNotFoundError } from '../../../application/exceptions/UserNotFoundError';
+
+type Dependencies = {
+  httpResponseHandler: IHttpResponseHandler;
+};
 
 export class ExpressUsersSharedServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: {
-    httpResponseHandler: IHttpResponseHandler;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.httpResponseHandler = dependencies.httpResponseHandler;
   }
 
@@ -33,6 +36,16 @@ export class ExpressUsersSharedServerErrorHandler implements IServerErrorHandler
           errors: { name: error.name, details: error.message },
         });
         status = HttpStatus.CONFLICT;
+        isInstanceof = true;
+        break;
+
+      case error instanceof UserNotFoundError:
+        errorResponse = this.httpResponseHandler.handleErrorResponse({
+          code: HttpStatus.NOT_FOUND,
+          message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
+          errors: { name: error.name, details: error.message },
+        });
+        status = HttpStatus.NOT_FOUND;
         isInstanceof = true;
         break;
 

@@ -14,6 +14,13 @@ import {
 import { CreatePlayerUserCareerStatsDTO } from '../dtos/CreatePlayerUserCareerStatsDTO';
 import { ICreatePlayerUserCareerStatsUseCase } from './ports/ICreatePlayerUserCareerStatsUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  playerUserValidationService: PlayerUserValidationService;
+  businessDateService: BusinessDateService;
+  playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
+};
+
 export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCareerStatsUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCare
 
   readonly #playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
 
-  public constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    playerUserValidationService: PlayerUserValidationService;
-    businessDateService: BusinessDateService;
-    playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

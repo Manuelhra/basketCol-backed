@@ -14,6 +14,13 @@ import {
 import { CreateFinishingAttributesDTO } from '../dtos/CreateFinishingAttributesDTO';
 import { ICreateFinishingAttributesUseCase } from './ports/ICreateFinishingAttributesUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  playerUserValidationService: PlayerUserValidationService;
+  businessDateService: BusinessDateService;
+  playerUserFinishingAttributesRepository: IPlayerUserFinishingAttributesRepository;
+};
+
 export class CreateFinishingAttributesUseCase implements ICreateFinishingAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreateFinishingAttributesUseCase implements ICreateFinishingAttribu
 
   readonly #playerUserFinishingAttributesRepository: IPlayerUserFinishingAttributesRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    playerUserValidationService: PlayerUserValidationService;
-    businessDateService: BusinessDateService;
-    playerUserFinishingAttributesRepository: IPlayerUserFinishingAttributesRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

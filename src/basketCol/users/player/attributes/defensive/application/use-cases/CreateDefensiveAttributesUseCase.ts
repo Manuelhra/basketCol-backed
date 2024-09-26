@@ -14,6 +14,13 @@ import {
 import { CreateDefensiveAttributesDTO } from '../dtos/CreateDefensiveAttributesDTO';
 import { ICreateDefensiveAttributesUseCase } from './ports/ICreateDefensiveAttributesUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  playerUserValidationService: PlayerUserValidationService;
+  businessDateService: BusinessDateService;
+  playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
+};
+
 export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttribu
 
   readonly #playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    playerUserValidationService: PlayerUserValidationService;
-    businessDateService: BusinessDateService;
-    playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

@@ -24,8 +24,8 @@ export class App {
   constructor() {
     this.#server = ExpressServer.create();
 
-    this.setUpRoutes();
-    this.handleErrors();
+    this.#setUpRoutes();
+    this.#handleErrors();
   }
 
   public start(port: string): void {
@@ -36,7 +36,7 @@ export class App {
     this.#server.stop();
   }
 
-  private setUpRoutes(): void {
+  #setUpRoutes(): void {
     this.#server.registerRoutes([
       serverStatusRouteManager,
       hostUserRouteManager,
@@ -45,7 +45,7 @@ export class App {
     ]);
   }
 
-  private handleErrors(): void {
+  #handleErrors(): void {
     this.#server.handleErrors([
       sharedServerErrorHandler,
       authenticationServerErrorHandler,

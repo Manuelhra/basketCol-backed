@@ -16,6 +16,13 @@ import {
 import { CreateRefereeUserDTO } from '../dtos/CreateRefereeUserDTO';
 import { ICreateRefereeUserUseCase } from './ports/ICreateRefereeUserUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  businessDateService: BusinessDateService;
+  refereeUserRepository: IRefereeUserRepository;
+};
+
 export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -25,12 +32,7 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
 
   readonly #refereeUserRepository: IRefereeUserRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    emailUniquenessValidatorService: EmailUniquenessValidatorService;
-    businessDateService: BusinessDateService;
-    refereeUserRepository: IRefereeUserRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#businessDateService = dependencies.businessDateService;

@@ -14,6 +14,10 @@ import { MongooseRepository } from '../../../../../shared/infrastructure/persist
 import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
 import { mongooseHostUserSchema } from './mongoose-host-user.schema';
 
+type Dependencies = {
+  securePasswordCreationService: SecurePasswordCreationService;
+};
+
 export class MongooseHostUserRepository extends MongooseRepository<IHostUser, HostUser> implements IHostUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
@@ -21,9 +25,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
     return 'host-user';
   }
 
-  constructor(dependencies: {
-    securePasswordCreationService: SecurePasswordCreationService;
-  }) {
+  constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongooseHostUserSchema,
@@ -46,7 +48,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -64,7 +66,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -82,7 +84,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -107,7 +109,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUser, Ho
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
   }
 
-  private async createSecurePassword(hashedPassword: string): Promise<string> {
+  async #createSecurePassword(hashedPassword: string): Promise<string> {
     const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
     return securePassword.value;
   }

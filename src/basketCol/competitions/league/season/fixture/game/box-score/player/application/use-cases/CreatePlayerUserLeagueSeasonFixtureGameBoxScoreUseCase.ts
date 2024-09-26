@@ -16,6 +16,14 @@ import {
 import { CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO } from '../dtos/CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO';
 import { ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase } from './ports/ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  leagueSeasonFixtureGameValidationService: LeagueSeasonFixtureGameValidationService;
+  playerUserValidationService: PlayerUserValidationService;
+  businessDateService: BusinessDateService;
+  playerUserLeagueSeasonFixtureGameBoxScoreRepository: IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository;
+};
+
 export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -27,13 +35,7 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
 
   readonly #playerUserLeagueSeasonFixtureGameBoxScoreRepository: IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    leagueSeasonFixtureGameValidationService: LeagueSeasonFixtureGameValidationService;
-    playerUserValidationService: PlayerUserValidationService;
-    businessDateService: BusinessDateService;
-    playerUserLeagueSeasonFixtureGameBoxScoreRepository: IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#leagueSeasonFixtureGameValidationService = dependencies.leagueSeasonFixtureGameValidationService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;

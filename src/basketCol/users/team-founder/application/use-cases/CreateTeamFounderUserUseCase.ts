@@ -16,6 +16,13 @@ import {
 import { CreateTeamFounderUserDTO } from '../dtos/CreateTeamFounderUserDTO';
 import { ICreateTeamFounderUserUseCase } from './ports/ICreateTeamFounderUserUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  businessDateService: BusinessDateService;
+  tFURepository: ITeamFounderUserRepository;
+};
+
 export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -25,12 +32,7 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
 
   readonly #tFURepository: ITeamFounderUserRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    emailUniquenessValidatorService: EmailUniquenessValidatorService;
-    businessDateService: BusinessDateService;
-    tFURepository: ITeamFounderUserRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#businessDateService = dependencies.businessDateService;

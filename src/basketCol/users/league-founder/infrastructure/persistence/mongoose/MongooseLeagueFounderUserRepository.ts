@@ -14,6 +14,10 @@ import { IMongooseLeagueFounderUserDocument } from './IMongooseLeagueFounderUser
 import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
 import { mongooseLeagueFounderUserSchema } from './mongoose-league-founder-user.schema';
 
+type Dependencies = {
+  securePasswordCreationService: SecurePasswordCreationService;
+};
+
 export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILeagueFounderUser, LeagueFounderUser> implements ILeagueFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
@@ -21,9 +25,7 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
     return 'league-founder-user';
   }
 
-  constructor(dependencies: {
-    securePasswordCreationService: SecurePasswordCreationService;
-  }) {
+  constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongooseLeagueFounderUserSchema,
@@ -42,7 +44,7 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -60,7 +62,7 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -85,7 +87,7 @@ export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILea
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
   }
 
-  private async createSecurePassword(hashedPassword: string): Promise<string> {
+  async #createSecurePassword(hashedPassword: string): Promise<string> {
     const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
     return securePassword.value;
   }

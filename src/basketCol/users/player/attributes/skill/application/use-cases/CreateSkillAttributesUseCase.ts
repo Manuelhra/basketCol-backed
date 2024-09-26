@@ -14,6 +14,13 @@ import {
 import { CreateSkillAttributesDTO } from '../dtos/CreateSkillAttributesDTO';
 import { ICreateSkillAttributesUseCase } from './ports/ICreateSkillAttributesUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  playerUserValidationService: PlayerUserValidationService;
+  businessDateService: BusinessDateService;
+  playerUserSkillAttributesRepository: IPlayerUserSkillAttributesRepository;
+};
+
 export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCa
 
   readonly #playerUserSkillAttributesRepository: IPlayerUserSkillAttributesRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    playerUserValidationService: PlayerUserValidationService;
-    businessDateService: BusinessDateService;
-    playerUserSkillAttributesRepository: IPlayerUserSkillAttributesRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

@@ -7,12 +7,14 @@ import { IServerErrorHandler } from '../../../../../shared/infrastructure/server
 import { MultipleHostUsersException } from '../../../application/exceptions/MultipleHostUsersException';
 import { InvalidHostUserCredentialsError } from '../../../application/exceptions/InvalidHostUserCredentialsError';
 
+type Dependencies = {
+  httpResponseHandler: IHttpResponseHandler;
+};
+
 export class ExpressHostUserServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: {
-    httpResponseHandler: IHttpResponseHandler;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.httpResponseHandler = dependencies.httpResponseHandler;
   }
 

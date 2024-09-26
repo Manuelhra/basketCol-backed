@@ -5,12 +5,14 @@ import { CreateHostUserDTO } from '../../../../application/dtos/CreateHostUserDT
 import { ICreateHostUserUseCase } from '../../../../application/use-cases/ports/ICreateHostUserUseCase';
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 
+type Dependencies = {
+  createHostUserUseCase: ICreateHostUserUseCase;
+};
+
 export class ExpressCreateHostUserPOSTController implements ExpressBaseController {
   readonly #createHostUserUseCase: ICreateHostUserUseCase;
 
-  public constructor(dependencies: {
-    createHostUserUseCase: ICreateHostUserUseCase;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.#createHostUserUseCase = dependencies.createHostUserUseCase;
   }
 

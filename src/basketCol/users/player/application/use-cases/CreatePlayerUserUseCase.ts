@@ -21,6 +21,14 @@ import { ICreatePlayerUserUseCase } from './ports/ICreatePlayerUserUseCase';
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 import { IUserContext } from '../../../../shared/application/context/IUserContext';
 
+type Dependencies = {
+  playerUserNicknameValidationService: PlayerUserNicknameValidationService;
+  emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  playerUserRepository: IPlayerUserRepository;
+  businessDateService: BusinessDateService;
+};
+
 export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -32,13 +40,7 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
 
   readonly #playerUserRepository: IPlayerUserRepository;
 
-  constructor(dependencies: {
-    playerUserNicknameValidationService: PlayerUserNicknameValidationService;
-    emailUniquenessValidatorService: EmailUniquenessValidatorService;
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    playerUserRepository: IPlayerUserRepository;
-    businessDateService: BusinessDateService;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#playerUserNicknameValidationService = dependencies.playerUserNicknameValidationService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;

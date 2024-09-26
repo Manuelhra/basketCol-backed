@@ -14,6 +14,13 @@ import {
 import { CreatePhysicalAttributesDTO } from '../dtos/CreatePhysicalAttributesDTO';
 import { ICreatePhysicalAttributesUseCase } from './ports/ICreatePhysicalAttributesUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  playerUserValidationService: PlayerUserValidationService;
+  businessDateService: BusinessDateService;
+  playerUserPhysicalAttributesRepository: IPlayerUserPhysicalAttributesRepository;
+};
+
 export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttribute
 
   readonly #playerUserPhysicalAttributesRepository: IPlayerUserPhysicalAttributesRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    playerUserValidationService: PlayerUserValidationService;
-    businessDateService: BusinessDateService;
-    playerUserPhysicalAttributesRepository: IPlayerUserPhysicalAttributesRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

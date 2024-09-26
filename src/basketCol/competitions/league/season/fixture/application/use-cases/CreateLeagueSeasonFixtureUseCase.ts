@@ -16,6 +16,14 @@ import {
 import { CreateLeagueSeasonFixtureDTO } from '../dtos/CreateLeagueSeasonFixtureDTO';
 import { ICreateLeagueSeasonFixtureUseCase } from './ports/ICreateLeagueSeasonFixtureUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  leagueSeasonValidationService: LeagueSeasonValidationService;
+  leagueSeasonFixtureValidationService: LeagueSeasonFixtureValidationService;
+  businessDateService: BusinessDateService;
+  leagueSeasonFixtureRepository: ILeagueSeasonFixtureRepository;
+};
+
 export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixtureUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -27,13 +35,7 @@ export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixt
 
   readonly #leagueSeasonFixtureRepository: ILeagueSeasonFixtureRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    leagueSeasonValidationService: LeagueSeasonValidationService;
-    leagueSeasonFixtureValidationService: LeagueSeasonFixtureValidationService;
-    businessDateService: BusinessDateService;
-    leagueSeasonFixtureRepository: ILeagueSeasonFixtureRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#leagueSeasonValidationService = dependencies.leagueSeasonValidationService;
     this.#leagueSeasonFixtureValidationService = dependencies.leagueSeasonFixtureValidationService;

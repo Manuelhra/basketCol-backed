@@ -18,6 +18,14 @@ import {
 import { CreateCourtDTO } from '../dtos/CreateCourtDTO';
 import { ICreateCourtUseCase } from './ports/ICreateCourtUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  hostUserValidationService: HostUserValidationService;
+  gymValidationService: GymValidationService;
+  businessDateService: BusinessDateService;
+  courtRepository: ICourtRepository;
+};
+
 export class CreateCourtUseCase implements ICreateCourtUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -29,13 +37,7 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
 
   readonly #courtRepository: ICourtRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    hostUserValidationService: HostUserValidationService;
-    gymValidationService: GymValidationService;
-    businessDateService: BusinessDateService;
-    courtRepository: ICourtRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#hostUserValidationService = dependencies.hostUserValidationService;
     this.#gymValidationService = dependencies.gymValidationService;

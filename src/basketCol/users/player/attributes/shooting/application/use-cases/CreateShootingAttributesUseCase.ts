@@ -14,6 +14,13 @@ import {
 import { CreateShootingAttributesDTO } from '../dtos/CreateShootingAttributesDTO';
 import { ICreateShootingAttributesUseCase } from './ports/ICreateShootingAttributesUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  playerUserValidationService: PlayerUserValidationService;
+  businessDateService: BusinessDateService;
+  playerUserShootingAttributesRepository: IPlayerUserShootingAttributesRepository;
+};
+
 export class CreateShootingAttributesUseCase implements ICreateShootingAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreateShootingAttributesUseCase implements ICreateShootingAttribute
 
   readonly #playerUserShootingAttributesRepository: IPlayerUserShootingAttributesRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    playerUserValidationService: PlayerUserValidationService;
-    businessDateService: BusinessDateService;
-    playerUserShootingAttributesRepository: IPlayerUserShootingAttributesRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

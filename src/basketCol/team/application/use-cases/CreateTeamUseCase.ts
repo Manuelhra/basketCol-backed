@@ -14,6 +14,13 @@ import {
 import { CreateTeamDTO } from '../dtos/CreateTeamDTO';
 import { ICreateTeamUseCase } from './ports/ICreateTeamUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  teamFounderUserValidationService: TeamFounderUserValidationService;
+  businessDateService: BusinessDateService;
+  teamRepository: ITeamRepository;
+};
+
 export class CreateTeamUseCase implements ICreateTeamUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
 
   readonly #teamRepository: ITeamRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    teamFounderUserValidationService: TeamFounderUserValidationService;
-    businessDateService: BusinessDateService;
-    teamRepository: ITeamRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#teamFounderUserValidationService = dependencies.teamFounderUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

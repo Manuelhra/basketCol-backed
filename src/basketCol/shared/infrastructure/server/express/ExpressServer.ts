@@ -22,7 +22,7 @@ export class ExpressServer implements IServer {
     this.#app = express();
     this.#router = Router();
 
-    this.setUpMiddlewares();
+    this.#setUpMiddlewares();
     this.#router.use(errorHandler());
   }
 
@@ -84,7 +84,7 @@ export class ExpressServer implements IServer {
     });
   }
 
-  private setUpMiddlewares(): void {
+  #setUpMiddlewares(): void {
     this.#app.use(json());
     this.#app.use(urlencoded({ extended: true }));
     this.#app.use(helmet.xssFilter());

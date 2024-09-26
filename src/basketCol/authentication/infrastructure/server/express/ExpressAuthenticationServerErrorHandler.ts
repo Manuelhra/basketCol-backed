@@ -7,14 +7,16 @@ import { InvalidCredentialsError } from '../../../application/exceptions/Invalid
 import { IHttpResponseHandler } from '../../../../shared/application/http/IHttpResponseHandler';
 import { MissingCredentialsError } from '../../../application/exceptions/MissingCredentialsError';
 import { MissingEmailError } from '../../../application/exceptions/MissingEmailError';
-import { InvalidAuthenticationTokenError } from '../../exceptions/InvalidAuthenticationTokenError';
+import { InvalidAuthenticationTokenError } from '../../../application/exceptions/InvalidAuthenticationTokenError';
+
+type Dependencies = {
+  httpResponseHandler: IHttpResponseHandler;
+};
 
 export class ExpressAuthenticationServerErrorHandler implements IServerErrorHandler {
   readonly #httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: {
-    httpResponseHandler: IHttpResponseHandler;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.#httpResponseHandler = dependencies.httpResponseHandler;
   }
 

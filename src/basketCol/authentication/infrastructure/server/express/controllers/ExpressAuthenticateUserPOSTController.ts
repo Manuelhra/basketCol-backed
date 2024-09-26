@@ -6,15 +6,17 @@ import { AuthenticateUserDTO } from '../../../../application/dtos/AuthenticateUs
 import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
 import { ExpressBaseController } from '../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 
+type Dependencies = {
+  authenticateUserUseCase: IAuthenticateUserUseCase;
+  httpResponseHandler: IHttpResponseHandler;
+};
+
 export class ExpressAuthenticateUserPOSTController extends ExpressBaseController {
   readonly #authenticateUserUseCase: IAuthenticateUserUseCase;
 
   readonly #httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: {
-    authenticateUserUseCase: IAuthenticateUserUseCase;
-    httpResponseHandler: IHttpResponseHandler;
-  }) {
+  public constructor(dependencies: Dependencies) {
     super();
 
     this.#authenticateUserUseCase = dependencies.authenticateUserUseCase;
@@ -29,7 +31,7 @@ export class ExpressAuthenticateUserPOSTController extends ExpressBaseController
       code: HttpStatus.OK,
       message: HttpStatus.getMessage(HttpStatus.OK),
       data: {
-        user: result.user.toPrimitives(),
+        authenticatedUser: result.authenticatedUser.toPrimitives(),
         authenticationToken: result.authenticationToken,
       },
     });
