@@ -14,6 +14,10 @@ import { IMongooseTeamFounderUserDocument } from './IMongooseTeamFounderUserDocu
 import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
 import { mongooseTeamFounderUserSchema } from './mongoose-team-founder-user.schema';
 
+type Dependencies = {
+  securePasswordCreationService: SecurePasswordCreationService;
+};
+
 export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamFounderUser, TeamFounderUser> implements ITeamFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
@@ -21,9 +25,7 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
     return 'team-founder-user';
   }
 
-  constructor(dependencies: {
-    securePasswordCreationService: SecurePasswordCreationService;
-  }) {
+  constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongooseTeamFounderUserSchema,
@@ -42,7 +44,7 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -60,7 +62,7 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -85,7 +87,7 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
   }
 
-  private async createSecurePassword(hashedPassword: string): Promise<string> {
+  async #createSecurePassword(hashedPassword: string): Promise<string> {
     const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
     return securePassword.value;
   }

@@ -19,7 +19,7 @@ export abstract class MongooseClientFactory {
     }
 
     const mongooseConfig: IMongooseConfig = MongooseConfigFactory.createMongooseConfig();
-    MongooseClientFactory.#connectionPromise = MongooseClientFactory.createAndConnectMongooseClient(mongooseConfig);
+    MongooseClientFactory.#connectionPromise = MongooseClientFactory.#createAndConnectMongooseClient(mongooseConfig);
 
     try {
       MongooseClientFactory.#client = await MongooseClientFactory.#connectionPromise;
@@ -30,7 +30,7 @@ export abstract class MongooseClientFactory {
     }
   }
 
-  private static async createAndConnectMongooseClient(config: IMongooseConfig): Promise<Mongoose> {
+  static async #createAndConnectMongooseClient(config: IMongooseConfig): Promise<Mongoose> {
     const mongooseClient: Mongoose = new Mongoose();
 
     try {

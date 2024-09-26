@@ -15,6 +15,10 @@ import { IMongoosePlayerUserDocument } from './IMongoosePlayerUserDocument';
 import { MongooseClientFactory } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
 import { mongoosePlayerUserSchema } from './mongoose-player-user.schema';
 
+type Dependencies = {
+  securePasswordCreationService: SecurePasswordCreationService;
+};
+
 export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser, PlayerUser> implements IPlayerUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
@@ -22,9 +26,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
     return 'player-user';
   }
 
-  constructor(dependencies: {
-    securePasswordCreationService: SecurePasswordCreationService;
-  }) {
+  constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongoosePlayerUserSchema,
@@ -44,7 +46,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -63,7 +65,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -82,7 +84,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.createSecurePassword(document.password.valueOf()),
+      await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       document.createdAt.valueOf(),
@@ -107,7 +109,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
   }
 
-  private async createSecurePassword(hashedPassword: string): Promise<string> {
+  async #createSecurePassword(hashedPassword: string): Promise<string> {
     const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
 
     return securePassword.value;

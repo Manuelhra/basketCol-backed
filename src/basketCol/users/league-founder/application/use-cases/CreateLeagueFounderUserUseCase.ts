@@ -16,6 +16,13 @@ import {
 import { CreateLeagueFounderUserDTO } from '../dtos/CreateLeagueFounderUserDTO';
 import { ICreateLeagueFounderUserUseCase } from './ports/ICreateLeagueFounderUserUseCase';
 
+type Dependencies = {
+  emailUniquenessValidatorService: EmailUniquenessValidatorService
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  leagueFounderUserRepository: ILeagueFounderUserRepository;
+  businessDateService: BusinessDateService;
+};
+
 export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserUseCase {
   readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
 
@@ -25,12 +32,7 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
 
   readonly #businessDateService: BusinessDateService;
 
-  constructor(dependencies: {
-    emailUniquenessValidatorService: EmailUniquenessValidatorService
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    leagueFounderUserRepository: ILeagueFounderUserRepository;
-    businessDateService: BusinessDateService;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#leagueFounderUserRepository = dependencies.leagueFounderUserRepository;

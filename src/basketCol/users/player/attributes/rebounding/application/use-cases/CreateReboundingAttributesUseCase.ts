@@ -14,6 +14,13 @@ import {
 import { CreateReboundingAttributesDTO } from '../dtos/CreateReboundingAttributesDTO';
 import { ICreateReboundingAttributesUseCase } from './ports/ICreateReboundingAttributesUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  playerUserValidationService: PlayerUserValidationService;
+  businessDateService: BusinessDateService;
+  playerUserReboundingAttributesRepository: IPlayerUserReboundingAttributesRepository;
+};
+
 export class CreateReboundingAttributesUseCase implements ICreateReboundingAttributesUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreateReboundingAttributesUseCase implements ICreateReboundingAttri
 
   readonly #playerUserReboundingAttributesRepository: IPlayerUserReboundingAttributesRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    playerUserValidationService: PlayerUserValidationService;
-    businessDateService: BusinessDateService;
-    playerUserReboundingAttributesRepository: IPlayerUserReboundingAttributesRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

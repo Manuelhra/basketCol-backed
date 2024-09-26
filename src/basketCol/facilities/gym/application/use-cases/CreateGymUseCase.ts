@@ -16,6 +16,13 @@ import {
 import { CreateGymDTO } from '../dtos/CreateGymDTO';
 import { ICreateGymUseCase } from './ports/ICreateGymUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  hostUserValidationService: HostUserValidationService;
+  businessDateService: BusinessDateService;
+  gymRepository: IGymRepository;
+};
+
 export class CreateGymUseCase implements ICreateGymUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -25,12 +32,7 @@ export class CreateGymUseCase implements ICreateGymUseCase {
 
   readonly #gymRepository: IGymRepository;
 
-  constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    hostUserValidationService: HostUserValidationService;
-    businessDateService: BusinessDateService;
-    gymRepository: IGymRepository;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#hostUserValidationService = dependencies.hostUserValidationService;
     this.#businessDateService = dependencies.businessDateService;

@@ -14,6 +14,13 @@ import {
 import { CreateTeamAllTimeStatsDTO } from '../dtos/CreateTeamAllTimeStatsDTO';
 import { ICreateTeamAllTimeStatsUseCase } from './ports/ICreateTeamAllTimeStatsUseCase';
 
+type Dependencies = {
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+  teamValidationService: TeamValidationService;
+  businessDateService: BusinessDateService;
+  teamAllTimeStatsRepository: ITeamAllTimeStatsRepository;
+};
+
 export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
@@ -23,12 +30,7 @@ export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUse
 
   readonly #teamAllTimeStatsRepository: ITeamAllTimeStatsRepository;
 
-  public constructor(dependencies: {
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-    teamValidationService: TeamValidationService;
-    businessDateService: BusinessDateService;
-    teamAllTimeStatsRepository: ITeamAllTimeStatsRepository;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#teamValidationService = dependencies.teamValidationService;
     this.#businessDateService = dependencies.businessDateService;

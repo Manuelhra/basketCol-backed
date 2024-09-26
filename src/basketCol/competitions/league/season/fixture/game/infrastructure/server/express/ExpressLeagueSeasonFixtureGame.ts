@@ -9,12 +9,14 @@ import { IErrorApiResponse } from '../../../../../../../../shared/application/ht
 import { IHttpResponseHandler } from '../../../../../../../../shared/application/http/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../../../../../../shared/infrastructure/server/IServerErrorHandler';
 
+type Dependencies = {
+  httpResponseHandler: IHttpResponseHandler;
+};
+
 export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: {
-    httpResponseHandler: IHttpResponseHandler;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.httpResponseHandler = dependencies.httpResponseHandler;
   }
 

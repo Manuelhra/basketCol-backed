@@ -46,12 +46,14 @@ import { DatabaseConnectionFailedError } from '../../exceptions/DatabaseConnecti
 import { DependencyContainerNotInitializedError } from '../../exceptions/DependencyContainerNotInitializedError';
 import { UnauthorizedAccessError } from '../../../application/exceptions/UnauthorizedAccessError';
 
+type Dependencies = {
+  httpResponseHandler: IHttpResponseHandler;
+};
+
 export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: {
-    httpResponseHandler: IHttpResponseHandler;
-  }) {
+  public constructor(dependencies: Dependencies) {
     this.httpResponseHandler = dependencies.httpResponseHandler;
   }
 

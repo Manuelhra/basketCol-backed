@@ -2,11 +2,13 @@ import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IF
 import { ExpressBaseRouteManager } from '../../../../../shared/infrastructure/server/express/routes/ExpressBaseRouteManager';
 import { IRouteManager } from '../../../../../shared/infrastructure/server/routes/IRouteManager';
 
+type Dependencies = {
+  fileSystem: IFileSystem;
+  basePath: string;
+};
+
 export class ExpressAuthenticationRouteManager extends ExpressBaseRouteManager implements IRouteManager {
-  public constructor(dependencies: {
-    fileSystem: IFileSystem;
-    basePath: string;
-  }) {
+  public constructor(dependencies: Dependencies) {
     super(dependencies);
   }
 }

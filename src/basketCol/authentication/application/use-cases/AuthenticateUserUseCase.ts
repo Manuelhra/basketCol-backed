@@ -1,4 +1,5 @@
 import {
+  AnySystemUserType,
   HostUser,
   HostUserEmail,
   HostUserPassword,
@@ -35,7 +36,17 @@ import { MissingEmailError } from '../exceptions/MissingEmailError';
 import { PasswordValidationService } from '../services/PasswordValidationService';
 import { ITokenGeneratorService } from '../services/ITokenGeneratorService';
 import { InvalidCredentialsError } from '../exceptions/InvalidCredentialsError';
-import { IAuthenticateUserUseCase, SomethingUser } from './ports/IAuthenticateUserUseCase';
+import { IAuthenticateUserUseCase } from './ports/IAuthenticateUserUseCase';
+
+type Dependencies = {
+  playerUserRepository: IPlayerUserRepository;
+  hostUserRepository: IHostUserRepository;
+  refereeUserRepository: IRefereeUserRepository;
+  teamFounderUserRepository: ITeamFounderUserRepository;
+  leagueFounderUserRepository: ILeagueFounderUserRepository;
+  passwordValidationService: PasswordValidationService;
+  tokenGeneratorService: ITokenGeneratorService;
+};
 
 export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
   readonly #playerUserRepository: IPlayerUserRepository;
@@ -52,15 +63,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
   readonly #tokenGeneratorService: ITokenGeneratorService;
 
-  constructor(dependencies: {
-    playerUserRepository: IPlayerUserRepository;
-    hostUserRepository: IHostUserRepository;
-    refereeUserRepository: IRefereeUserRepository;
-    teamFounderUserRepository: ITeamFounderUserRepository;
-    leagueFounderUserRepository: ILeagueFounderUserRepository;
-    passwordValidationService: PasswordValidationService;
-    tokenGeneratorService: ITokenGeneratorService;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#playerUserRepository = dependencies.playerUserRepository;
     this.#hostUserRepository = dependencies.hostUserRepository;
     this.#refereeUserRepository = dependencies.refereeUserRepository;
@@ -70,7 +73,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     this.#tokenGeneratorService = dependencies.tokenGeneratorService;
   }
 
-  public async execute(dto: AuthenticateUserDTO): Promise<{ user: SomethingUser; authenticationToken: string; }> {
+  public async execute(dto: AuthenticateUserDTO): Promise<{ authenticatedUser: AnySystemUserType; authenticationToken: string; }> {
     const {
       nickname,
       email,
@@ -78,16 +81,17 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       userType,
     } = dto;
 
-    let user: Nullable<SomethingUser>;
+    let userFound: Nullable<AnySystemUserType>;
 
     switch (userType) {
       case PlayerUserType.value:
-        user = await this.authenticatePlayerUser(
+        userFound = await this.#authenticatePlayerUser(
           PlayerUserPassword.create(password),
           nickname !== undefined ? PlayerUserNickname.create(nickname) : undefined,
           email !== undefined ? PlayerUserEmail.create({ value: email, verified: true }) : undefined,
         );
         break;
+
       case HostUserType.value: {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
@@ -96,9 +100,10 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
         const hostUserEmail = HostUserEmail.create({ value: email, verified: true });
         const hostUserPassword = HostUserPassword.create(password);
 
-        user = await this.authenticateHostUser(hostUserEmail, hostUserPassword);
+        userFound = await this.#authenticateHostUser(hostUserEmail, hostUserPassword);
         break;
       }
+
       case LeagueFounderUserType.value: {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
@@ -107,9 +112,10 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
         const leagueFounderUserEmail = LeagueFounderUserEmail.create({ value: email, verified: true });
         const leagueFounderUserPassword = LeagueFounderUserPassword.create(password);
 
-        user = await this.authenticateLeagueFounderUser(leagueFounderUserEmail, leagueFounderUserPassword);
+        userFound = await this.#authenticateLeagueFounderUser(leagueFounderUserEmail, leagueFounderUserPassword);
         break;
       }
+
       case RefereeUserType.value: {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
@@ -118,9 +124,10 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
         const refereeUserEmail = RefereeUserEmail.create({ value: email, verified: true });
         const refereeUserPassword = RefereeUserPassword.create(password);
 
-        user = await this.authenticateRefereeUser(refereeUserEmail, refereeUserPassword);
+        userFound = await this.#authenticateRefereeUser(refereeUserEmail, refereeUserPassword);
         break;
       }
+
       case TeamFounderUserType.value: {
         if (email === undefined || email === null) {
           throw new MissingEmailError();
@@ -129,24 +136,25 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
         const teamFounderUserEmail = TeamFounderUserEmail.create({ value: email, verified: true });
         const teamFounderUserPassword = TeamFounderUserPassword.create(password);
 
-        user = await this.authenticateTeamFounderUser(teamFounderUserEmail, teamFounderUserPassword);
+        userFound = await this.#authenticateTeamFounderUser(teamFounderUserEmail, teamFounderUserPassword);
         break;
       }
+
       default:
         throw new InvalidUserTypeError(userType);
     }
 
-    if (user === null || user === undefined) {
+    if (userFound === null || userFound === undefined) {
       throw new InvalidCredentialsError();
     }
 
     return {
-      user,
-      authenticationToken: this.#tokenGeneratorService.generateAuthenticationToken(user),
+      authenticatedUser: userFound,
+      authenticationToken: this.#tokenGeneratorService.generateAuthenticationToken(userFound),
     };
   }
 
-  private async authenticatePlayerUser(
+  async #authenticatePlayerUser(
     playerUserPassword: PlayerUserPassword,
     playerUserNickname: Nullable<PlayerUserNickname>,
     playerUserEmail: Nullable<PlayerUserEmail>,
@@ -155,62 +163,62 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       throw new MissingCredentialsError();
     }
 
-    let user: Nullable<PlayerUser> = null;
+    let playerUserFound: Nullable<PlayerUser> = null;
 
     if (playerUserNickname !== undefined && playerUserNickname !== null) {
-      user = await this.#playerUserRepository.searchByNickname(playerUserNickname);
+      playerUserFound = await this.#playerUserRepository.searchByNickname(playerUserNickname);
     } else if (playerUserEmail !== undefined && playerUserEmail !== null) {
-      user = await this.#playerUserRepository.searchByEmail(playerUserEmail);
+      playerUserFound = await this.#playerUserRepository.searchByEmail(playerUserEmail);
     }
 
-    if (user === null || user === undefined) {
+    if (playerUserFound === null || playerUserFound === undefined) {
       return null;
     }
 
-    const isPasswordValid = await this.#passwordValidationService.validate(playerUserPassword, user.password);
-    return isPasswordValid ? user : null;
+    const isPasswordValid = await this.#passwordValidationService.validate(playerUserPassword, playerUserFound.password);
+    return isPasswordValid ? playerUserFound : null;
   }
 
-  private async authenticateHostUser(hostUserEmail: HostUserEmail, hostUserPassword: HostUserPassword): Promise<Nullable<HostUser>> {
-    const user = await this.#hostUserRepository.searchByEmail(hostUserEmail);
-    if (user === null || user === undefined) {
+  async #authenticateHostUser(hostUserEmail: HostUserEmail, hostUserPassword: HostUserPassword): Promise<Nullable<HostUser>> {
+    const hostUserFound = await this.#hostUserRepository.searchByEmail(hostUserEmail);
+    if (hostUserFound === null || hostUserFound === undefined) {
       return null;
     }
 
-    const isPasswordValid = await this.#passwordValidationService.validate(hostUserPassword, user.password);
-    return isPasswordValid ? user : null;
+    const isPasswordValid = await this.#passwordValidationService.validate(hostUserPassword, hostUserFound.password);
+    return isPasswordValid ? hostUserFound : null;
   }
 
-  private async authenticateRefereeUser(refereeUserEmail: RefereeUserEmail, refereeUserPassword: RefereeUserPassword): Promise<Nullable<RefereeUser>> {
-    const user = await this.#refereeUserRepository.searchByEmail(refereeUserEmail);
-    if (user === null || user === undefined) {
+  async #authenticateRefereeUser(refereeUserEmail: RefereeUserEmail, refereeUserPassword: RefereeUserPassword): Promise<Nullable<RefereeUser>> {
+    const refereeUserFound = await this.#refereeUserRepository.searchByEmail(refereeUserEmail);
+    if (refereeUserFound === null || refereeUserFound === undefined) {
       return null;
     }
 
-    const isPasswordValid = await this.#passwordValidationService.validate(refereeUserPassword, user.password);
-    return isPasswordValid ? user : null;
+    const isPasswordValid = await this.#passwordValidationService.validate(refereeUserPassword, refereeUserFound.password);
+    return isPasswordValid ? refereeUserFound : null;
   }
 
-  private async authenticateLeagueFounderUser(
+  async #authenticateLeagueFounderUser(
     leagueFounderUserEmail: LeagueFounderUserEmail,
     leagueFounderUserPassword: LeagueFounderUserPassword,
   ): Promise<Nullable<LeagueFounderUser>> {
-    const user = await this.#leagueFounderUserRepository.searchByEmail(leagueFounderUserEmail);
-    if (user === null || user === undefined) {
+    const leagueFounderUserFound = await this.#leagueFounderUserRepository.searchByEmail(leagueFounderUserEmail);
+    if (leagueFounderUserFound === null || leagueFounderUserFound === undefined) {
       return null;
     }
 
-    const isPasswordValid = await this.#passwordValidationService.validate(leagueFounderUserPassword, user.password);
-    return isPasswordValid ? user : null;
+    const isPasswordValid = await this.#passwordValidationService.validate(leagueFounderUserPassword, leagueFounderUserFound.password);
+    return isPasswordValid ? leagueFounderUserFound : null;
   }
 
-  private async authenticateTeamFounderUser(teamFounderUserEmail: TeamFounderUserEmail, teamFounderUserPassword: TeamFounderUserPassword): Promise<Nullable<TeamFounderUser>> {
-    const user = await this.#teamFounderUserRepository.searchByEmail(teamFounderUserEmail);
-    if (user === null || user === undefined) {
+  async #authenticateTeamFounderUser(teamFounderUserEmail: TeamFounderUserEmail, teamFounderUserPassword: TeamFounderUserPassword): Promise<Nullable<TeamFounderUser>> {
+    const teamFounderUserFound = await this.#teamFounderUserRepository.searchByEmail(teamFounderUserEmail);
+    if (teamFounderUserFound === null || teamFounderUserFound === undefined) {
       return null;
     }
 
-    const isPasswordValid = await this.#passwordValidationService.validate(teamFounderUserPassword, user.password);
-    return isPasswordValid ? user : null;
+    const isPasswordValid = await this.#passwordValidationService.validate(teamFounderUserPassword, teamFounderUserFound.password);
+    return isPasswordValid ? teamFounderUserFound : null;
   }
 }

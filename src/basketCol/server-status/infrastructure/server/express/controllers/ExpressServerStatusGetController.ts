@@ -4,12 +4,14 @@ import { Request, Response } from 'express';
 import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
 import { ExpressBaseController } from '../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 
+type Dependencies = {
+  httpResponseHandler: IHttpResponseHandler;
+};
+
 export class ExpressServerStatusGETController extends ExpressBaseController {
   readonly #httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: {
-    httpResponseHandler: IHttpResponseHandler;
-  }) {
+  public constructor(dependencies: Dependencies) {
     super();
 
     this.#httpResponseHandler = dependencies.httpResponseHandler;

@@ -33,6 +33,11 @@ import { GlobFileSystem } from '../../../../shared/infrastructure/file-system/Gl
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
 import { ExpressAuthenticationServerErrorHandler } from '../../server/express/ExpressAuthenticationServerErrorHandler';
 import { BcryptPasswordHashingService } from '../../../../shared/infrastructure/services/BcryptPasswordHashingService';
+import { ExpressValidateAndRefreshAuthenticationTokenPOSTController } from '../../server/express/controllers/ExpressValidateAndRefreshAuthenticationTokenPOSTController';
+import { ValidateAndRefreshAuthenticationTokenUseCase } from '../../../application/use-cases/ValidateAndRefreshAuthenticationTokenUseCase';
+import { IValidateAndRefreshAuthenticationTokenUseCase } from '../../../application/use-cases/ports/IValidateAndRefreshAuthenticationTokenUseCase';
+import { ITokenValidatorService } from '../../../application/services/ITokenValidatorService';
+import { JwtTokenValidatorService } from '../../services/jwt/JwtTokenValidatorService';
 
 export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInjector<IAuthenticationContainer> {
   public constructor() {
@@ -57,6 +62,9 @@ export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInje
       securePasswordCreationService: AwilixDependencyInjector.registerAsClass<SecurePasswordCreationService>(SecurePasswordCreationService).singleton(),
       teamFounderUserRepository: AwilixDependencyInjector.registerAsClass<ITeamFounderUserRepository>(MongooseTeamFounderUserRepository).singleton(),
       tokenGeneratorService: AwilixDependencyInjector.registerAsClass<ITokenGeneratorService>(JwtTokenGeneratorService).singleton(),
+      validateAndRefreshAuthenticationTokenPOSTController: AwilixDependencyInjector.registerAsClass<IController>(ExpressValidateAndRefreshAuthenticationTokenPOSTController).singleton(),
+      validateAndRefreshAuthenticationTokenUseCase: AwilixAuthenticationDependencyInjector.registerAsClass<IValidateAndRefreshAuthenticationTokenUseCase>(ValidateAndRefreshAuthenticationTokenUseCase).singleton(),
+      tokenValidatorService: AwilixDependencyInjector.registerAsClass<ITokenValidatorService>(JwtTokenValidatorService).singleton(),
     });
   }
 }

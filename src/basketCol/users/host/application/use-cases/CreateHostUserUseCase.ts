@@ -16,6 +16,13 @@ import { MultipleHostUsersException } from '../exceptions/MultipleHostUsersExcep
 import { InvalidHostUserCredentialsError } from '../exceptions/InvalidHostUserCredentialsError';
 import { IHostUserConfigFactory } from '../ports/IHostUserConfigFactory';
 
+type Dependencies = {
+  hostUserConfigFactory: IHostUserConfigFactory;
+  hostUserRepository: IHostUserRepository;
+  securePasswordCreationService: SecurePasswordCreationService;
+  businessDateService: BusinessDateService;
+};
+
 export class CreateHostUserUseCase implements ICreateHostUserUseCase {
   readonly #hostUserConfigFactory: IHostUserConfigFactory;
 
@@ -23,12 +30,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
 
   readonly #businessDateService: BusinessDateService;
 
-  constructor(dependencies: {
-    hostUserConfigFactory: IHostUserConfigFactory;
-    hostUserRepository: IHostUserRepository;
-    securePasswordCreationService: SecurePasswordCreationService;
-    businessDateService: BusinessDateService;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#hostUserConfigFactory = dependencies.hostUserConfigFactory;
     this.#hostUserRepository = dependencies.hostUserRepository;
     this.#businessDateService = dependencies.businessDateService;

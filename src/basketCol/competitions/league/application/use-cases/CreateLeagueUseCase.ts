@@ -18,6 +18,14 @@ import {
 import { CreateLeagueDTO } from '../dtos/CreateLeagueDTO';
 import { ICreateLeagueUseCase } from './ports/ICreateLeagueUseCase';
 
+type Dependencies = {
+  BusinessDateService: BusinessDateService;
+  leagueValidationNameService: LeagueValidationNameService;
+  leagueRepository: ILeagueRepository;
+  leagueFounderUserValidationService: LeagueFounderUserValidationService;
+  idUniquenessValidatorService: IdUniquenessValidatorService;
+};
+
 export class CreateLeagueUseCase implements ICreateLeagueUseCase {
   readonly #businessDateService: BusinessDateService;
 
@@ -29,13 +37,7 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
 
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
-  constructor(dependencies: {
-    BusinessDateService: BusinessDateService;
-    leagueValidationNameService: LeagueValidationNameService;
-    leagueRepository: ILeagueRepository;
-    leagueFounderUserValidationService: LeagueFounderUserValidationService;
-    idUniquenessValidatorService: IdUniquenessValidatorService;
-  }) {
+  constructor(dependencies: Dependencies) {
     this.#businessDateService = dependencies.BusinessDateService;
     this.#leagueValidationNameService = dependencies.leagueValidationNameService;
     this.#leagueRepository = dependencies.leagueRepository;
