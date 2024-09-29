@@ -39,9 +39,9 @@ import {
 } from '@basketcol/domain';
 import { Response } from 'express';
 
-import { IHttpResponseHandler } from '../../../application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../application/http/ports/IHttpResponseHandler';
 import { IServerErrorHandler } from '../IServerErrorHandler';
-import { IErrorApiResponse } from '../../../application/http/IErrorApiResponse';
+import { IErrorApiResponse } from '../../../application/http/ports/IErrorApiResponse';
 import { DatabaseConnectionFailedError } from '../../exceptions/DatabaseConnectionFailedError';
 import { DependencyContainerNotInitializedError } from '../../exceptions/DependencyContainerNotInitializedError';
 import { UnauthorizedAccessError } from '../../../application/exceptions/UnauthorizedAccessError';

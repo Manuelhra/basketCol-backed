@@ -1,7 +1,7 @@
 import { HttpStatus } from '@basketcol/domain';
 import { NextFunction, Request, Response } from 'express';
 
-import { IHttpResponseHandler } from '../../../../../application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../../application/http/ports/IHttpResponseHandler';
 
 export const expressUserTypeAuthorizationMiddleware = (
   allowedUserTypes: string[],

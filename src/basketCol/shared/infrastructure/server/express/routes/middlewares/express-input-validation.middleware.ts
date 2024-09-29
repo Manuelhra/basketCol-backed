@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import { validationResult, ValidationError } from 'express-validator';
 
 import { HttpResponseHandler } from '../../../../http/HttpResponseHandler';
-import { IHttpResponseHandler } from '../../../../../application/http/IHttpResponseHandler';
-import { IErrorDetail } from '../../../../../application/http/IErrorApiResponse';
+import { IHttpResponseHandler } from '../../../../../application/http/ports/IHttpResponseHandler';
+import { IErrorDetail } from '../../../../../application/http/ports/IErrorApiResponse';
 
 const parseError = (error: ValidationError): IErrorDetail => ({
   name: 'ValidationError',

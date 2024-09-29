@@ -1,4 +1,4 @@
-import { IHttpResponseHandler } from '../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../shared/application/http/ports/IHttpResponseHandler';
 import { IFileSystem } from '../../../shared/infrastructure/file-system/IFileSystem';
 import { IController } from '../../../shared/infrastructure/server/controllers/IController';
 import { IRouteManager } from '../../../shared/infrastructure/server/routes/IRouteManager';

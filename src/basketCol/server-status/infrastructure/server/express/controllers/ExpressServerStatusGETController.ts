@@ -1,7 +1,7 @@
 import { HttpStatus } from '@basketcol/domain';
 import { Request, Response } from 'express';
 
-import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { ExpressBaseController } from '../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 
 type Dependencies = {

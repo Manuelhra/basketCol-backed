@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { HttpStatus } from '@basketcol/domain';
 
 import { ITokenValidatorService } from '../../../../../../authentication/application/services/ITokenValidatorService';
-import { IHttpResponseHandler } from '../../../../../application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../../application/http/ports/IHttpResponseHandler';
 
 export const expressAuthenticationMiddleware = (
   tokenValidatorService: ITokenValidatorService,

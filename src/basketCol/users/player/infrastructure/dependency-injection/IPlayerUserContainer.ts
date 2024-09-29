@@ -9,7 +9,7 @@ import {
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 
-import { IHttpResponseHandler } from '../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IController } from '../../../../shared/infrastructure/server/controllers/IController';
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
 import { ICreatePlayerUserUseCase } from '../../application/use-cases/ports/ICreatePlayerUserUseCase';

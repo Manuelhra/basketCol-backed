@@ -1,4 +1,4 @@
-import { IHttpResponseHandler } from '../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
 import { AwilixDependencyInjector } from '../../../../shared/infrastructure/dependency-injection/awilix/AwilixDependencyInjector';
 import { GlobFileSystem } from '../../../../shared/infrastructure/file-system/GlobFileSystem';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';

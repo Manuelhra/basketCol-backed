@@ -17,7 +17,7 @@ import { ExpressHostUserRouteManager } from '../../server/express/routes/Express
 import { CreateHostUserUseCase } from '../../../application/use-cases/CreateHostUserUseCase';
 import { MongooseHostUserRepository } from '../../persistence/mongoose/MongooseHostUserRepository';
 import { ExpressCreateHostUserPOSTController } from '../../server/express/controllers/ExpressCreateHostUserPOSTController';
-import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { HttpResponseHandler } from '../../../../../shared/infrastructure/http/HttpResponseHandler';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
 import { ExpressHostUserServerErrorHandler } from '../../server/express/ExpressHostUserServerErrorHandler';

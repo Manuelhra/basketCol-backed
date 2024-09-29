@@ -24,7 +24,7 @@ import { JwtTokenGeneratorService } from '../../services/jwt/JwtTokenGeneratorSe
 import { MongooseLeagueFounderUserRepository } from '../../../../users/league-founder/infrastructure/persistence/mongoose/MongooseLeagueFounderUserRepository';
 import { IController } from '../../../../shared/infrastructure/server/controllers/IController';
 import { ExpressAuthenticateUserPOSTController } from '../../server/express/controllers/ExpressAuthenticateUserPOSTController';
-import { IHttpResponseHandler } from '../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
 import { HttpResponseHandler } from '../../../../shared/infrastructure/http/HttpResponseHandler';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { ExpressAuthenticationRouteManager } from '../../server/express/routes/ExpressAuthenticationRouteManager';
