@@ -2,7 +2,7 @@ import {
   BusinessDateService,
   CourtValidationService,
   IdUniquenessValidatorService,
-  ILeagueSeasonFixtureGame,
+  ILeagueSeasonFixtureGamePrimitives,
   ILeagueSeasonFixtureGameRepository,
   LeagueSeasonFixtureGame,
   LeagueSeasonValidationService,
@@ -50,7 +50,7 @@ export class CreateLeagueSeasonFixtureGameUseCase implements ICreateLeagueSeason
 
   readonly #leagueSeasonFixtureGameRepository: ILeagueSeasonFixtureGameRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#teamValidationService = dependencies.teamValidationService;
     this.#refereeUserValidationService = dependencies.refereeUserValidationService;
@@ -58,6 +58,10 @@ export class CreateLeagueSeasonFixtureGameUseCase implements ICreateLeagueSeason
     this.#leagueSeasonValidationService = dependencies.leagueSeasonValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#leagueSeasonFixtureGameRepository = dependencies.leagueSeasonFixtureGameRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateLeagueSeasonFixtureGameUseCase {
+    return new CreateLeagueSeasonFixtureGameUseCase(dependencies);
   }
 
   public async execute(dto: CreateLeagueSeasonFixtureGameDTO): Promise<void> {
@@ -88,7 +92,7 @@ export class CreateLeagueSeasonFixtureGameUseCase implements ICreateLeagueSeason
     const lSFGameCourtId: LSFGameCourtId = LSFGameCourtId.create(courtId);
     const lSFGameFixtureId: LSFGameFixtureId = LSFGameFixtureId.create(fixtureId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LSFGameId, ILeagueSeasonFixtureGame, LeagueSeasonFixtureGame>(lSFGameId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<LSFGameId, ILeagueSeasonFixtureGamePrimitives, LeagueSeasonFixtureGame>(lSFGameId);
     await this.#teamValidationService.ensureTeamExists(lSFGameHomeTeamId.value);
     await this.#teamValidationService.ensureTeamExists(lSFGameAwayTeamId.value);
     await this.#refereeUserValidationService.ensureRefereeUserExists(lSFGameHeadRefereeId.value);

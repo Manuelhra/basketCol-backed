@@ -6,13 +6,17 @@ import { ExpressGymServerErrorHandler } from '../../server/express/ExpressGymSer
 import { IGymContainer } from '../IGymContainer';
 
 export class AwilixGymDependencyInjector extends AwilixDependencyInjector<IGymContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      gymServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressGymServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      gymServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressGymServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixGymDependencyInjector {
+    return new AwilixGymDependencyInjector();
   }
 }

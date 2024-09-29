@@ -1,3 +1,3 @@
-import { ILeagueFounderUser } from '@basketcol/domain';
+import { ILeagueFounderUserPrimitives } from '@basketcol/domain';
 
-export interface IMongooseLeagueFounderUserDocument extends ILeagueFounderUser {}
+export interface IMongooseLeagueFounderUserDocument extends ILeagueFounderUserPrimitives {}

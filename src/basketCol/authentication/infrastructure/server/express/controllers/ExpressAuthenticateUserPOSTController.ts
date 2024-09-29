@@ -16,11 +16,15 @@ export class ExpressAuthenticateUserPOSTController extends ExpressBaseController
 
   readonly #httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super();
 
     this.#authenticateUserUseCase = dependencies.authenticateUserUseCase;
     this.#httpResponseHandler = dependencies.httpResponseHandler;
+  }
+
+  public static create(dependencies: Dependencies): ExpressAuthenticateUserPOSTController {
+    return new ExpressAuthenticateUserPOSTController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {

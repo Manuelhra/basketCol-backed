@@ -2,7 +2,7 @@ import {
   BusinessDateService,
   EmailUniquenessValidatorService,
   IdUniquenessValidatorService,
-  ITeamFounderUser,
+  ITeamFounderUserPrimitives,
   ITeamFounderUserRepository,
   TeamFounderUser,
   TeamFounderUserId,
@@ -32,11 +32,15 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
 
   readonly #tFURepository: ITeamFounderUserRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#businessDateService = dependencies.businessDateService;
     this.#tFURepository = dependencies.tFURepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateTeamFounderUserUseCase {
+    return new CreateTeamFounderUserUseCase(dependencies);
   }
 
   public async execute(dto: CreateTeamFounderUserDTO): Promise<void> {
@@ -51,8 +55,8 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
     const teamFounderUserId: TeamFounderUserId = TeamFounderUserId.create(id);
     const teamFounderUserEmail: TeamFounderUserEmail = TeamFounderUserEmail.create({ value: email.value, verified: false });
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<TeamFounderUserId, ITeamFounderUser, TeamFounderUser>(teamFounderUserId);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<TeamFounderUserEmail, ITeamFounderUser, TeamFounderUser>(teamFounderUserEmail);
+    await this.#idUniquenessValidatorService.ensureUniqueId<TeamFounderUserId, ITeamFounderUserPrimitives, TeamFounderUser>(teamFounderUserId);
+    await this.#emailUniquenessValidatorService.ensureUniqueEmail<TeamFounderUserEmail, ITeamFounderUserPrimitives, TeamFounderUser>(teamFounderUserEmail);
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;

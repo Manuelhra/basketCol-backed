@@ -18,7 +18,7 @@ export class ExpressServer implements IServer {
 
   private httpServer: http.Server | undefined;
 
-  constructor() {
+  private constructor() {
     this.#app = express();
     this.#router = Router();
 

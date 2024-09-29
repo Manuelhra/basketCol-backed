@@ -10,7 +10,7 @@
   "author": "Manuel Rivera - manuelh_ra",
   "license": "ISC",
   "dependencies": {
-    "@basketcol/domain": "^2.2.6",
+    "@basketcol/domain": "^3.0.2",
     "awilix": "^11.0.0",
     "bcrypt": "^5.1.1",
     "compression": "^1.7.4",

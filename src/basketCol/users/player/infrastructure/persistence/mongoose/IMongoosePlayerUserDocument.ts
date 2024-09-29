@@ -1,3 +1,3 @@
-import { IPlayerUser } from '@basketcol/domain';
+import { IPlayerUserPrimitives } from '@basketcol/domain';
 
-export interface IMongoosePlayerUserDocument extends IPlayerUser {}
+export interface IMongoosePlayerUserDocument extends IPlayerUserPrimitives {}

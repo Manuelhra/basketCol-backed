@@ -3,7 +3,7 @@ import {
   EmailUniquenessValidatorService,
   HostUserType,
   IdUniquenessValidatorService,
-  IPlayerUser,
+  IPlayerUserPrimitives,
   IPlayerUserRepository,
   PlayerUser,
   PlayerUserCreatedAt,
@@ -40,7 +40,7 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
 
   readonly #playerUserRepository: IPlayerUserRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#playerUserNicknameValidationService = dependencies.playerUserNicknameValidationService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
@@ -49,9 +49,13 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     this.#businessDateService = dependencies.businessDateService;
   }
 
+  public static create(dependencies: Dependencies): CreatePlayerUserUseCase {
+    return new CreatePlayerUserUseCase(dependencies);
+  }
+
   public async execute(dto: CreatePlayerUserDTO, userContext: IUserContext): Promise<void> {
     if (userContext.userType !== HostUserType.value) {
-      throw new UnauthorizedAccessError(userContext, HostUserType.value, 'create a player user');
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a player user');
     }
 
     const {
@@ -67,9 +71,9 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     const playerUserNickname: PlayerUserNickname = PlayerUserNickname.create(nickname);
     const playerUserEmail: PlayerUserEmail = PlayerUserEmail.create({ value: email.value, verified: false });
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PlayerUserId, IPlayerUser, PlayerUser>(playerUserId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PlayerUserId, IPlayerUserPrimitives, PlayerUser>(playerUserId);
     await this.#playerUserNicknameValidationService.ensureNicknameIsUnique(playerUserNickname);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<PlayerUserEmail, IPlayerUser, PlayerUser>(playerUserEmail);
+    await this.#emailUniquenessValidatorService.ensureUniqueEmail<PlayerUserEmail, IPlayerUserPrimitives, PlayerUser>(playerUserEmail);
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;

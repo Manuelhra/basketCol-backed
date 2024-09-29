@@ -6,13 +6,17 @@ import { ExpressTeamFounderUserServerErrorHandler } from '../../server/express/E
 import { ITeamFounderUserContainer } from '../ITeamFounderUserContainer';
 
 export class AwilixTeamFounderUserDependencyInjector extends AwilixDependencyInjector<ITeamFounderUserContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      teamFounderUserServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressTeamFounderUserServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      teamFounderUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressTeamFounderUserServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixTeamFounderUserDependencyInjector {
+    return new AwilixTeamFounderUserDependencyInjector();
   }
 }

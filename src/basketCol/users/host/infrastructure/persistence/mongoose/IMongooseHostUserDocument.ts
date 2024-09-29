@@ -1,3 +1,3 @@
-import { IHostUser } from '@basketcol/domain';
+import { IHostUserPrimitives } from '@basketcol/domain';
 
-export interface IMongooseHostUserDocument extends IHostUser {}
+export interface IMongooseHostUserDocument extends IHostUserPrimitives {}

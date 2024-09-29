@@ -10,7 +10,7 @@ import {
   DateValueObject,
   GymValidationService,
   HostUserValidationService,
-  ICourt,
+  ICourtPrimitives,
   ICourtRepository,
   IdUniquenessValidatorService,
 } from '@basketcol/domain';
@@ -37,12 +37,16 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
 
   readonly #courtRepository: ICourtRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#hostUserValidationService = dependencies.hostUserValidationService;
     this.#gymValidationService = dependencies.gymValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#courtRepository = dependencies.courtRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateCourtUseCase {
+    return new CreateCourtUseCase(dependencies);
   }
 
   public async execute(dto: CreateCourtDTO): Promise<void> {
@@ -62,7 +66,7 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
     const courtEstablishmentDate: CourtEstablishmentDate = CourtEstablishmentDate.create(establishmentDate);
     const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<CourtId, ICourt, Court>(courtId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<CourtId, ICourtPrimitives, Court>(courtId);
     await this.#hostUserValidationService.ensureHostUserExists(courtRegisteredById.value);
     this.#businessDateService.ensureNotGreaterThan<CourtEstablishmentDate, DateValueObject>(courtEstablishmentDate, currentDate);
 

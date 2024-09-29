@@ -30,17 +30,21 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
 
   readonly #businessDateService: BusinessDateService;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#hostUserConfigFactory = dependencies.hostUserConfigFactory;
     this.#hostUserRepository = dependencies.hostUserRepository;
     this.#businessDateService = dependencies.businessDateService;
+  }
+
+  public static create(dependencies: Dependencies): CreateHostUserUseCase {
+    return new CreateHostUserUseCase(dependencies);
   }
 
   public async execute(dto: CreateHostUserDTO): Promise<void> {
     const hostUserFound: Nullable<HostUser> = await this.#hostUserRepository.search();
 
     if (hostUserFound) {
-      throw new MultipleHostUsersException();
+      throw MultipleHostUsersException.create();
     }
 
     const {
@@ -57,7 +61,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
     const isValidPassword: boolean = password === hostUserCredentials.password;
 
     if (isValidEmail === false || isValidPassword === false) {
-      throw new InvalidHostUserCredentialsError();
+      throw InvalidHostUserCredentialsError.create();
     }
 
     const accountState: string = UserAccountState.active;

@@ -11,10 +11,14 @@ type Dependencies = {
 export class ExpressServerStatusGETController extends ExpressBaseController {
   readonly #httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super();
 
     this.#httpResponseHandler = dependencies.httpResponseHandler;
+  }
+
+  public static create(dependencies: Dependencies): ExpressServerStatusGETController {
+    return new ExpressServerStatusGETController(dependencies);
   }
 
   public async run(_request: Request, response: Response): Promise<void> {

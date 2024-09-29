@@ -4,7 +4,7 @@ import { App } from './App';
 try {
   const port: string = convictConfig.get('server.port');
 
-  const app: App = new App();
+  const app: App = App.create();
   app.start(port);
 } catch (error) {
   console.log(error);

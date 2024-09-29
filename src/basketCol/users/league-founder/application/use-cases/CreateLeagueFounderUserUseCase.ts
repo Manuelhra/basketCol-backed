@@ -2,7 +2,7 @@ import {
   BusinessDateService,
   EmailUniquenessValidatorService,
   IdUniquenessValidatorService,
-  ILeagueFounderUser,
+  ILeagueFounderUserPrimitives,
   ILeagueFounderUserRepository,
   LeagueFounderUser,
   LeagueFounderUserCreatedAt,
@@ -32,11 +32,15 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
 
   readonly #businessDateService: BusinessDateService;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#leagueFounderUserRepository = dependencies.leagueFounderUserRepository;
     this.#businessDateService = dependencies.businessDateService;
+  }
+
+  public static create(dependencies: Dependencies): CreateLeagueFounderUserUseCase {
+    return new CreateLeagueFounderUserUseCase(dependencies);
   }
 
   public async execute(dto: CreateLeagueFounderUserDTO): Promise<void> {
@@ -51,8 +55,8 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
     const leagueFounderUserId: LeagueFounderUserId = LeagueFounderUserId.create(id);
     const leagueFounderUserEmail: LeagueFounderUserEmail = LeagueFounderUserEmail.create({ value: email.value, verified: false });
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueFounderUserId, ILeagueFounderUser, LeagueFounderUser>(leagueFounderUserId);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<LeagueFounderUserEmail, ILeagueFounderUser, LeagueFounderUser>(leagueFounderUserEmail);
+    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueFounderUserId, ILeagueFounderUserPrimitives, LeagueFounderUser>(leagueFounderUserId);
+    await this.#emailUniquenessValidatorService.ensureUniqueEmail<LeagueFounderUserEmail, ILeagueFounderUserPrimitives, LeagueFounderUser>(leagueFounderUserEmail);
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;

@@ -6,13 +6,17 @@ import { ExpressLeagueFounderUserServerErrorHandler } from '../../server/express
 import { ILeagueFounderUserContainer } from '../ILeagueFounderUserContainer';
 
 export class AwilixLeagueFounderUserDependencyInjector extends AwilixDependencyInjector<ILeagueFounderUserContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      leagueFounderUserServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressLeagueFounderUserServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      leagueFounderUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressLeagueFounderUserServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixLeagueFounderUserDependencyInjector {
+    return new AwilixLeagueFounderUserDependencyInjector();
   }
 }

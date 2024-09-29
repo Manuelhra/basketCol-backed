@@ -6,13 +6,17 @@ import { ExpressTeamServerErrorHandler } from '../../server/express/ExpressTeamS
 import { ITeamContainer } from '../ITeamContainer';
 
 export class AwilixTeamDependencyInjector extends AwilixDependencyInjector<ITeamContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      teamServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressTeamServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      teamServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressTeamServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixTeamDependencyInjector {
+    return new AwilixTeamDependencyInjector();
   }
 }

@@ -6,7 +6,7 @@ import {
   PlayerUserReboundingAttributes,
   PURAId,
   PURAReferencedPlayerUserId,
-  IPlayerUserReboundingAttributes,
+  IPlayerUserReboundingAttributesPrimitives,
   PURACreatedAt,
   PURAUpdatedAt,
 } from '@basketcol/domain';
@@ -30,11 +30,15 @@ export class CreateReboundingAttributesUseCase implements ICreateReboundingAttri
 
   readonly #playerUserReboundingAttributesRepository: IPlayerUserReboundingAttributesRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#playerUserReboundingAttributesRepository = dependencies.playerUserReboundingAttributesRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateReboundingAttributesUseCase {
+    return new CreateReboundingAttributesUseCase(dependencies);
   }
 
   public async execute(dto: CreateReboundingAttributesDTO): Promise<void> {
@@ -48,7 +52,7 @@ export class CreateReboundingAttributesUseCase implements ICreateReboundingAttri
     const playerUserReboundingAttributesId: PURAId = PURAId.create(id);
     const pURAReferencedPlayerUserId: PURAReferencedPlayerUserId = PURAReferencedPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PURAId, IPlayerUserReboundingAttributes, PlayerUserReboundingAttributes>(playerUserReboundingAttributesId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PURAId, IPlayerUserReboundingAttributesPrimitives, PlayerUserReboundingAttributes>(playerUserReboundingAttributesId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pURAReferencedPlayerUserId.value);
 
     const pURACreatedAt: PURACreatedAt = this.#businessDateService.getCurrentDate();

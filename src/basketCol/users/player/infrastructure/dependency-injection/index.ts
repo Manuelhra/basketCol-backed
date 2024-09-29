@@ -1,10 +1,10 @@
 import { DependencyContainerNotInitializedError } from '../../../../shared/infrastructure/exceptions/DependencyContainerNotInitializedError';
 import { AwilixPlayerUserDependencyInjector } from './awilix/AwilixPlayerUserDependencyInjector';
 
-const awilixPlayerUserContainer = new AwilixPlayerUserDependencyInjector().getContainer();
+const awilixPlayerUserContainer = AwilixPlayerUserDependencyInjector.create().getContainer();
 
 if (awilixPlayerUserContainer === null) {
-  throw new DependencyContainerNotInitializedError();
+  throw DependencyContainerNotInitializedError.create();
 }
 
 export const playerUserServerErrorHandler = awilixPlayerUserContainer.resolve('playerUserServerErrorHandler');

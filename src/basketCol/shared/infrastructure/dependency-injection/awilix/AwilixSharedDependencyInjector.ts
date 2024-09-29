@@ -8,14 +8,18 @@ import { ISharedContainer } from '../ISharedContainer';
 import { AwilixDependencyInjector } from './AwilixDependencyInjector';
 
 export class AwilixSharedDependencyInjector extends AwilixDependencyInjector<ISharedContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      sharedServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressSharedServerErrorHandler).singleton(),
-      tokenValidatorService: AwilixDependencyInjector.registerAsClass<ITokenValidatorService>(JwtTokenValidatorService).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      sharedServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressSharedServerErrorHandler.create).singleton(),
+      tokenValidatorService: AwilixDependencyInjector.registerAsFunction<ITokenValidatorService>(JwtTokenValidatorService.create).singleton(),
     });
+  }
+
+  public static create(): AwilixSharedDependencyInjector {
+    return new AwilixSharedDependencyInjector();
   }
 }

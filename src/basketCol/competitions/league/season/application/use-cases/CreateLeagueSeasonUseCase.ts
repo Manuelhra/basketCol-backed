@@ -2,7 +2,7 @@ import {
   BusinessDateService,
   CourtValidationService,
   IdUniquenessValidatorService,
-  ILeagueSeason,
+  ILeagueSeasonPrimitives,
   ILeagueSeasonRepository,
   LeagueId,
   LeagueSeason,
@@ -36,12 +36,16 @@ export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
 
   readonly #courtValidationService: CourtValidationService;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#leagueSeasonRepository = dependencies.leagueSeasonRepository;
     this.#leagueValidationService = dependencies.leagueValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#courtValidationService = dependencies.courtValidationService;
+  }
+
+  public static create(dependencies: Dependencies): CreateLeagueSeasonUseCase {
+    return new CreateLeagueSeasonUseCase(dependencies);
   }
 
   public async execute(dto: CreateLeagueSeasonDTO): Promise<void> {
@@ -58,7 +62,7 @@ export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
     const leagueId: LeagueId = LeagueId.create(dto.leagueId);
     const leagueSeasonCourtIdList: LSReferencedCourtIdList = LSReferencedCourtIdList.create(courtIdList);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonId, ILeagueSeason, LeagueSeason>(leagueSeasonId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonId, ILeagueSeasonPrimitives, LeagueSeason>(leagueSeasonId);
     await this.#leagueValidationService.ensureLeagueExist(leagueId);
     await this.#courtValidationService.ensureCourtsExist(leagueSeasonCourtIdList);
 

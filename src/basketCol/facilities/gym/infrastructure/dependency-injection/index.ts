@@ -1,10 +1,10 @@
 import { DependencyContainerNotInitializedError } from '../../../../shared/infrastructure/exceptions/DependencyContainerNotInitializedError';
 import { AwilixGymDependencyInjector } from './awilix/AwilixGymDependencyInjector';
 
-const awilixGymContainer = new AwilixGymDependencyInjector().getContainer();
+const awilixGymContainer = AwilixGymDependencyInjector.create().getContainer();
 
 if (awilixGymContainer === null) {
-  throw new DependencyContainerNotInitializedError();
+  throw DependencyContainerNotInitializedError.create();
 }
 
 export const gymServerErrorHandler = awilixGymContainer.resolve('gymServerErrorHandler');

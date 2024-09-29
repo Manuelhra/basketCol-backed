@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  ITeamLeagueSeasonFixtureGameBoxScore,
+  ITeamLeagueSeasonFixtureGameBoxScorePrimitives,
   ITeamLeagueSeasonFixtureGameBoxScoreRepository,
   LeagueSeasonFixtureGameValidationService,
   TeamLeagueSeasonFixtureGameBoxScore,
@@ -35,12 +35,16 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
 
   readonly #teamLeagueSeasonFixtureGameBoxScoreRepository: ITeamLeagueSeasonFixtureGameBoxScoreRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#leagueSeasonFixtureGameValidationService = dependencies.leagueSeasonFixtureGameValidationService;
     this.#teamValidationService = dependencies.teamValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#teamLeagueSeasonFixtureGameBoxScoreRepository = dependencies.teamLeagueSeasonFixtureGameBoxScoreRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase {
+    return new CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase(dependencies);
   }
 
   public async execute(dto: CreateTeamLeagueSeasonFixtureGameBoxScoreDTO): Promise<void> {
@@ -68,7 +72,7 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
     const tLSFGBoxScoreFixtureGameId: TLSFGBoxScoreFixtureGameId = TLSFGBoxScoreFixtureGameId.create(fixtureGameId);
     const tLSFGBoxScoreTeamId: TLSFGBoxScoreTeamId = TLSFGBoxScoreTeamId.create(teamId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<TLSFGBoxScoreId, ITeamLeagueSeasonFixtureGameBoxScore, TeamLeagueSeasonFixtureGameBoxScore>(tLSFGBoxScoreId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<TLSFGBoxScoreId, ITeamLeagueSeasonFixtureGameBoxScorePrimitives, TeamLeagueSeasonFixtureGameBoxScore>(tLSFGBoxScoreId);
     await this.#leagueSeasonFixtureGameValidationService.ensureLeagueSeasonFixtureGameExists(tLSFGBoxScoreFixtureGameId.value);
     await this.#teamValidationService.ensureTeamExists(tLSFGBoxScoreTeamId.value);
 

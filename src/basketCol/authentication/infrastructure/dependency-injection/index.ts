@@ -1,10 +1,10 @@
 import { DependencyContainerNotInitializedError } from '../../../shared/infrastructure/exceptions/DependencyContainerNotInitializedError';
 import { AwilixAuthenticationDependencyInjector } from './awilix/AwilixAuthenticationDependencyInjector';
 
-const awilixAuthenticationContainer = new AwilixAuthenticationDependencyInjector().getContainer();
+const awilixAuthenticationContainer = AwilixAuthenticationDependencyInjector.create().getContainer();
 
 if (awilixAuthenticationContainer === null) {
-  throw new DependencyContainerNotInitializedError();
+  throw DependencyContainerNotInitializedError.create();
 }
 
 export const authenticateUserPOSTController = awilixAuthenticationContainer.resolve('authenticateUserPOSTController');

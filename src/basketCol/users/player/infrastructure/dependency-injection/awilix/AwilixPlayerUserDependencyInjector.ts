@@ -28,27 +28,31 @@ import { GlobFileSystem } from '../../../../../shared/infrastructure/file-system
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
 
 export class AwilixPlayerUserDependencyInjector extends AwilixDependencyInjector<IPlayerUserContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      playerUserRouteManager: AwilixDependencyInjector.registerAsClass<IRouteManager>(ExpressPlayerUserRouteManager).singleton(),
+      playerUserRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressPlayerUserRouteManager.create).singleton(),
       basePath: AwilixDependencyInjector.registerAsValue<string>(__dirname),
-      fileSystem: AwilixDependencyInjector.registerAsClass<IFileSystem>(GlobFileSystem).singleton(),
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      playerUserServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressPlayerUserServerErrorHandler).singleton(),
-      createPlayerUserPOSTController: AwilixDependencyInjector.registerAsClass<IController>(ExpressCreatePlayerUserPOSTController).singleton(),
-      businessDateService: AwilixDependencyInjector.registerAsClass<BusinessDateService>(BusinessDateService).singleton(),
-      createPlayerUserUseCase: AwilixDependencyInjector.registerAsClass<ICreatePlayerUserUseCase>(CreatePlayerUserUseCase).singleton(),
-      emailUniquenessValidatorService: AwilixDependencyInjector.registerAsClass<EmailUniquenessValidatorService>(EmailUniquenessValidatorService).singleton(),
-      idUniquenessValidatorService: AwilixDependencyInjector.registerAsClass<IdUniquenessValidatorService>(IdUniquenessValidatorService).singleton(),
-      playerUserNicknameValidationService: AwilixDependencyInjector.registerAsClass<PlayerUserNicknameValidationService>(PlayerUserNicknameValidationService).singleton(),
-      playerUserRepository: AwilixDependencyInjector.registerAsClass<IPlayerUserRepository>(MongoosePlayerUserRepository).singleton(),
-      repository: AwilixDependencyInjector.registerAsClass<IPlayerUserRepository>(MongoosePlayerUserRepository).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsClass<IPasswordHashingService>(BcryptPasswordHashingService).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsClass<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService).singleton(),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsClass<SecurePasswordCreationService>(SecurePasswordCreationService).singleton(),
+      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(GlobFileSystem.create).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      playerUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressPlayerUserServerErrorHandler.create).singleton(),
+      createPlayerUserPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreatePlayerUserPOSTController.create).singleton(),
+      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      createPlayerUserUseCase: AwilixDependencyInjector.registerAsFunction<ICreatePlayerUserUseCase>(CreatePlayerUserUseCase.create).singleton(),
+      emailUniquenessValidatorService: AwilixDependencyInjector.registerAsFunction<EmailUniquenessValidatorService>(EmailUniquenessValidatorService.create).singleton(),
+      idUniquenessValidatorService: AwilixDependencyInjector.registerAsFunction<IdUniquenessValidatorService>(IdUniquenessValidatorService.create).singleton(),
+      playerUserNicknameValidationService: AwilixDependencyInjector.registerAsFunction<PlayerUserNicknameValidationService>(PlayerUserNicknameValidationService.create).singleton(),
+      playerUserRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserRepository>(MongoosePlayerUserRepository.create).singleton(),
+      repository: AwilixDependencyInjector.registerAsFunction<IPlayerUserRepository>(MongoosePlayerUserRepository.create).singleton(),
+      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
+      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
     });
+  }
+
+  public static create(): AwilixPlayerUserDependencyInjector {
+    return new AwilixPlayerUserDependencyInjector();
   }
 }

@@ -2,6 +2,10 @@ import { IPasswordHashingService } from '@basketcol/domain';
 import bcrypt from 'bcrypt';
 
 export class BcryptPasswordHashingService implements IPasswordHashingService {
+  public static create(): BcryptPasswordHashingService {
+    return new BcryptPasswordHashingService();
+  }
+
   public async hash(password: string): Promise<string> {
     const salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);

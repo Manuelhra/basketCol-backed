@@ -16,8 +16,12 @@ type Dependencies = {
 export class ExpressAuthenticationServerErrorHandler implements IServerErrorHandler {
   readonly #httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#httpResponseHandler = dependencies.httpResponseHandler;
+  }
+
+  public static create(dependencies: Dependencies): ExpressAuthenticationServerErrorHandler {
+    return new ExpressAuthenticationServerErrorHandler(dependencies);
   }
 
   public run(response: Response, error: Error): void {

@@ -1,4 +1,4 @@
-import { AggregateRoot, IAggregateRoot } from '@basketcol/domain';
+import { AggregateRoot, IAggregateRootPrimitives } from '@basketcol/domain';
 import { Model, Mongoose, Schema } from 'mongoose';
 
 type Dependencies<IAggregate> = {
@@ -6,12 +6,12 @@ type Dependencies<IAggregate> = {
   mongooseSchema: Schema<IAggregate>;
 };
 
-export abstract class MongooseRepository<IAggregate extends IAggregateRoot, TAggregate extends AggregateRoot<IAggregate>> {
+export abstract class MongooseRepository<IAggregate extends IAggregateRootPrimitives, TAggregate extends AggregateRoot<IAggregate>> {
   readonly #client: Promise<Mongoose>;
 
   readonly #schema: Schema<IAggregate>;
 
-  constructor(dependencies: Dependencies<IAggregate>) {
+  protected constructor(dependencies: Dependencies<IAggregate>) {
     this.#client = dependencies.mongooseClient;
     this.#schema = dependencies.mongooseSchema;
   }

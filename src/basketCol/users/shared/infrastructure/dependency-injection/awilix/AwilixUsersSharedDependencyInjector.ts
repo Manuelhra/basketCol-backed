@@ -6,13 +6,17 @@ import { ExpressUsersSharedServerErrorHandler } from '../../server/express/Expre
 import { IUsersSharedContainer } from '../IUsersSharedContainer';
 
 export class AwilixUsersSharedDependencyInjector extends AwilixDependencyInjector<IUsersSharedContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      usersSharedServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressUsersSharedServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      usersSharedServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressUsersSharedServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixUsersSharedDependencyInjector {
+    return new AwilixUsersSharedDependencyInjector();
   }
 }

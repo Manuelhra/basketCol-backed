@@ -10,16 +10,20 @@ import { IServerStatusContainer } from '../IServerStatusContainer';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 
 export class AwilixServerStatusDependencyInjector extends AwilixDependencyInjector<IServerStatusContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
       basePath: AwilixDependencyInjector.registerAsValue<string>(__dirname),
-      serverStatusGETController: AwilixDependencyInjector.registerAsClass<IController>(ExpressServerStatusGETController).singleton(),
-      fileSystem: AwilixDependencyInjector.registerAsClass<IFileSystem>(GlobFileSystem).singleton(),
-      serverStatusRouteManager: AwilixDependencyInjector.registerAsClass<IRouteManager>(ExpressServerStatusRouteManager).singleton(),
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
+      serverStatusGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressServerStatusGETController.create).singleton(),
+      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(GlobFileSystem.create).singleton(),
+      serverStatusRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressServerStatusRouteManager.create).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixServerStatusDependencyInjector {
+    return new AwilixServerStatusDependencyInjector();
   }
 }

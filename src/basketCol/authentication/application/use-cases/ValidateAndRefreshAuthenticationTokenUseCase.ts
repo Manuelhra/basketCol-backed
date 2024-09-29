@@ -51,7 +51,7 @@ export class ValidateAndRefreshAuthenticationTokenUseCase implements IValidateAn
 
   readonly #tokenGeneratorService: ITokenGeneratorService;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#tokenValidatorService = dependencies.tokenValidatorService;
     this.#playerUserRepository = dependencies.playerUserRepository;
     this.#hostUserRepository = dependencies.hostUserRepository;
@@ -61,19 +61,23 @@ export class ValidateAndRefreshAuthenticationTokenUseCase implements IValidateAn
     this.#tokenGeneratorService = dependencies.tokenGeneratorService;
   }
 
+  public static create(dependencies: Dependencies): ValidateAndRefreshAuthenticationTokenUseCase {
+    return new ValidateAndRefreshAuthenticationTokenUseCase(dependencies);
+  }
+
   public async execute(dto: ValidateAndRefreshAuthenticationTokenDTO): Promise<{ newAuthenticationToken: string }> {
     const { authenticationToken } = dto;
 
     const userAuthenticationTokenPayload = this.#tokenValidatorService.validateAuthenticationToken(authenticationToken);
 
     if (userAuthenticationTokenPayload === null) {
-      throw new InvalidAuthenticationTokenError();
+      throw InvalidAuthenticationTokenError.create();
     }
 
     const userFound = await this.#findUserByType(userAuthenticationTokenPayload.userType, userAuthenticationTokenPayload.userId);
 
     if (userFound === null || userFound === undefined) {
-      throw new UserNotFoundError(userAuthenticationTokenPayload.userId);
+      throw UserNotFoundError.create(userAuthenticationTokenPayload.userId);
     }
 
     return {
@@ -106,7 +110,7 @@ export class ValidateAndRefreshAuthenticationTokenUseCase implements IValidateAn
         break;
 
       default:
-        throw new InvalidUserTypeError(userType);
+        throw InvalidUserTypeError.create(userType);
     }
 
     return userFound;

@@ -15,8 +15,12 @@ type Dependencies = {
 export class ExpressGymServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.httpResponseHandler = dependencies.httpResponseHandler;
+  }
+
+  public static create(dependencies: Dependencies): ExpressGymServerErrorHandler {
+    return new ExpressGymServerErrorHandler(dependencies);
   }
 
   public run(response: Response, error: Error): void {

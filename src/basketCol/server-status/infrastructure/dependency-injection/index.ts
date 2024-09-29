@@ -1,10 +1,10 @@
 import { DependencyContainerNotInitializedError } from '../../../shared/infrastructure/exceptions/DependencyContainerNotInitializedError';
 import { AwilixServerStatusDependencyInjector } from './awilix/AwilixServerStatusDependencyInjector';
 
-const awilixServerStatusContainer = new AwilixServerStatusDependencyInjector().getContainer();
+const awilixServerStatusContainer = AwilixServerStatusDependencyInjector.create().getContainer();
 
 if (awilixServerStatusContainer === null) {
-  throw new DependencyContainerNotInitializedError();
+  throw DependencyContainerNotInitializedError.create();
 }
 
 export const serverStatusGETController = awilixServerStatusContainer.resolve('serverStatusGETController');

@@ -1,3 +1,3 @@
-import { ITeamFounderUser } from '@basketcol/domain';
+import { ITeamFounderUserPrimitives } from '@basketcol/domain';
 
-export interface IMongooseTeamFounderUserDocument extends ITeamFounderUser {}
+export interface IMongooseTeamFounderUserDocument extends ITeamFounderUserPrimitives {}

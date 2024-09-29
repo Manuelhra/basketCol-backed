@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  IPlayerUserDefensiveAttributes,
+  IPlayerUserDefensiveAttributesPrimitives,
   IPlayerUserDefensiveAttributesRepository,
   PlayerUserDefensiveAttributes,
   PlayerUserValidationService,
@@ -30,11 +30,15 @@ export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttribu
 
   readonly #playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#playerUserDefensiveAttributesRepository = dependencies.playerUserDefensiveAttributesRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateDefensiveAttributesUseCase {
+    return new CreateDefensiveAttributesUseCase(dependencies);
   }
 
   public async execute(dto: CreateDefensiveAttributesDTO): Promise<void> {
@@ -50,7 +54,7 @@ export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttribu
     const pUDAId: PUDAId = PUDAId.create(id);
     const pUDAReferencedPlayerUserId: PUDAReferencedPlayerUserId = PUDAReferencedPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUDAId, IPlayerUserDefensiveAttributes, PlayerUserDefensiveAttributes>(pUDAId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PUDAId, IPlayerUserDefensiveAttributesPrimitives, PlayerUserDefensiveAttributes>(pUDAId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUDAReferencedPlayerUserId.value);
 
     const pUDACreatedAt: PUDACreatedAt = this.#businessDateService.getCurrentDate();

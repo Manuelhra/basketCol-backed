@@ -5,7 +5,7 @@ export const hostUserCredentialsPasswordValidation = (userPassword: string) => {
   const hostUserCredentials = convictConfig.get('hostUserCredentials');
 
   if (hostUserCredentials.password !== userPassword) {
-    throw new InvalidHostUserCredentialsError();
+    throw InvalidHostUserCredentialsError.create();
   }
 
   return true;

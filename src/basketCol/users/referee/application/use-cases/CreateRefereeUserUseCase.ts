@@ -2,7 +2,7 @@ import {
   BusinessDateService,
   EmailUniquenessValidatorService,
   IdUniquenessValidatorService,
-  IRefereeUser,
+  IRefereeUserPrimitives,
   IRefereeUserRepository,
   RefereeUser,
   RefereeUserCreatedAt,
@@ -32,11 +32,15 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
 
   readonly #refereeUserRepository: IRefereeUserRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
     this.#businessDateService = dependencies.businessDateService;
     this.#refereeUserRepository = dependencies.refereeUserRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateRefereeUserUseCase {
+    return new CreateRefereeUserUseCase(dependencies);
   }
 
   public async execute(dto: CreateRefereeUserDTO): Promise<void> {
@@ -51,8 +55,8 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
     const refereeUserId: RefereeUserId = RefereeUserId.create(id);
     const refereeUserEmail: RefereeUserEmail = RefereeUserEmail.create({ value: email.value, verified: false });
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<RefereeUserId, IRefereeUser, RefereeUser>(refereeUserId);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<RefereeUserEmail, IRefereeUser, RefereeUser>(refereeUserEmail);
+    await this.#idUniquenessValidatorService.ensureUniqueId<RefereeUserId, IRefereeUserPrimitives, RefereeUser>(refereeUserId);
+    await this.#emailUniquenessValidatorService.ensureUniqueEmail<RefereeUserEmail, IRefereeUserPrimitives, RefereeUser>(refereeUserEmail);
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;

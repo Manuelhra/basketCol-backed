@@ -1,5 +1,5 @@
 import {
-  ILeagueFounderUser,
+  ILeagueFounderUserPrimitives,
   ILeagueFounderUserRepository,
   LeagueFounderUser,
   LeagueFounderUserEmail,
@@ -18,20 +18,24 @@ type Dependencies = {
   securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILeagueFounderUser, LeagueFounderUser> implements ILeagueFounderUserRepository {
+export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILeagueFounderUserPrimitives, LeagueFounderUser> implements ILeagueFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
     return 'league-founder-user';
   }
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongooseLeagueFounderUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
+  }
+
+  public static create(dependencies: Dependencies): MongooseLeagueFounderUserRepository {
+    return new MongooseLeagueFounderUserRepository(dependencies);
   }
 
   public async searchById(leagueFounderUserId: LeagueFounderUserId): Promise<Nullable<LeagueFounderUser>> {

@@ -1,10 +1,10 @@
 import { DependencyContainerNotInitializedError } from '../exceptions/DependencyContainerNotInitializedError';
 import { AwilixSharedDependencyInjector } from './awilix/AwilixSharedDependencyInjector';
 
-const awilixSharedContainer = new AwilixSharedDependencyInjector().getContainer();
+const awilixSharedContainer = AwilixSharedDependencyInjector.create().getContainer();
 
 if (awilixSharedContainer === null) {
-  throw new DependencyContainerNotInitializedError();
+  throw DependencyContainerNotInitializedError.create();
 }
 
 export const sharedServerErrorHandler = awilixSharedContainer.resolve('sharedServerErrorHandler');

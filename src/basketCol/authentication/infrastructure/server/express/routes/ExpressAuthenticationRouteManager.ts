@@ -8,7 +8,11 @@ type Dependencies = {
 };
 
 export class ExpressAuthenticationRouteManager extends ExpressBaseRouteManager implements IRouteManager {
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super(dependencies);
+  }
+
+  public static create(dependencies: Dependencies): ExpressAuthenticationRouteManager {
+    return new ExpressAuthenticationRouteManager(dependencies);
   }
 }

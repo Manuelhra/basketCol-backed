@@ -6,13 +6,17 @@ import { ExpressLeagueServerErrorHandler } from '../../server/express/ExpressLea
 import { ILeagueContainer } from '../ILeagueContainer';
 
 export class AwilixLeagueDependencyInjector extends AwilixDependencyInjector<ILeagueContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      leagueServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressLeagueServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      leagueServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressLeagueServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixLeagueDependencyInjector {
+    return new AwilixLeagueDependencyInjector();
   }
 }

@@ -12,8 +12,12 @@ type Dependencies = {
 export class ExpressTeamFounderUserServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.httpResponseHandler = dependencies.httpResponseHandler;
+  }
+
+  public static create(dependencies: Dependencies): ExpressTeamFounderUserServerErrorHandler {
+    return new ExpressTeamFounderUserServerErrorHandler(dependencies);
   }
 
   public run(response: Response, error: Error): void {

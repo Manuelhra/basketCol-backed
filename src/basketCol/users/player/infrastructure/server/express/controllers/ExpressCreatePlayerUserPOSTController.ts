@@ -12,8 +12,12 @@ type Dependencies = {
 export class ExpressCreatePlayerUserPOSTController implements ExpressBaseController {
   readonly #createPlayerUserUseCase: ICreatePlayerUserUseCase;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#createPlayerUserUseCase = dependencies.createPlayerUserUseCase;
+  }
+
+  public static create(dependencies: Dependencies): ExpressCreatePlayerUserPOSTController {
+    return new ExpressCreatePlayerUserPOSTController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {

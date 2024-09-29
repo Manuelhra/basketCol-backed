@@ -26,24 +26,28 @@ import { HostUserConfigFactory } from '../../adapters/HostUserConfigFactory';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
 
 export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<IHostUserContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
       basePath: AwilixDependencyInjector.registerAsValue<string>(__dirname),
-      businessDateService: AwilixDependencyInjector.registerAsClass<BusinessDateService>(BusinessDateService).singleton(),
-      createHostUserUseCase: AwilixDependencyInjector.registerAsClass<CreateHostUserUseCase>(CreateHostUserUseCase).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsClass<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService).singleton(),
-      fileSystem: AwilixDependencyInjector.registerAsClass<IFileSystem>(GlobFileSystem).singleton(),
-      hostUserConfigFactory: AwilixDependencyInjector.registerAsClass<IHostUserConfigFactory>(HostUserConfigFactory),
-      createHostUserPOSTController: AwilixDependencyInjector.registerAsClass<IController>(ExpressCreateHostUserPOSTController).singleton(),
-      hostUserRepository: AwilixDependencyInjector.registerAsClass<IHostUserRepository>(MongooseHostUserRepository).singleton(),
-      hostUserRouteManager: AwilixDependencyInjector.registerAsClass<IRouteManager>(ExpressHostUserRouteManager).singleton(),
-      hostUserServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressHostUserServerErrorHandler).singleton(),
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsClass<IPasswordHashingService>(BcryptPasswordHashingService).singleton(),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsClass<SecurePasswordCreationService>(SecurePasswordCreationService).singleton(),
+      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      createHostUserUseCase: AwilixDependencyInjector.registerAsFunction<CreateHostUserUseCase>(CreateHostUserUseCase.create).singleton(),
+      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(GlobFileSystem.create).singleton(),
+      hostUserConfigFactory: AwilixDependencyInjector.registerAsFunction<IHostUserConfigFactory>(HostUserConfigFactory.create).singleton(),
+      createHostUserPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreateHostUserPOSTController.create).singleton(),
+      hostUserRepository: AwilixDependencyInjector.registerAsFunction<IHostUserRepository>(MongooseHostUserRepository.create).singleton(),
+      hostUserRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressHostUserRouteManager.create).singleton(),
+      hostUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressHostUserServerErrorHandler.create).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
+      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
     });
+  }
+
+  public static create(): AwilixHostUserDependencyInjector {
+    return new AwilixHostUserDependencyInjector();
   }
 }

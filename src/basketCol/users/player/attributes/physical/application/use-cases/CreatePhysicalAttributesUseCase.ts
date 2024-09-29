@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  IPlayerUserPhysicalAttributes,
+  IPlayerUserPhysicalAttributesPrimitives,
   IPlayerUserPhysicalAttributesRepository,
   PlayerUserPhysicalAttributes,
   PlayerUserValidationService,
@@ -30,11 +30,15 @@ export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttribute
 
   readonly #playerUserPhysicalAttributesRepository: IPlayerUserPhysicalAttributesRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#playerUserPhysicalAttributesRepository = dependencies.playerUserPhysicalAttributesRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreatePhysicalAttributesUseCase {
+    return new CreatePhysicalAttributesUseCase(dependencies);
   }
 
   public async execute(dto: CreatePhysicalAttributesDTO): Promise<void> {
@@ -51,7 +55,7 @@ export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttribute
     const physicalAttributesId: PUPAId = PUPAId.create(id);
     const pUPAReferencedPlayerUserId: PUPAReferencedPlayerUserId = PUPAReferencedPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUPAId, IPlayerUserPhysicalAttributes, PlayerUserPhysicalAttributes>(physicalAttributesId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PUPAId, IPlayerUserPhysicalAttributesPrimitives, PlayerUserPhysicalAttributes>(physicalAttributesId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUPAReferencedPlayerUserId.value);
 
     const pUPACreatedAt: PUPACreatedAt = this.#businessDateService.getCurrentDate();

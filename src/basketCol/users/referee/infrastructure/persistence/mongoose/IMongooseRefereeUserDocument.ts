@@ -1,3 +1,3 @@
-import { IRefereeUser } from '@basketcol/domain';
+import { IRefereeUserPrimitives } from '@basketcol/domain';
 
-export interface IMongooseRefereeUserDocument extends IRefereeUser {}
+export interface IMongooseRefereeUserDocument extends IRefereeUserPrimitives {}

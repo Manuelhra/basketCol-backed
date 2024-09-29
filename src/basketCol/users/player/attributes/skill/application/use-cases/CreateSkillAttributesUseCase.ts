@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  IPlayerUserSkillAttributes,
+  IPlayerUserSkillAttributesPrimitives,
   IPlayerUserSkillAttributesRepository,
   PlayerUserSkillAttributes,
   PlayerUserValidationService,
@@ -30,11 +30,15 @@ export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCa
 
   readonly #playerUserSkillAttributesRepository: IPlayerUserSkillAttributesRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#playerUserSkillAttributesRepository = dependencies.playerUserSkillAttributesRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateSkillAttributesUseCase {
+    return new CreateSkillAttributesUseCase(dependencies);
   }
 
   public async execute(dto: CreateSkillAttributesDTO): Promise<void> {
@@ -49,7 +53,7 @@ export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCa
     const pUSASkillAttributesId: PUSASkillAttributesId = PUSASkillAttributesId.create(id);
     const pUSASkillAttributesReferencedPlayerUserId: PUSASkillAttributesReferencedPlayerUserId = PUSASkillAttributesReferencedPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUSASkillAttributesId, IPlayerUserSkillAttributes, PlayerUserSkillAttributes>(pUSASkillAttributesId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PUSASkillAttributesId, IPlayerUserSkillAttributesPrimitives, PlayerUserSkillAttributes>(pUSASkillAttributesId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUSASkillAttributesReferencedPlayerUserId.value);
 
     const pUSASkillAttributesCreatedAt: PUSASkillAttributesCreatedAt = this.#businessDateService.getCurrentDate();

@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  ILeagueSeasonFixture,
+  ILeagueSeasonFixturePrimitives,
   ILeagueSeasonFixtureRepository,
   LeagueSeasonFixture,
   LeagueSeasonFixtureValidationService,
@@ -35,12 +35,16 @@ export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixt
 
   readonly #leagueSeasonFixtureRepository: ILeagueSeasonFixtureRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#leagueSeasonValidationService = dependencies.leagueSeasonValidationService;
     this.#leagueSeasonFixtureValidationService = dependencies.leagueSeasonFixtureValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#leagueSeasonFixtureRepository = dependencies.leagueSeasonFixtureRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateLeagueSeasonFixtureUseCase {
+    return new CreateLeagueSeasonFixtureUseCase(dependencies);
   }
 
   public async execute(dto: CreateLeagueSeasonFixtureDTO): Promise<void> {
@@ -55,7 +59,7 @@ export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixt
     const lSFixtureDate: LSFixtureDate = LSFixtureDate.create(date);
     const lSFixtureLeagueSeasonId: LSFixtureLeagueSeasonId = LSFixtureLeagueSeasonId.create(leagueSeasonId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LSFixtureId, ILeagueSeasonFixture, LeagueSeasonFixture>(lSFixtureId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<LSFixtureId, ILeagueSeasonFixturePrimitives, LeagueSeasonFixture>(lSFixtureId);
     await this.#leagueSeasonValidationService.ensureLeagueSeasonExists(lSFixtureLeagueSeasonId.value);
     await this.#leagueSeasonFixtureValidationService.ensureNoFixtureExistsForDateAndLeagueSeason(lSFixtureLeagueSeasonId, lSFixtureDate);
 

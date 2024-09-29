@@ -6,13 +6,17 @@ import { ExpressRefereeUserServerErrorHandler } from '../../server/express/Expre
 import { IRefereeUserContainer } from '../IRefereeUserContainer';
 
 export class AwilixRefereeUserDependencyInjector extends AwilixDependencyInjector<IRefereeUserContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      refereeUserServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressRefereeUserServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      refereeUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressRefereeUserServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixRefereeUserDependencyInjector {
+    return new AwilixRefereeUserDependencyInjector();
   }
 }

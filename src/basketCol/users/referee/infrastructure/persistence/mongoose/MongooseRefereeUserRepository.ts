@@ -1,5 +1,5 @@
 import {
-  IRefereeUser,
+  IRefereeUserPrimitives,
   IRefereeUserRepository,
   Nullable,
   RefereeUser,
@@ -18,20 +18,24 @@ type Dependencies = {
   securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUser, RefereeUser> implements IRefereeUserRepository {
+export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUserPrimitives, RefereeUser> implements IRefereeUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
     return 'referee-user';
   }
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongooseRefereeUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
+  }
+
+  public static create(dependencies: Dependencies): MongooseRefereeUserRepository {
+    return new MongooseRefereeUserRepository(dependencies);
   }
 
   public async searchById(refereeUserId: RefereeUserId): Promise<Nullable<RefereeUser>> {

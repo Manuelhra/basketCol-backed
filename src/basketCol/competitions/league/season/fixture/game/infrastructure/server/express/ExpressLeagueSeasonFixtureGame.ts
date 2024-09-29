@@ -16,8 +16,12 @@ type Dependencies = {
 export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServerErrorHandler {
   protected readonly httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.httpResponseHandler = dependencies.httpResponseHandler;
+  }
+
+  public static create(dependencies: Dependencies): ExpressLeagueSeasonFixtureGameServerErrorHandler {
+    return new ExpressLeagueSeasonFixtureGameServerErrorHandler(dependencies);
   }
 
   public run(response: Response, error: Error): void {

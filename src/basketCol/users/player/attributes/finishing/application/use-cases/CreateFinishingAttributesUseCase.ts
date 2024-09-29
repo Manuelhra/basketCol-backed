@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  IPlayerUserFinishingAttributes,
+  IPlayerUserFinishingAttributesPrimitives,
   IPlayerUserFinishingAttributesRepository,
   PlayerUserFinishingAttributes,
   PlayerUserValidationService,
@@ -30,11 +30,15 @@ export class CreateFinishingAttributesUseCase implements ICreateFinishingAttribu
 
   readonly #playerUserFinishingAttributesRepository: IPlayerUserFinishingAttributesRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#playerUserFinishingAttributesRepository = dependencies.playerUserFinishingAttributesRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateFinishingAttributesUseCase {
+    return new CreateFinishingAttributesUseCase(dependencies);
   }
 
   public async execute(dto: CreateFinishingAttributesDTO): Promise<void> {
@@ -50,7 +54,7 @@ export class CreateFinishingAttributesUseCase implements ICreateFinishingAttribu
     const pUFAId: PUFAId = PUFAId.create(id);
     const pUFAReferencedPlayerUserId: PUFAReferencedPlayerUserId = PUFAReferencedPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUFAId, IPlayerUserFinishingAttributes, PlayerUserFinishingAttributes>(pUFAId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PUFAId, IPlayerUserFinishingAttributesPrimitives, PlayerUserFinishingAttributes>(pUFAId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUFAReferencedPlayerUserId.value);
 
     const pUFACreatedAt: PUFACreatedAt = this.#businessDateService.getCurrentDate();

@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  ILeagueSeasonAwards,
+  ILeagueSeasonAwardsPrimitives,
   ILeagueSeasonAwardsRepository,
   LeagueSeasonAwards,
   LeagueSeasonAwardsId,
@@ -45,13 +45,17 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
 
   readonly #leagueSeasonAwardsRepository: ILeagueSeasonAwardsRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#teamValidationService = dependencies.teamValidationService;
     this.#leagueSeasonValidationService = dependencies.leagueSeasonValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#leagueSeasonAwardsRepository = dependencies.leagueSeasonAwardsRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateLeagueSeasonAwardsUseCase {
+    return new CreateLeagueSeasonAwardsUseCase(dependencies);
   }
 
   public async execute(dto: CreateLeagueSeasonAwardsDTO): Promise<void> {
@@ -77,7 +81,7 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
     const lSAChampionTeamId: LSAChampionTeamId = LSAChampionTeamId.create(championTeamId);
     const lSALeagueSeasonId: LSAReferencedLeagueSeasonId = LSAReferencedLeagueSeasonId.create(leagueSeasonId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonAwardsId, ILeagueSeasonAwards, LeagueSeasonAwards>(leagueSeasonAwardsId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonAwardsId, ILeagueSeasonAwardsPrimitives, LeagueSeasonAwards>(leagueSeasonAwardsId);
     await this.#playerUserValidationService.ensurePlayerUserExists(lSABestThreePointShooterId.value);
     await this.#playerUserValidationService.ensurePlayerUserExists(lSABestTwoPointShooterId.value);
     await this.#playerUserValidationService.ensurePlayerUserExists(lSABestFreeThrowShooterId.value);

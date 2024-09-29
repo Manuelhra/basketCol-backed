@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  IPlayerUserShootingAttributes,
+  IPlayerUserShootingAttributesPrimitives,
   IPlayerUserShootingAttributesRepository,
   PlayerUserShootingAttributes,
   PlayerUserValidationService,
@@ -30,11 +30,15 @@ export class CreateShootingAttributesUseCase implements ICreateShootingAttribute
 
   readonly #playerUserShootingAttributesRepository: IPlayerUserShootingAttributesRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#playerUserShootingAttributesRepository = dependencies.playerUserShootingAttributesRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateShootingAttributesUseCase {
+    return new CreateShootingAttributesUseCase(dependencies);
   }
 
   public async execute(dto: CreateShootingAttributesDTO): Promise<void> {
@@ -50,7 +54,7 @@ export class CreateShootingAttributesUseCase implements ICreateShootingAttribute
     const pUShootingAttributesId: PUShootingAttributesId = PUShootingAttributesId.create(id);
     const pUShootingAttributesReferencedPlayerUserId: PUShootingAttributesReferencedPlayerUserId = PUShootingAttributesReferencedPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUShootingAttributesId, IPlayerUserShootingAttributes, PlayerUserShootingAttributes>(pUShootingAttributesId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PUShootingAttributesId, IPlayerUserShootingAttributesPrimitives, PlayerUserShootingAttributes>(pUShootingAttributesId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUShootingAttributesReferencedPlayerUserId.value);
 
     const pUShootingAttributesCreatedAt: PUShootingAttributesCreatedAt = this.#businessDateService.getCurrentDate();

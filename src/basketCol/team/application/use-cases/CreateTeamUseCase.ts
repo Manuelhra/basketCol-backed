@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  ITeam,
+  ITeamPrimitives,
   ITeamRepository,
   Team,
   TeamCreatedAt,
@@ -30,11 +30,15 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
 
   readonly #teamRepository: ITeamRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#teamFounderUserValidationService = dependencies.teamFounderUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#teamRepository = dependencies.teamRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateTeamUseCase {
+    return new CreateTeamUseCase(dependencies);
   }
 
   public async execute(dto: CreateTeamDTO): Promise<void> {
@@ -47,7 +51,7 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
     const teamId: TeamId = TeamId.create(id);
     const tReferencedTeamFounderUserId: TReferencedTeamFounderUserId = TReferencedTeamFounderUserId.create(teamFounderUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<TeamId, ITeam, Team>(teamId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<TeamId, ITeamPrimitives, Team>(teamId);
     await this.#teamFounderUserValidationService.ensureTeamFounderUserExists(tReferencedTeamFounderUserId.value);
 
     const teamCreatedAt: TeamCreatedAt = this.#businessDateService.getCurrentDate();

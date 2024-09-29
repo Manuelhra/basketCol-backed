@@ -1,10 +1,10 @@
 import { DependencyContainerNotInitializedError } from '../../../../shared/infrastructure/exceptions/DependencyContainerNotInitializedError';
 import { AwilixLeagueDependencyInjector } from './awilix/AwilixLeagueDependencyInjector';
 
-const awilixLeagueContainer = new AwilixLeagueDependencyInjector().getContainer();
+const awilixLeagueContainer = AwilixLeagueDependencyInjector.create().getContainer();
 
 if (awilixLeagueContainer === null) {
-  throw new DependencyContainerNotInitializedError();
+  throw DependencyContainerNotInitializedError.create();
 }
 
 export const leagueServerErrorHandler = awilixLeagueContainer.resolve('leagueServerErrorHandler');

@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  IPlayerUserCareerStats,
+  IPlayerUserCareerStatsPrimitives,
   IPlayerUserCareerStatsRepository,
   PlayerUserCareerStats,
   PlayerUserValidationService,
@@ -30,11 +30,15 @@ export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCare
 
   readonly #playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#playerUserCareerStatsRepository = dependencies.playerUserCareerStatsRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreatePlayerUserCareerStatsUseCase {
+    return new CreatePlayerUserCareerStatsUseCase(dependencies);
   }
 
   public async execute(dto: CreatePlayerUserCareerStatsDTO): Promise<void> {
@@ -64,7 +68,7 @@ export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCare
     const pUCStatsId: PUCStatsId = PUCStatsId.create(id);
     const pUCStatsPlayerUserId: PUCStatsPlayerUserId = PUCStatsPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUCStatsId, IPlayerUserCareerStats, PlayerUserCareerStats>(pUCStatsId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PUCStatsId, IPlayerUserCareerStatsPrimitives, PlayerUserCareerStats>(pUCStatsId);
     await this.#playerUserValidationService.ensurePlayerUserExists(pUCStatsPlayerUserId.value);
 
     const pUCStatsCreatedAt: PUCStatsCreatedAt = this.#businessDateService.getCurrentDate();

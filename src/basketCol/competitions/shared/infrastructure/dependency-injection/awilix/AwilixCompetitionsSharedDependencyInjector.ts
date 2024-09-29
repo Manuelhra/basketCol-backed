@@ -6,13 +6,17 @@ import { ExpressCompetitionsSharedServerErrorHandler } from '../../server/expres
 import { ICompetitionsSharedContainer } from '../ICompetitionsSharedContainer';
 
 export class AwilixCompetitionsSharedDependencyInjector extends AwilixDependencyInjector<ICompetitionsSharedContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      competitionsSharedServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressCompetitionsSharedServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      competitionsSharedServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressCompetitionsSharedServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixCompetitionsSharedDependencyInjector {
+    return new AwilixCompetitionsSharedDependencyInjector();
   }
 }

@@ -2,7 +2,7 @@ import {
   HostUser,
   HostUserEmail,
   HostUserId,
-  IHostUser,
+  IHostUserPrimitives,
   IHostUserRepository,
   Nullable,
   SecurePasswordCreationService,
@@ -18,20 +18,24 @@ type Dependencies = {
   securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongooseHostUserRepository extends MongooseRepository<IHostUser, HostUser> implements IHostUserRepository {
+export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrimitives, HostUser> implements IHostUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
     return 'host-user';
   }
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongooseHostUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
+  }
+
+  public static create(dependencies: Dependencies): MongooseHostUserRepository {
+    return new MongooseHostUserRepository(dependencies);
   }
 
   public async search(): Promise<Nullable<HostUser>> {

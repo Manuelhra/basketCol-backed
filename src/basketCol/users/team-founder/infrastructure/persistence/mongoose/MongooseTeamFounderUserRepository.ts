@@ -1,5 +1,5 @@
 import {
-  ITeamFounderUser,
+  ITeamFounderUserPrimitives,
   ITeamFounderUserRepository,
   Nullable,
   SecurePasswordCreationService,
@@ -18,20 +18,24 @@ type Dependencies = {
   securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamFounderUser, TeamFounderUser> implements ITeamFounderUserRepository {
+export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamFounderUserPrimitives, TeamFounderUser> implements ITeamFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
     return 'team-founder-user';
   }
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongooseTeamFounderUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
+  }
+
+  public static create(dependencies: Dependencies): MongooseTeamFounderUserRepository {
+    return new MongooseTeamFounderUserRepository(dependencies);
   }
 
   public async searchById(teamFounderUserId: TeamFounderUserId): Promise<Nullable<TeamFounderUser>> {

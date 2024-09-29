@@ -63,7 +63,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
   readonly #tokenGeneratorService: ITokenGeneratorService;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#playerUserRepository = dependencies.playerUserRepository;
     this.#hostUserRepository = dependencies.hostUserRepository;
     this.#refereeUserRepository = dependencies.refereeUserRepository;
@@ -71,6 +71,10 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     this.#leagueFounderUserRepository = dependencies.leagueFounderUserRepository;
     this.#passwordValidationService = dependencies.passwordValidationService;
     this.#tokenGeneratorService = dependencies.tokenGeneratorService;
+  }
+
+  public static create(dependencies: Dependencies): AuthenticateUserUseCase {
+    return new AuthenticateUserUseCase(dependencies);
   }
 
   public async execute(dto: AuthenticateUserDTO): Promise<{ authenticatedUser: AnySystemUserType; authenticationToken: string; }> {
@@ -94,7 +98,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
       case HostUserType.value: {
         if (email === undefined || email === null) {
-          throw new MissingEmailError();
+          throw MissingEmailError.create();
         }
 
         const hostUserEmail = HostUserEmail.create({ value: email, verified: true });
@@ -106,7 +110,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
       case LeagueFounderUserType.value: {
         if (email === undefined || email === null) {
-          throw new MissingEmailError();
+          throw MissingEmailError.create();
         }
 
         const leagueFounderUserEmail = LeagueFounderUserEmail.create({ value: email, verified: true });
@@ -118,7 +122,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
       case RefereeUserType.value: {
         if (email === undefined || email === null) {
-          throw new MissingEmailError();
+          throw MissingEmailError.create();
         }
 
         const refereeUserEmail = RefereeUserEmail.create({ value: email, verified: true });
@@ -130,7 +134,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
 
       case TeamFounderUserType.value: {
         if (email === undefined || email === null) {
-          throw new MissingEmailError();
+          throw MissingEmailError.create();
         }
 
         const teamFounderUserEmail = TeamFounderUserEmail.create({ value: email, verified: true });
@@ -141,11 +145,11 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
       }
 
       default:
-        throw new InvalidUserTypeError(userType);
+        throw InvalidUserTypeError.create(userType);
     }
 
     if (userFound === null || userFound === undefined) {
-      throw new InvalidCredentialsError();
+      throw InvalidCredentialsError.create();
     }
 
     return {
@@ -160,7 +164,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     playerUserEmail: Nullable<PlayerUserEmail>,
   ): Promise<Nullable<PlayerUser>> {
     if (playerUserNickname === undefined && playerUserEmail === undefined) {
-      throw new MissingCredentialsError();
+      throw MissingCredentialsError.create();
     }
 
     let playerUserFound: Nullable<PlayerUser> = null;

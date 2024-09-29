@@ -6,13 +6,17 @@ import { ExpressLeagueSeasonFixtureServerErrorHandler } from '../../server/expre
 import { ILeagueSeasonFixtureContainer } from '../ILeagueSeasonFixtureContainer';
 
 export class AwilixLeagueSeasonFixtureDependencyInjector extends AwilixDependencyInjector<ILeagueSeasonFixtureContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      leagueSeasonFixtureServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressLeagueSeasonFixtureServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      leagueSeasonFixtureServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressLeagueSeasonFixtureServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixLeagueSeasonFixtureDependencyInjector {
+    return new AwilixLeagueSeasonFixtureDependencyInjector();
   }
 }

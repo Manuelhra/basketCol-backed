@@ -2,7 +2,7 @@ import {
   BusinessDateService,
   DateValueObject,
   IdUniquenessValidatorService,
-  ILeague,
+  ILeaguePrimitives,
   ILeagueRepository,
   League,
   LeagueCreatedAt,
@@ -37,12 +37,16 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
 
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#businessDateService = dependencies.BusinessDateService;
     this.#leagueValidationNameService = dependencies.leagueValidationNameService;
     this.#leagueRepository = dependencies.leagueRepository;
     this.#leagueFounderUserValidationService = dependencies.leagueFounderUserValidationService;
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
+  }
+
+  public static create(dependencies: Dependencies): CreateLeagueUseCase {
+    return new CreateLeagueUseCase(dependencies);
   }
 
   public async execute(dto: CreateLeagueDTO): Promise<void> {
@@ -63,7 +67,7 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
     const leagueEstablishmentDate: LeagueEstablishmentDate = LeagueEstablishmentDate.create(establishmentDate);
     const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueId, ILeague, League>(leagueId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueId, ILeaguePrimitives, League>(leagueId);
     await this.#leagueValidationNameService.validateUniqueShortName(leagueName);
     await this.#leagueValidationNameService.validateUniqueOfficialName(leagueName);
 

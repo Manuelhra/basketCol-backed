@@ -6,13 +6,17 @@ import { ExpressCourtServerErrorHandler } from '../../server/express/ExpressCour
 import { ICourtContainer } from '../ICourtContainer';
 
 export class AwilixCourtDependencyInjector extends AwilixDependencyInjector<ICourtContainer> {
-  public constructor() {
+  private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      httpResponseHandler: AwilixDependencyInjector.registerAsClass<IHttpResponseHandler>(HttpResponseHandler).singleton(),
-      courtServerErrorHandler: AwilixDependencyInjector.registerAsClass<IServerErrorHandler>(ExpressCourtServerErrorHandler).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
+      courtServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressCourtServerErrorHandler.create).singleton(),
     });
+  }
+
+  public static create(): AwilixCourtDependencyInjector {
+    return new AwilixCourtDependencyInjector();
   }
 }

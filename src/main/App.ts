@@ -21,7 +21,7 @@ import { ExpressServer } from '../basketCol/shared/infrastructure/server/express
 export class App {
   readonly #server: IServer;
 
-  constructor() {
+  private constructor() {
     this.#server = ExpressServer.create();
 
     this.#setUpRoutes();
@@ -34,6 +34,10 @@ export class App {
 
   public stop(): void {
     this.#server.stop();
+  }
+
+  public static create(): App {
+    return new App();
   }
 
   #setUpRoutes(): void {

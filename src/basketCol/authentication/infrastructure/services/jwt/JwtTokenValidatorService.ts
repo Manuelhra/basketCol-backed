@@ -16,7 +16,7 @@ export class JwtTokenValidatorService implements ITokenValidatorService {
     try {
       return jwt.verify(token, secretKey) as IUserAuthenticationTokenPayload;
     } catch (error) {
-      throw new InvalidAuthenticationTokenError();
+      throw InvalidAuthenticationTokenError.create();
     }
   }
 }

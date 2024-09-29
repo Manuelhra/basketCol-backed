@@ -1,5 +1,5 @@
 import {
-  IPlayerUser,
+  IPlayerUserPrimitives,
   IPlayerUserRepository,
   Nullable,
   PlayerUser,
@@ -19,20 +19,24 @@ type Dependencies = {
   securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser, PlayerUser> implements IPlayerUserRepository {
+export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUserPrimitives, PlayerUser> implements IPlayerUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
     return 'player-user';
   }
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super({
       mongooseClient: MongooseClientFactory.createMongooseClient(),
       mongooseSchema: mongoosePlayerUserSchema,
     });
 
     this.#securePasswordCreationService = dependencies.securePasswordCreationService;
+  }
+
+  public static create(dependencies: Dependencies): MongoosePlayerUserRepository {
+    return new MongoosePlayerUserRepository(dependencies);
   }
 
   public async searchById(playerUserId: PlayerUserId): Promise<Nullable<PlayerUser>> {

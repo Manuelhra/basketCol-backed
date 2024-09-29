@@ -39,7 +39,7 @@ export abstract class MongooseClientFactory {
       return mongooseClient;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      throw new DatabaseConnectionFailedError(errorMessage);
+      throw DatabaseConnectionFailedError.create(errorMessage);
     }
   }
 }

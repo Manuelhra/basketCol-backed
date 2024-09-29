@@ -15,11 +15,15 @@ export class ExpressValidateAndRefreshAuthenticationTokenPOSTController extends 
 
   readonly #httpResponseHandler: IHttpResponseHandler;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     super();
 
     this.#validateAndRefreshAuthenticationTokenUseCase = dependencies.validateAndRefreshAuthenticationTokenUseCase;
     this.#httpResponseHandler = dependencies.httpResponseHandler;
+  }
+
+  public static create(dependencies: Dependencies): ExpressValidateAndRefreshAuthenticationTokenPOSTController {
+    return new ExpressValidateAndRefreshAuthenticationTokenPOSTController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {

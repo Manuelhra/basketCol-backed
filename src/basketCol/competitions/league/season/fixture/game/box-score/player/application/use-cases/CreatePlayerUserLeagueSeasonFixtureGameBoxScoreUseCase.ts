@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  IPlayerUserLeagueSeasonFixtureGameBoxScore,
+  IPlayerUserLeagueSeasonFixtureGameBoxScorePrimitives,
   IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository,
   LeagueSeasonFixtureGameValidationService,
   PlayerUserLeagueSeasonFixtureGameBoxScore,
@@ -35,12 +35,16 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
 
   readonly #playerUserLeagueSeasonFixtureGameBoxScoreRepository: IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#leagueSeasonFixtureGameValidationService = dependencies.leagueSeasonFixtureGameValidationService;
     this.#playerUserValidationService = dependencies.playerUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#playerUserLeagueSeasonFixtureGameBoxScoreRepository = dependencies.playerUserLeagueSeasonFixtureGameBoxScoreRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase {
+    return new CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase(dependencies);
   }
 
   public async execute(dto: CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO): Promise<void> {
@@ -68,7 +72,7 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
     const pLSFGBoxScoreFixtureGameId: PLSFGBoxScoreFixtureGameId = PLSFGBoxScoreFixtureGameId.create(fixtureGameId);
     const pLSFGBoxScorePlayerUserId: PLSFGBoxScorePlayerUserId = PLSFGBoxScorePlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PLSFGBoxScoreId, IPlayerUserLeagueSeasonFixtureGameBoxScore, PlayerUserLeagueSeasonFixtureGameBoxScore>(pLSFGBoxScoreId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<PLSFGBoxScoreId, IPlayerUserLeagueSeasonFixtureGameBoxScorePrimitives, PlayerUserLeagueSeasonFixtureGameBoxScore>(pLSFGBoxScoreId);
     await this.#leagueSeasonFixtureGameValidationService.ensureLeagueSeasonFixtureGameExists(pLSFGBoxScoreFixtureGameId.value);
     await this.#playerUserValidationService.ensurePlayerUserExists(pLSFGBoxScorePlayerUserId.value);
 

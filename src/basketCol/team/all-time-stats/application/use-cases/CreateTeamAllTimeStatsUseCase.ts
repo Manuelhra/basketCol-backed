@@ -1,7 +1,7 @@
 import {
   BusinessDateService,
   IdUniquenessValidatorService,
-  ITeamAllTimeStats,
+  ITeamAllTimeStatsPrimitives,
   ITeamAllTimeStatsRepository,
   TATStatsCreatedAt,
   TATStatsId,
@@ -30,11 +30,15 @@ export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUse
 
   readonly #teamAllTimeStatsRepository: ITeamAllTimeStatsRepository;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#teamValidationService = dependencies.teamValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#teamAllTimeStatsRepository = dependencies.teamAllTimeStatsRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateTeamAllTimeStatsUseCase {
+    return new CreateTeamAllTimeStatsUseCase(dependencies);
   }
 
   public async execute(dto: CreateTeamAllTimeStatsDTO): Promise<void> {
@@ -64,7 +68,7 @@ export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUse
     const tATStatsId: TATStatsId = TATStatsId.create(id);
     const tATStatsTeamId: TATStatsTeamId = TATStatsTeamId.create(teamId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<TATStatsId, ITeamAllTimeStats, TeamAllTimeStats>(tATStatsId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<TATStatsId, ITeamAllTimeStatsPrimitives, TeamAllTimeStats>(tATStatsId);
     await this.#teamValidationService.ensureTeamExists(tATStatsTeamId.value);
 
     const tATStatsCreatedAt: TATStatsCreatedAt = this.#businessDateService.getCurrentDate();

@@ -9,7 +9,7 @@ import {
   GymUpdatedAt,
   HostUserValidationService,
   IdUniquenessValidatorService,
-  IGym,
+  IGymPrimitives,
   IGymRepository,
 } from '@basketcol/domain';
 
@@ -32,11 +32,15 @@ export class CreateGymUseCase implements ICreateGymUseCase {
 
   readonly #gymRepository: IGymRepository;
 
-  constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
     this.#hostUserValidationService = dependencies.hostUserValidationService;
     this.#businessDateService = dependencies.businessDateService;
     this.#gymRepository = dependencies.gymRepository;
+  }
+
+  public static create(dependencies: Dependencies): CreateGymUseCase {
+    return new CreateGymUseCase(dependencies);
   }
 
   public async execute(dto: CreateGymDTO): Promise<void> {
@@ -52,7 +56,7 @@ export class CreateGymUseCase implements ICreateGymUseCase {
     const gymEstablishmentDate: GymEstablishmentDate = GymEstablishmentDate.create(establishmentDate);
     const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<GymId, IGym, Gym>(gymId);
+    await this.#idUniquenessValidatorService.ensureUniqueId<GymId, IGymPrimitives, Gym>(gymId);
     await this.#hostUserValidationService.ensureHostUserExists(gymRegisteredById.value);
     this.#businessDateService.ensureNotGreaterThan<GymEstablishmentDate, DateValueObject>(gymEstablishmentDate, currentDate);
 

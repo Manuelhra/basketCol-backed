@@ -1,10 +1,10 @@
 import { DependencyContainerNotInitializedError } from '../../../../shared/infrastructure/exceptions/DependencyContainerNotInitializedError';
 import { AwilixCourtDependencyInjector } from './awilix/AwilixCourtDependencyInjector';
 
-const awilixCourtContainer = new AwilixCourtDependencyInjector().getContainer();
+const awilixCourtContainer = AwilixCourtDependencyInjector.create().getContainer();
 
 if (awilixCourtContainer === null) {
-  throw new DependencyContainerNotInitializedError();
+  throw DependencyContainerNotInitializedError.create();
 }
 
 export const courtServerErrorHandler = awilixCourtContainer.resolve('courtServerErrorHandler');

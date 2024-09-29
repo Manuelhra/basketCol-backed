@@ -12,8 +12,12 @@ type Dependencies = {
 export class ExpressCreateHostUserPOSTController implements ExpressBaseController {
   readonly #createHostUserUseCase: ICreateHostUserUseCase;
 
-  public constructor(dependencies: Dependencies) {
+  private constructor(dependencies: Dependencies) {
     this.#createHostUserUseCase = dependencies.createHostUserUseCase;
+  }
+
+  public static create(dependencies: Dependencies): ExpressCreateHostUserPOSTController {
+    return new ExpressCreateHostUserPOSTController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {
