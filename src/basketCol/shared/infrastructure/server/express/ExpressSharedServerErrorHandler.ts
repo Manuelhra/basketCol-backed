@@ -67,7 +67,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.NOT_IMPLEMENTED,
           message: HttpStatus.getMessage(HttpStatus.NOT_IMPLEMENTED),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.NOT_IMPLEMENTED;
         isInstanceof = true;
@@ -80,7 +80,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.INTERNAL_SERVER_ERROR,
           message: HttpStatus.getMessage(HttpStatus.INTERNAL_SERVER_ERROR),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.INTERNAL_SERVER_ERROR;
         isInstanceof = true;
@@ -91,7 +91,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.CONFLICT;
         isInstanceof = true;
@@ -101,7 +101,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.NOT_FOUND;
         isInstanceof = true;
@@ -111,7 +111,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.UNAUTHORIZED,
           message: HttpStatus.getMessage(HttpStatus.UNAUTHORIZED),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.UNAUTHORIZED;
         isInstanceof = true;
@@ -151,7 +151,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.BAD_REQUEST;
         isInstanceof = true;

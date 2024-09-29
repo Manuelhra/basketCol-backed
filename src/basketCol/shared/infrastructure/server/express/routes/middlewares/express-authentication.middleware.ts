@@ -14,7 +14,7 @@ export const expressAuthenticationMiddleware = (
     const errorResponse = httpResponseHandler.handleErrorResponse({
       code: HttpStatus.UNAUTHORIZED,
       message: 'Authorization header missing or improperly formatted. Please provide a valid Bearer token.',
-      errors: {
+      error: {
         name: 'UnauthorizedAccessError',
         details: 'The request lacks a valid Bearer token. Access to this resource requires proper authentication.',
       },
@@ -32,7 +32,7 @@ export const expressAuthenticationMiddleware = (
     const errorResponse = httpResponseHandler.handleErrorResponse({
       code: HttpStatus.UNAUTHORIZED,
       message: 'Invalid or expired token. Please provide a valid Bearer token.',
-      errors: {
+      error: {
         name: 'UnauthorizedAccessError',
         details: 'The token provided is invalid or expired. Ensure that your token is correct and not expired.',
       },

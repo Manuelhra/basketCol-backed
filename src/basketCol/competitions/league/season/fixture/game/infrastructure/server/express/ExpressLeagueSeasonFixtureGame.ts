@@ -30,7 +30,7 @@ export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServer
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.CONFLICT;
         isInstanceof = true;
@@ -40,7 +40,7 @@ export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServer
         errorResponse = this.httpResponseHandler.handleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.NOT_FOUND;
         isInstanceof = true;

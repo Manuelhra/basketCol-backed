@@ -30,7 +30,7 @@ export class ExpressAuthenticationServerErrorHandler implements IServerErrorHand
         errorResponse = this.#httpResponseHandler.handleErrorResponse({
           code: HttpStatus.UNAUTHORIZED,
           message: HttpStatus.getMessage(HttpStatus.UNAUTHORIZED),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.UNAUTHORIZED;
         isInstanceof = true;
@@ -42,7 +42,7 @@ export class ExpressAuthenticationServerErrorHandler implements IServerErrorHand
         errorResponse = this.#httpResponseHandler.handleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
-          errors: { name: error.name, details: error.message },
+          error: { name: error.name, details: error.message },
         });
         status = HttpStatus.BAD_REQUEST;
         isInstanceof = true;

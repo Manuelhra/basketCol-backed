@@ -13,7 +13,7 @@ export const expressUserTypeAuthorizationMiddleware = (
     const errorResponse = httpResponseHandler.handleErrorResponse({
       code: HttpStatus.UNAUTHORIZED,
       message: 'Authentication required. Please log in to access this resource.',
-      errors: {
+      error: {
         name: 'UnauthorizedAccessError',
         details: 'The request lacks valid authentication. Please ensure you are logged in before accessing this resource.',
       },
@@ -27,7 +27,7 @@ export const expressUserTypeAuthorizationMiddleware = (
     const errorResponse = httpResponseHandler.handleErrorResponse({
       code: HttpStatus.FORBIDDEN,
       message: 'Insufficient permissions to access this resource.',
-      errors: {
+      error: {
         name: 'InsufficientPermissionsError',
         details: `Your user type (${userContext.userType}) does not have the necessary permissions to access this resource. Required user types: ${allowedUserTypes.join(', ')}.`,
       },

@@ -7,5 +7,6 @@ export interface IErrorDetail {
 }
 
 export interface IErrorApiResponse extends IApiResponse {
-  errors: IErrorDetail | IErrorDetail[];
+  error?: IErrorDetail;
+  errors?: IErrorDetail[];
 }

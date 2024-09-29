@@ -29,7 +29,7 @@ export class ExpressValidateAndRefreshAuthenticationTokenPOSTController extends 
       const errorResponse = this.#httpResponseHandler.handleErrorResponse({
         code: HttpStatus.UNAUTHORIZED,
         message: 'Authorization header missing or improperly formatted. Please provide a valid Bearer token.',
-        errors: {
+        error: {
           name: 'UnauthorizedAccessError',
           details: 'The request lacks a valid Bearer token. Access to this resource requires proper authentication.',
         },

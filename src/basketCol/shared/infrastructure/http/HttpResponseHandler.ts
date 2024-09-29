@@ -18,11 +18,13 @@ export class HttpResponseHandler implements IHttpResponseHandler {
   public handleErrorResponse(body: {
     code: number;
     message: string;
-    errors: IErrorDetail | IErrorDetail[];
+    error?: IErrorDetail;
+    errors?: IErrorDetail[];
   }): IErrorApiResponse {
     return {
       code: body.code,
       message: body.message,
+      error: body.error,
       errors: body.errors,
     };
   }
