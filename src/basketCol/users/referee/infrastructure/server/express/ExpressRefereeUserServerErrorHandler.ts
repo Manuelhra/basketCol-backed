@@ -23,7 +23,7 @@ export class ExpressRefereeUserServerErrorHandler implements IServerErrorHandler
 
     switch (true) {
       case error instanceof RefereeUserNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },

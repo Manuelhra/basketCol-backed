@@ -26,7 +26,7 @@ export class ExpressValidateAndRefreshAuthenticationTokenPOSTController extends 
     const authenticationHeader = request.headers.authorization;
 
     if (authenticationHeader === undefined || authenticationHeader === null || authenticationHeader.startsWith('Bearer ') === false) {
-      const errorResponse = this.#httpResponseHandler.handleErrorResponse({
+      const errorResponse = this.#httpResponseHandler.handleSingleErrorResponse({
         code: HttpStatus.UNAUTHORIZED,
         message: 'Authorization header missing or improperly formatted. Please provide a valid Bearer token.',
         error: {

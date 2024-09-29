@@ -10,7 +10,7 @@ export const expressUserTypeAuthorizationMiddleware = (
   const { userContext } = request;
 
   if (userContext === undefined || userContext === null) {
-    const errorResponse = httpResponseHandler.handleErrorResponse({
+    const errorResponse = httpResponseHandler.handleSingleErrorResponse({
       code: HttpStatus.UNAUTHORIZED,
       message: 'Authentication required. Please log in to access this resource.',
       error: {
@@ -24,7 +24,7 @@ export const expressUserTypeAuthorizationMiddleware = (
   }
 
   if (allowedUserTypes.includes(userContext.userType) === false) {
-    const errorResponse = httpResponseHandler.handleErrorResponse({
+    const errorResponse = httpResponseHandler.handleSingleErrorResponse({
       code: HttpStatus.FORBIDDEN,
       message: 'Insufficient permissions to access this resource.',
       error: {

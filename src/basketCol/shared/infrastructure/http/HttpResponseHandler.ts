@@ -1,4 +1,7 @@
-import { IErrorApiResponse, IErrorDetail } from '../../application/http/ports/IErrorApiResponse';
+import {
+  IErrorApiResponse,
+  IErrorDetail,
+} from '../../application/http/ports/IErrorApiResponse';
 import { IHttpResponseHandler } from '../../application/http/ports/IHttpResponseHandler';
 import { ISuccessApiResponse } from '../../application/http/ports/ISuccessApiResponse';
 
@@ -7,25 +10,41 @@ export class HttpResponseHandler implements IHttpResponseHandler {
     return new HttpResponseHandler();
   }
 
-  public handleSuccessResponse<T>(body: { code: number; message: string; data: T; }): ISuccessApiResponse<T> {
+  public handleSuccessResponse<T>(payload: {
+    code: number;
+    message: string;
+    data: T;
+  }): ISuccessApiResponse<T> {
     return {
-      code: body.code,
-      message: body.message,
-      data: body.data,
+      code: payload.code,
+      message: payload.message,
+      data: payload.data,
     };
   }
 
-  public handleErrorResponse(body: {
+  public handleSingleErrorResponse(payload: {
     code: number;
     message: string;
-    error?: IErrorDetail;
-    errors?: IErrorDetail[];
+    error: IErrorDetail;
   }): IErrorApiResponse {
     return {
-      code: body.code,
-      message: body.message,
-      error: body.error,
-      errors: body.errors,
+      code: payload.code,
+      message: payload.message,
+      type: 'single',
+      error: payload.error,
+    };
+  }
+
+  public handleMultipleErrorResponse(payload: {
+    code: number;
+    message: string;
+    errors: IErrorDetail[];
+  }): IErrorApiResponse {
+    return {
+      code: payload.code,
+      message: payload.message,
+      type: 'multiple',
+      errors: payload.errors,
     };
   }
 }

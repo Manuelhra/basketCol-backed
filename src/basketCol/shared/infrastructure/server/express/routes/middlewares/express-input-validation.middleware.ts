@@ -27,7 +27,7 @@ export const expressInputValidationMiddleware = (
   const httpResponseHandler: IHttpResponseHandler = HttpResponseHandler.create();
   const formattedErrors: IErrorDetail[] = errors.array().map(parseError);
 
-  const errorResponse = httpResponseHandler.handleErrorResponse({
+  const errorResponse = httpResponseHandler.handleMultipleErrorResponse({
     code: HttpStatus.BAD_REQUEST,
     message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
     errors: formattedErrors,

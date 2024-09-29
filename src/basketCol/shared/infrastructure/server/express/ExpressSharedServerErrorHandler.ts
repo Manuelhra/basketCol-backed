@@ -64,7 +64,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
 
     switch (true) {
       case error instanceof MethodNotImplementedError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_IMPLEMENTED,
           message: HttpStatus.getMessage(HttpStatus.NOT_IMPLEMENTED),
           error: { name: error.name, details: error.message },
@@ -77,7 +77,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
       case error instanceof DependencyContainerNotInitializedError:
       case error instanceof DatabaseConnectionFailedError:
       case error instanceof CreateMethodNotImplementedError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.INTERNAL_SERVER_ERROR,
           message: HttpStatus.getMessage(HttpStatus.INTERNAL_SERVER_ERROR),
           error: { name: error.name, details: error.message },
@@ -88,7 +88,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
 
       case error instanceof IdAlreadyExistsError:
       case error instanceof DuplicateIdError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
           error: { name: error.name, details: error.message },
@@ -98,7 +98,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         break;
 
       case error instanceof EntityNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },
@@ -108,7 +108,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         break;
 
       case error instanceof UnauthorizedAccessError: {
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.UNAUTHORIZED,
           message: HttpStatus.getMessage(HttpStatus.UNAUTHORIZED),
           error: { name: error.name, details: error.message },
@@ -148,7 +148,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
       case error instanceof EmptyCourtIdListError:
       case error instanceof ElementAlreadyDisabledError:
       case error instanceof DateGreaterThanError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
           error: { name: error.name, details: error.message },

@@ -23,7 +23,7 @@ export class ExpressLeagueServerErrorHandler implements IServerErrorHandler {
 
     switch (true) {
       case error instanceof DuplicateLeagueNameError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
           error: { name: error.name, details: error.message },
@@ -33,7 +33,7 @@ export class ExpressLeagueServerErrorHandler implements IServerErrorHandler {
         break;
 
       case error instanceof LeagueNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },

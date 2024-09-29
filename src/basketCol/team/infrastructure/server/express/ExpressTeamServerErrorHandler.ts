@@ -27,7 +27,7 @@ export class ExpressTeamServerErrorHandler implements IServerErrorHandler {
 
     switch (true) {
       case error instanceof TeamNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },
@@ -37,7 +37,7 @@ export class ExpressTeamServerErrorHandler implements IServerErrorHandler {
         break;
 
       case error instanceof TeamOfficialNameLengthError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
           error: { name: error.name, details: error.message },

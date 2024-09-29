@@ -27,7 +27,7 @@ export class ExpressPlayerUserServerErrorHandler implements IServerErrorHandler 
 
     switch (true) {
       case error instanceof PlayerUserNicknameAlreadyExistsError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
           error: { name: error.name, details: error.message },
@@ -37,7 +37,7 @@ export class ExpressPlayerUserServerErrorHandler implements IServerErrorHandler 
         break;
 
       case error instanceof PlayerUserNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },

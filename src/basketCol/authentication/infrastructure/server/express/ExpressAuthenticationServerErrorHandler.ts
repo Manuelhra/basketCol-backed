@@ -27,7 +27,7 @@ export class ExpressAuthenticationServerErrorHandler implements IServerErrorHand
 
     switch (true) {
       case error instanceof InvalidAuthenticationTokenError:
-        errorResponse = this.#httpResponseHandler.handleErrorResponse({
+        errorResponse = this.#httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.UNAUTHORIZED,
           message: HttpStatus.getMessage(HttpStatus.UNAUTHORIZED),
           error: { name: error.name, details: error.message },
@@ -39,7 +39,7 @@ export class ExpressAuthenticationServerErrorHandler implements IServerErrorHand
       case error instanceof MissingEmailError:
       case error instanceof MissingCredentialsError:
       case error instanceof InvalidCredentialsError:
-        errorResponse = this.#httpResponseHandler.handleErrorResponse({
+        errorResponse = this.#httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
           error: { name: error.name, details: error.message },

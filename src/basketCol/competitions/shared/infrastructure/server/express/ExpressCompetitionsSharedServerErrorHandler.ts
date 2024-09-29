@@ -30,7 +30,7 @@ export class ExpressCompetitionsSharedServerErrorHandler implements IServerError
       case error instanceof SameTeamError:
       case error instanceof SameRefereeError:
       case error instanceof InvalidGameTypeError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
           error: { name: error.name, details: error.message },

@@ -27,7 +27,7 @@ export class ExpressGymServerErrorHandler implements IServerErrorHandler {
     switch (true) {
       case error instanceof GymNotFoundError:
       case error instanceof GymsNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },

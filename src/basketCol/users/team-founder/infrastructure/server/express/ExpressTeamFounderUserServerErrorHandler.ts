@@ -23,7 +23,7 @@ export class ExpressTeamFounderUserServerErrorHandler implements IServerErrorHan
 
     switch (true) {
       case error instanceof TeamFounderUserNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },

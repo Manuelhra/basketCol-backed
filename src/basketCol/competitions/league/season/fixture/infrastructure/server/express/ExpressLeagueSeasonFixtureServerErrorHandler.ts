@@ -27,7 +27,7 @@ export class ExpressLeagueSeasonFixtureServerErrorHandler implements IServerErro
 
     switch (true) {
       case error instanceof FixtureAlreadyExistsForDateInLeagueSeasonError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
           error: { name: error.name, details: error.message },
@@ -37,7 +37,7 @@ export class ExpressLeagueSeasonFixtureServerErrorHandler implements IServerErro
         break;
 
       case error instanceof FixtureDateTooSoonError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
           error: { name: error.name, details: error.message },

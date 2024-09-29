@@ -6,7 +6,7 @@ export interface IErrorDetail {
   details: string;
 }
 
-export interface IErrorApiResponse extends IApiResponse {
-  error?: IErrorDetail;
-  errors?: IErrorDetail[];
-}
+export type IErrorApiResponse = IApiResponse & (
+  | { type: 'single'; error: IErrorDetail }
+  | { type: 'multiple'; errors: IErrorDetail[] }
+);

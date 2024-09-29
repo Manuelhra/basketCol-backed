@@ -11,7 +11,7 @@ export const expressAuthenticationMiddleware = (
   const authenticationHeader = request.headers.authorization;
 
   if (authenticationHeader === undefined || authenticationHeader === null || authenticationHeader.startsWith('Bearer ') === false) {
-    const errorResponse = httpResponseHandler.handleErrorResponse({
+    const errorResponse = httpResponseHandler.handleSingleErrorResponse({
       code: HttpStatus.UNAUTHORIZED,
       message: 'Authorization header missing or improperly formatted. Please provide a valid Bearer token.',
       error: {
@@ -29,7 +29,7 @@ export const expressAuthenticationMiddleware = (
   const userContext = tokenValidatorService.validateAuthenticationToken(authenticationToken);
 
   if (userContext === null) {
-    const errorResponse = httpResponseHandler.handleErrorResponse({
+    const errorResponse = httpResponseHandler.handleSingleErrorResponse({
       code: HttpStatus.UNAUTHORIZED,
       message: 'Invalid or expired token. Please provide a valid Bearer token.',
       error: {

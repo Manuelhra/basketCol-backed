@@ -32,7 +32,7 @@ export class ExpressLeagueSeasonServerErrorHandler implements IServerErrorHandle
 
     switch (true) {
       case error instanceof LeagueSeasonNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },
@@ -47,7 +47,7 @@ export class ExpressLeagueSeasonServerErrorHandler implements IServerErrorHandle
       case error instanceof LeagueSeasonEndDateInPastError:
       case error instanceof LeagueSeasonEndDateBeforeStartDateError:
       case error instanceof InvalidLeagueSeasonStatusError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
           error: { name: error.name, details: error.message },

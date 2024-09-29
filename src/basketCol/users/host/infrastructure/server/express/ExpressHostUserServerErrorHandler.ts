@@ -25,7 +25,7 @@ export class ExpressHostUserServerErrorHandler implements IServerErrorHandler {
 
     switch (true) {
       case error instanceof MultipleHostUsersException:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.INTERNAL_SERVER_ERROR,
           message: HttpStatus.getMessage(HttpStatus.INTERNAL_SERVER_ERROR),
           error: { name: error.name, details: error.message },
@@ -35,7 +35,7 @@ export class ExpressHostUserServerErrorHandler implements IServerErrorHandler {
         break;
 
       case error instanceof HostUserNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },
@@ -45,7 +45,7 @@ export class ExpressHostUserServerErrorHandler implements IServerErrorHandler {
         break;
 
       case error instanceof InvalidHostUserCredentialsError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.UNAUTHORIZED,
           message: HttpStatus.getMessage(HttpStatus.UNAUTHORIZED),
           error: { name: error.name, details: error.message },

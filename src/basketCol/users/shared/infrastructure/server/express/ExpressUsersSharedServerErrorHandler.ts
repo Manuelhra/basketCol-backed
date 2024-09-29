@@ -30,7 +30,7 @@ export class ExpressUsersSharedServerErrorHandler implements IServerErrorHandler
 
     switch (true) {
       case error instanceof EmailAlreadyExistsError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
           error: { name: error.name, details: error.message },
@@ -40,7 +40,7 @@ export class ExpressUsersSharedServerErrorHandler implements IServerErrorHandler
         break;
 
       case error instanceof UserNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },
@@ -52,7 +52,7 @@ export class ExpressUsersSharedServerErrorHandler implements IServerErrorHandler
       case error instanceof PasswordPolicyViolationError:
       case error instanceof InvalidUserTypeError:
       case error instanceof InvalidEmailPolicyError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),
           error: { name: error.name, details: error.message },

@@ -27,7 +27,7 @@ export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServer
 
     switch (true) {
       case error instanceof FixtureAlreadyExistsForDateInLeagueSeasonError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
           error: { name: error.name, details: error.message },
@@ -37,7 +37,7 @@ export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServer
         break;
 
       case error instanceof LeagueSeasonFixtureGameNotFoundError:
-        errorResponse = this.httpResponseHandler.handleErrorResponse({
+        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },
