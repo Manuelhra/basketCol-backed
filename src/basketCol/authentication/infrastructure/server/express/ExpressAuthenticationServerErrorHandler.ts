@@ -2,9 +2,9 @@ import { HttpStatus } from '@basketcol/domain';
 import { Response } from 'express';
 
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
-import { IErrorApiResponse } from '../../../../shared/application/http/IErrorApiResponse';
+import { IErrorApiResponse } from '../../../../shared/application/http/ports/IErrorApiResponse';
 import { InvalidCredentialsError } from '../../../application/exceptions/InvalidCredentialsError';
-import { IHttpResponseHandler } from '../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
 import { MissingCredentialsError } from '../../../application/exceptions/MissingCredentialsError';
 import { MissingEmailError } from '../../../application/exceptions/MissingEmailError';
 import { InvalidAuthenticationTokenError } from '../../../application/exceptions/InvalidAuthenticationTokenError';

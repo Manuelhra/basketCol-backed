@@ -10,7 +10,7 @@ import {
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 
-import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { AwilixDependencyInjector } from '../../../../../shared/infrastructure/dependency-injection/awilix/AwilixDependencyInjector';
 import { HttpResponseHandler } from '../../../../../shared/infrastructure/http/HttpResponseHandler';
 import { IController } from '../../../../../shared/infrastructure/server/controllers/IController';

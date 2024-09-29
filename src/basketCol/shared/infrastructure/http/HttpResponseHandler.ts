@@ -1,6 +1,6 @@
-import { IErrorApiResponse, IErrorDetail } from '../../application/http/IErrorApiResponse';
-import { IHttpResponseHandler } from '../../application/http/IHttpResponseHandler';
-import { ISuccessApiResponse } from '../../application/http/ISuccessApiResponse';
+import { IErrorApiResponse, IErrorDetail } from '../../application/http/ports/IErrorApiResponse';
+import { IHttpResponseHandler } from '../../application/http/ports/IHttpResponseHandler';
+import { ISuccessApiResponse } from '../../application/http/ports/ISuccessApiResponse';
 
 export class HttpResponseHandler implements IHttpResponseHandler {
   public static create(): HttpResponseHandler {

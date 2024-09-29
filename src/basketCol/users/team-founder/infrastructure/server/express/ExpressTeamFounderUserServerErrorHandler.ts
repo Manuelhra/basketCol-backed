@@ -1,9 +1,9 @@
 import { HttpStatus, TeamFounderUserNotFoundError } from '@basketcol/domain';
 import { Response } from 'express';
 
-import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
-import { IErrorApiResponse } from '../../../../../shared/application/http/IErrorApiResponse';
+import { IErrorApiResponse } from '../../../../../shared/application/http/ports/IErrorApiResponse';
 
 type Dependencies = {
   httpResponseHandler: IHttpResponseHandler;

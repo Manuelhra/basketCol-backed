@@ -3,7 +3,7 @@ import { HttpStatus } from '@basketcol/domain';
 
 import { IAuthenticateUserUseCase } from '../../../../application/use-cases/ports/IAuthenticateUserUseCase';
 import { AuthenticateUserDTO } from '../../../../application/dtos/AuthenticateUserDTO';
-import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { ExpressBaseController } from '../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 
 type Dependencies = {

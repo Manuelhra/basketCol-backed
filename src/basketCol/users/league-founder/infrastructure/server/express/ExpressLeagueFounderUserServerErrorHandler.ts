@@ -1,8 +1,8 @@
 import { HttpStatus, LeagueFounderUserNotFoundError } from '@basketcol/domain';
 import { Response } from 'express';
 
-import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
-import { IErrorApiResponse } from '../../../../../shared/application/http/IErrorApiResponse';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
+import { IErrorApiResponse } from '../../../../../shared/application/http/ports/IErrorApiResponse';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
 
 type Dependencies = {

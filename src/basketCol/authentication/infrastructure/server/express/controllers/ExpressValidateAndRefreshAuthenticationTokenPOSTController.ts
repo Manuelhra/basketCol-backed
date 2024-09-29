@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 import { ExpressBaseController } from '../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 import { IValidateAndRefreshAuthenticationTokenUseCase } from '../../../../application/use-cases/ports/IValidateAndRefreshAuthenticationTokenUseCase';
-import { IHttpResponseHandler } from '../../../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 
 type Dependencies = {
   validateAndRefreshAuthenticationTokenUseCase: IValidateAndRefreshAuthenticationTokenUseCase;

@@ -1,6 +1,6 @@
 import { ITokenValidatorService } from '../../../../authentication/application/services/ITokenValidatorService';
 import { JwtTokenValidatorService } from '../../../../authentication/infrastructure/services/jwt/JwtTokenValidatorService';
-import { IHttpResponseHandler } from '../../../application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../application/http/ports/IHttpResponseHandler';
 import { HttpResponseHandler } from '../../http/HttpResponseHandler';
 import { ExpressSharedServerErrorHandler } from '../../server/express/ExpressSharedServerErrorHandler';
 import { IServerErrorHandler } from '../../server/IServerErrorHandler';

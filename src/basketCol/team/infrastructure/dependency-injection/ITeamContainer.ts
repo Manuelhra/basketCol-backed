@@ -1,4 +1,4 @@
-import { IHttpResponseHandler } from '../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../shared/application/http/ports/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../shared/infrastructure/server/IServerErrorHandler';
 
 export interface ITeamContainer {

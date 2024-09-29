@@ -13,7 +13,7 @@ import { IAuthenticateUserUseCase } from '../../application/use-cases/ports/IAut
 import { PasswordValidationService } from '../../application/services/PasswordValidationService';
 import { ITokenGeneratorService } from '../../application/services/ITokenGeneratorService';
 import { IController } from '../../../shared/infrastructure/server/controllers/IController';
-import { IHttpResponseHandler } from '../../../shared/application/http/IHttpResponseHandler';
+import { IHttpResponseHandler } from '../../../shared/application/http/ports/IHttpResponseHandler';
 import { IRouteManager } from '../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../shared/infrastructure/file-system/IFileSystem';
 import { IServerErrorHandler } from '../../../shared/infrastructure/server/IServerErrorHandler';
