@@ -108,7 +108,7 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
       id,
       password,
       ...props
-    } = aggregate.toPrimitives();
+    } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
   }

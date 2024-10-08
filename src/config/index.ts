@@ -1,4 +1,5 @@
 import convict from 'convict';
+
 import { IConvictProps } from './IConvictProps';
 
 export const convictConfig = convict<IConvictProps>({

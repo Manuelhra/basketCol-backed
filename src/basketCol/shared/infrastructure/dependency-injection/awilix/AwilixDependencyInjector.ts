@@ -10,7 +10,7 @@ import {
   Resolver,
 } from 'awilix';
 
-import { IDependencyInjector } from '../IDependencyInjector';
+import { IDependencyInjector } from '../ports/IDependencyInjector';
 
 export abstract class AwilixDependencyInjector<TContainer extends Object> implements IDependencyInjector<AwilixContainer<TContainer>, NameAndRegistrationPair<TContainer>> {
   public container: AwilixContainer<TContainer> | null = null;

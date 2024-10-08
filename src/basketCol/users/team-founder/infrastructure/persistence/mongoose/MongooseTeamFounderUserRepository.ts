@@ -86,7 +86,7 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
       id,
       password,
       ...props
-    } = aggregate.toPrimitives();
+    } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
   }

@@ -35,7 +35,7 @@ export class ExpressAuthenticateUserPOSTController extends ExpressBaseController
       code: HttpStatus.OK,
       message: HttpStatus.getMessage(HttpStatus.OK),
       data: {
-        authenticatedUser: result.authenticatedUser.toPrimitives(),
+        authenticatedUser: result.authenticatedUser.toPrimitives,
         authenticationToken: result.authenticationToken,
       },
     });

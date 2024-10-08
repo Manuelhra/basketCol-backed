@@ -20,7 +20,7 @@ export abstract class MongooseRepository<IAggregate extends IAggregateRootPrimit
 
   protected async persist(aggregate: TAggregate): Promise<void> {
     const MyModel:Model<{ [key: string]: any }> = await this.model();
-    const { id, ...props } = aggregate.toPrimitives();
+    const { id, ...props } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { ...props }, { upsert: true });
   }
