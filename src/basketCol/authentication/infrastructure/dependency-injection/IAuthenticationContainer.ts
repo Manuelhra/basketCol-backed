@@ -19,11 +19,14 @@ import { IFileSystem } from '../../../shared/infrastructure/file-system/IFileSys
 import { IServerErrorHandler } from '../../../shared/infrastructure/server/IServerErrorHandler';
 import { IValidateAndRefreshAuthenticationTokenUseCase } from '../../application/use-cases/ports/IValidateAndRefreshAuthenticationTokenUseCase';
 import { ITokenValidatorService } from '../../application/services/ITokenValidatorService';
+import { IGetAuthenticatedUserUseCase } from '../../application/use-cases/ports/IGetAuthenticatedUserUseCase';
 
 export interface IAuthenticationContainer {
   authenticationServerErrorHandler: IServerErrorHandler;
   authenticateUserPOSTController: IController;
+  getAuthenticatedUserGETController: IController;
   authenticateUserUseCase: IAuthenticateUserUseCase;
+  getAuthenticatedUserUseCase: IGetAuthenticatedUserUseCase;
   authenticationRouteManager: IRouteManager;
   basePath: string;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;

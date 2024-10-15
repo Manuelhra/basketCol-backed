@@ -38,6 +38,9 @@ import { ValidateAndRefreshAuthenticationTokenUseCase } from '../../../applicati
 import { IValidateAndRefreshAuthenticationTokenUseCase } from '../../../application/use-cases/ports/IValidateAndRefreshAuthenticationTokenUseCase';
 import { ITokenValidatorService } from '../../../application/services/ITokenValidatorService';
 import { JwtTokenValidatorService } from '../../services/jwt/JwtTokenValidatorService';
+import { IGetAuthenticatedUserUseCase } from '../../../application/use-cases/ports/IGetAuthenticatedUserUseCase';
+import { GetAuthenticatedUserUseCase } from '../../../application/use-cases/GetAuthenticatedUserUseCase';
+import { ExpressGetAuthenticatedUserGETController } from '../../server/express/controllers/ExpressGetAuthenticatedUserGETController';
 
 export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInjector<IAuthenticationContainer> {
   private constructor() {
@@ -47,7 +50,9 @@ export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInje
     this.registerDependencies({
       authenticationServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressAuthenticationServerErrorHandler.create).singleton(),
       authenticateUserPOSTController: AwilixAuthenticationDependencyInjector.registerAsFunction<IController>(ExpressAuthenticateUserPOSTController.create).singleton(),
+      getAuthenticatedUserGETController: AwilixAuthenticationDependencyInjector.registerAsFunction<IController>(ExpressGetAuthenticatedUserGETController.create).singleton(),
       authenticateUserUseCase: AwilixDependencyInjector.registerAsFunction<IAuthenticateUserUseCase>(AuthenticateUserUseCase.create).singleton(),
+      getAuthenticatedUserUseCase: AwilixDependencyInjector.registerAsFunction<IGetAuthenticatedUserUseCase>(GetAuthenticatedUserUseCase.create).singleton(),
       authenticationRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressAuthenticationRouteManager.create).singleton(),
       basePath: AwilixDependencyInjector.registerAsValue<string>(__dirname),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
