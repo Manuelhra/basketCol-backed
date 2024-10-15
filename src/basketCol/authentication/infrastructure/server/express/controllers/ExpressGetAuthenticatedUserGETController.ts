@@ -51,7 +51,7 @@ export class ExpressGetAuthenticatedUserGETController extends ExpressBaseControl
       code: HttpStatus.CREATED,
       message: HttpStatus.getMessage(HttpStatus.CREATED),
       data: {
-        authenticatedUser: result.authenticatedUser,
+        authenticatedUser: result.authenticatedUser.toPrimitives,
       },
     });
 
