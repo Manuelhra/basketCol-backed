@@ -108,7 +108,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrim
       id,
       password,
       ...props
-    } = aggregate.toPrimitives();
+    } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
   }
