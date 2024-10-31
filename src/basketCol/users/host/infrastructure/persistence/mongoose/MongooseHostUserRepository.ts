@@ -47,12 +47,12 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrim
 
     const document = documentList[0];
 
-    return document === null ? null : HostUser.create(
+    return document === null ? null : HostUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
@@ -66,12 +66,12 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrim
 
     const document: Nullable<IMongooseHostUserDocument> = await MyModel.findOne<IMongooseHostUserDocument>({ id: hostUserId.value });
 
-    return document === null ? null : HostUser.create(
+    return document === null ? null : HostUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
@@ -85,12 +85,12 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrim
 
     const document = await MyModel.findOne<IMongooseHostUserDocument>({ 'email.value': hostUserEmail.value.value });
 
-    return document === null ? null : HostUser.create(
+    return document === null ? null : HostUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
@@ -114,10 +114,5 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrim
     } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
-  }
-
-  async #createSecurePassword(hashedPassword: string): Promise<string> {
-    const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
-    return securePassword.value;
   }
 }
