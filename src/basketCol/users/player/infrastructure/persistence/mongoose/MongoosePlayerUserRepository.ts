@@ -44,15 +44,16 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
 
     const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ id: playerUserId.value });
 
-    return document === null ? null : PlayerUser.create(
+    return document === null ? null : PlayerUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -63,15 +64,16 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
 
     const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ 'email.value': playerUserEmail.value.value });
 
-    return document === null ? null : PlayerUser.create(
+    return document === null ? null : PlayerUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -82,15 +84,16 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
 
     const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ nickname: playerUserNickname.value });
 
-    return document === null ? null : PlayerUser.create(
+    return document === null ? null : PlayerUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -111,11 +114,5 @@ export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUser
     } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
-  }
-
-  async #createSecurePassword(hashedPassword: string): Promise<string> {
-    const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
-
-    return securePassword.value;
   }
 }

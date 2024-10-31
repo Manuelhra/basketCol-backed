@@ -11,5 +11,14 @@
       "value": "basketcol.dev@gmail.com"
     },
     "password": "BasketCol12@#"
+  },
+  "aws": {
+    "s3": {
+      "accessKeyId": "AKIA27BF2YKO6ZLHTA5P",
+      "secretAccessKey": "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",
+      "bucketName": {
+        "userProfileImage": "basketcol-dev-profile-image"
+      }
+    }
   }
 }

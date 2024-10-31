@@ -58,3 +58,6 @@ build/
 
 # node_modules
 node_modules/
+
+# Ignorar archivos JSON en src/config
+src/config/*.json

@@ -13,6 +13,7 @@ import { ICreateHostUserUseCase } from '../../application/use-cases/ports/ICreat
 import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
 import { IHostUserConfigFactory } from '../../application/ports/IHostUserConfigFactory';
+import { IProfileImageUploader } from '../../../shared/application/ports/IProfileImageUploader';
 
 export interface IHostUserContainer {
   basePath: string;
@@ -28,4 +29,5 @@ export interface IHostUserContainer {
   passwordHashingService: IPasswordHashingService;
   securePasswordCreationService: SecurePasswordCreationService;
   hostUserServerErrorHandler: IServerErrorHandler;
+  profileImageUploader: IProfileImageUploader;
 }

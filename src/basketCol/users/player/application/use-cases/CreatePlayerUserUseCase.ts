@@ -65,6 +65,7 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
       nickname,
       email,
       password,
+      profileImage,
     } = dto;
 
     const playerUserId: PlayerUserId = PlayerUserId.create(id);
@@ -89,6 +90,7 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
       password,
       accountState,
       subscriptionType,
+      profileImage,
       playerUserCreatedAt.value,
       playerUserUpdatedAt.value,
     );

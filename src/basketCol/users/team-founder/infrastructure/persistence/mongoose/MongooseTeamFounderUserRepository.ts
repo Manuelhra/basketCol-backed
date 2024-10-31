@@ -43,14 +43,15 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
 
     const document: Nullable<IMongooseTeamFounderUserDocument> = await MyModel.findOne<IMongooseTeamFounderUserDocument>({ id: teamFounderUserId.value });
 
-    return document === null ? null : TeamFounderUser.create(
+    return document === null ? null : TeamFounderUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -61,14 +62,15 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
 
     const document: Nullable<IMongooseTeamFounderUserDocument> = await MyModel.findOne<IMongooseTeamFounderUserDocument>({ 'email.value': teamFounderUserEmail.value.value });
 
-    return document === null ? null : TeamFounderUser.create(
+    return document === null ? null : TeamFounderUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -89,10 +91,5 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
     } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
-  }
-
-  async #createSecurePassword(hashedPassword: string): Promise<string> {
-    const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
-    return securePassword.value;
   }
 }

@@ -43,14 +43,15 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
 
     const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findOne<IMongooseRefereeUserDocument>({ id: refereeUserId.value });
 
-    return document === null ? null : RefereeUser.create(
+    return document === null ? null : RefereeUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -61,14 +62,15 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
 
     const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findOne<IMongooseRefereeUserDocument>({ 'email.value': refereeUserEmail.value.value });
 
-    return document === null ? null : RefereeUser.create(
+    return document === null ? null : RefereeUser.fromPrimitives(
       document.id.valueOf(),
       { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      await this.#createSecurePassword(document.password.valueOf()),
+      document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -89,10 +91,5 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
     } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
-  }
-
-  async #createSecurePassword(hashedPassword: string): Promise<string> {
-    const securePassword = await this.#securePasswordCreationService.createFromHashedText(hashedPassword);
-    return securePassword.value;
   }
 }

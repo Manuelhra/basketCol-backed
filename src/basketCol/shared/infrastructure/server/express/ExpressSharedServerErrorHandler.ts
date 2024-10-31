@@ -45,6 +45,7 @@ import { IErrorApiResponse } from '../../../application/http/ports/IErrorApiResp
 import { DatabaseConnectionFailedError } from '../../exceptions/DatabaseConnectionFailedError';
 import { DependencyContainerNotInitializedError } from '../../exceptions/DependencyContainerNotInitializedError';
 import { UnauthorizedAccessError } from '../../../application/exceptions/UnauthorizedAccessError';
+import { MulterError } from '../../exceptions/MulterError';
 
 type Dependencies = {
   httpResponseHandler: IHttpResponseHandler;
@@ -122,6 +123,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         break;
       }
 
+      case error instanceof MulterError:
       case error instanceof InvalidEnumValueError:
       case error instanceof UndefinedValueError:
       case error instanceof PropertyLengthTooShortError:

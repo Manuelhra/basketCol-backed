@@ -50,6 +50,7 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
       biography,
       email,
       password,
+      profileImage,
     } = dto;
 
     const refereeUserId: RefereeUserId = RefereeUserId.create(id);
@@ -71,6 +72,7 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
       password,
       accountState,
       subscriptionType,
+      profileImage,
       refereeUserCreatedAt.value,
       refereeUserUpdatedAt.value,
     );

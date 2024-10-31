@@ -46,6 +46,10 @@ export const mongooseHostUserSchema = new Schema<IMongooseHostUserDocument>({
     type: String,
     required: [true, "The host user's subscriptionType status is required"],
   },
+  profileImage: {
+    url: { type: String, required: [true, "The host user's profile image url is required"] },
+    updatedAt: { type: String, required: [true, "The host user's profile image update date is required"] },
+  },
   createdAt: {
     type: String,
     required: [true, "The host user's creation date is required"],

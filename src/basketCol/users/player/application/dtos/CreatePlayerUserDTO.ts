@@ -5,4 +5,5 @@ export interface CreatePlayerUserDTO {
   nickname: string;
   email: { value: string; };
   password: string;
+  profileImage: { url: string; updatedAt: string; };
 }

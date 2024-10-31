@@ -50,6 +50,10 @@ export const mongoosePlayerUserSchema = new Schema<IMongoosePlayerUserDocument>(
     type: String,
     required: [true, "The player user's subscriptionType status is required"],
   },
+  profileImage: {
+    url: { type: String, required: [true, "The player user's profile image url is required"] },
+    updatedAt: { type: String, required: [true, "The player user's profile image update date is required"] },
+  },
   createdAt: {
     type: String,
     required: [true, "The player user's creation date is required"],

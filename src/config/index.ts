@@ -63,6 +63,38 @@ export const convictConfig = convict<IConvictProps>({
       default: 'BasketColDev2024',
     },
   },
+  aws: {
+    s3: {
+      region: {
+        doc: 'AWS Region',
+        format: String,
+        default: 'us-east-1',
+        env: 'AWS_REGION',
+      },
+      accessKeyId: {
+        doc: 'AWS Access Key ID',
+        format: String,
+        default: null,
+        env: 'AWS_ACCESS_KEY_ID',
+        sensitive: true,
+      },
+      secretAccessKey: {
+        doc: 'AWS Secret Access Key',
+        format: String,
+        default: null,
+        env: 'AWS_SECRET_ACCESS_KEY',
+        sensitive: true,
+      },
+      bucketName: {
+        userProfileImage: {
+          doc: 'The bucket name for the user profile image',
+          format: String,
+          env: 'AWS_S3_BUCKET_NAME_USER_PROFILE_IMAGE',
+          default: null,
+        },
+      },
+    },
+  },
 });
 
 convictConfig.loadFile(`${__dirname}/${convictConfig.get('env')}.json`);
