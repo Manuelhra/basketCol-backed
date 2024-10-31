@@ -11,6 +11,7 @@ import { IErrorApiResponse } from '../../../../../shared/application/http/ports/
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
 import { UserNotFoundError } from '../../../application/exceptions/UserNotFoundError';
+import { ImageUploadError } from '../../exceptions/ImageUploadError';
 
 type Dependencies = {
   httpResponseHandler: IHttpResponseHandler;
@@ -53,6 +54,7 @@ export class ExpressUsersSharedServerErrorHandler implements IServerErrorHandler
         isInstanceof = true;
         break;
 
+      case error instanceof ImageUploadError:
       case error instanceof PasswordPolicyViolationError:
       case error instanceof InvalidUserTypeError:
       case error instanceof InvalidEmailPolicyError:

@@ -4,4 +4,5 @@ export interface CreateTeamFounderUserDTO {
   biography: string;
   email: { value: string; };
   password: string;
+  profileImage: { url: string; updatedAt: string; };
 }

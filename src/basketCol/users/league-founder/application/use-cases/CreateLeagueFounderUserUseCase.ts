@@ -50,6 +50,7 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
       name,
       biography,
       password,
+      profileImage,
     } = dto;
 
     const leagueFounderUserId: LeagueFounderUserId = LeagueFounderUserId.create(id);
@@ -71,6 +72,7 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
       password,
       accountState,
       subscriptionType,
+      profileImage,
       leagueFounderUserCreatedAt.value,
       leagueFounderUserUpdatedAt.value,
     );

@@ -24,6 +24,8 @@ import { ExpressHostUserServerErrorHandler } from '../../server/express/ExpressH
 import { IHostUserConfigFactory } from '../../../application/ports/IHostUserConfigFactory';
 import { HostUserConfigFactory } from '../../adapters/HostUserConfigFactory';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
+import { IProfileImageUploader } from '../../../../shared/application/ports/IProfileImageUploader';
+import { S3ProfileImageUploader } from '../../../../shared/infrastructure/aws/S3ProfileImageUploader';
 
 export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<IHostUserContainer> {
   private constructor() {
@@ -44,6 +46,9 @@ export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<I
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
       passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
       securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
+      profileImageUploader: AwilixDependencyInjector.registerAsFunction<IProfileImageUploader>(() => S3ProfileImageUploader.create({
+        folderPath: 'host',
+      })).singleton(),
     });
   }
 

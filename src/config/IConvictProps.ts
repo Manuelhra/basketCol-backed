@@ -17,4 +17,14 @@ export interface IConvictProps {
     email: { value: string; };
     password: string;
   };
+  aws: {
+    s3: {
+      region: string;
+      accessKeyId: string;
+      secretAccessKey: string;
+      bucketName: {
+        userProfileImage: string;
+      };
+    }
+  }
 }

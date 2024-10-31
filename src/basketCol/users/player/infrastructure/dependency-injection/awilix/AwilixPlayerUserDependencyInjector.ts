@@ -26,6 +26,8 @@ import { ExpressPlayerUserRouteManager } from '../../server/express/routes/Expre
 import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IFileSystem';
 import { GlobFileSystem } from '../../../../../shared/infrastructure/file-system/GlobFileSystem';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
+import { IProfileImageUploader } from '../../../../shared/application/ports/IProfileImageUploader';
+import { S3ProfileImageUploader } from '../../../../shared/infrastructure/aws/S3ProfileImageUploader';
 
 export class AwilixPlayerUserDependencyInjector extends AwilixDependencyInjector<IPlayerUserContainer> {
   private constructor() {
@@ -49,6 +51,9 @@ export class AwilixPlayerUserDependencyInjector extends AwilixDependencyInjector
       passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
       securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
+      profileImageUploader: AwilixDependencyInjector.registerAsFunction<IProfileImageUploader>(() => S3ProfileImageUploader.create({
+        folderPath: 'player',
+      })).singleton(),
     });
   }
 

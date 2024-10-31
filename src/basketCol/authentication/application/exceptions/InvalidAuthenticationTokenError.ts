@@ -8,7 +8,7 @@ export class InvalidAuthenticationTokenError extends RootError {
   }
 
   public static create(): InvalidAuthenticationTokenError {
-    return InvalidAuthenticationTokenError.create();
+    return new InvalidAuthenticationTokenError();
   }
 
   public override logError(): string {

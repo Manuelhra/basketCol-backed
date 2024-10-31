@@ -50,6 +50,7 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
       biography,
       email,
       password,
+      profileImage,
     } = dto;
 
     const teamFounderUserId: TeamFounderUserId = TeamFounderUserId.create(id);
@@ -71,6 +72,7 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
       password,
       accountState,
       subscriptionType,
+      profileImage,
       teamFounderUserCreatedAt.value,
       teamFounderUserUpdatedAt.value,
     );

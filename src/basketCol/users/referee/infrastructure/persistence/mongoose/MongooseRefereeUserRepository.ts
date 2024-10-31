@@ -51,6 +51,7 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
       await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -69,6 +70,7 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
       await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );

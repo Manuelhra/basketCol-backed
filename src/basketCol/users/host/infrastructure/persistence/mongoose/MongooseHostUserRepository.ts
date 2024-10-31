@@ -55,6 +55,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrim
       await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -73,6 +74,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrim
       await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -91,6 +93,7 @@ export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrim
       await this.#createSecurePassword(document.password.valueOf()),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
+      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );

@@ -53,6 +53,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       biography,
       email,
       password,
+      profileImage,
     } = dto;
 
     const hostUserCredentials = this.#hostUserConfigFactory.createHostUserCredentials();
@@ -77,6 +78,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       password,
       accountState,
       subscriptionType,
+      profileImage,
       hostUserCreatedAt.value,
       hostUserUpdatedAt.value,
     );
