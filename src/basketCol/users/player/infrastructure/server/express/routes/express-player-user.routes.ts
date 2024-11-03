@@ -12,6 +12,7 @@ import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/i
 const register = (router: Router) => {
   const pathPrefix: string = '/users';
 
+  // Endpoint - Create player user
   router.post(
     `${pathPrefix}/players`,
     (createPlayerUserPOSTController as ExpressCreatePlayerUserPOSTController).getImageUploadMiddleware(),

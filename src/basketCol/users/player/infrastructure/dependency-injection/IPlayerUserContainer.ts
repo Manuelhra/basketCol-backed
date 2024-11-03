@@ -24,13 +24,13 @@ export interface IPlayerUserContainer {
   createPlayerUserUseCase: ICreatePlayerUserUseCase;
   playerUserRepository: IPlayerUserRepository;
   idUniquenessValidatorService: IdUniquenessValidatorService;
-  repository: IPlayerUserRepository;
+  idUniquenessValidatorServiceRepository: IPlayerUserRepository;
+  emailUniquenessValidatorServiceRepository: IPlayerUserRepository;
   playerUserNicknameValidationService: PlayerUserNicknameValidationService;
   emailUniquenessValidatorService: EmailUniquenessValidatorService;
   businessDateService: BusinessDateService;
   playerUserRouteManager: IRouteManager;
   fileSystem: IFileSystem;
-  basePath: string;
   securePasswordCreationService: SecurePasswordCreationService;
   passwordHashingService: IPasswordHashingService;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;

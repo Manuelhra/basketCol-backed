@@ -18,11 +18,13 @@ type Dependencies = {
   securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongooseHostUserRepository extends MongooseRepository<IHostUserPrimitives, HostUser> implements IHostUserRepository {
+export class MongooseHostUserRepository
+  extends MongooseRepository<IHostUserPrimitives, HostUser>
+  implements IHostUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
-    return 'host-user';
+    return 'host_user';
   }
 
   private constructor(dependencies: Dependencies) {

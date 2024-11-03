@@ -3,11 +3,12 @@ import { ExpressBaseRouteManager } from '../../../../../../shared/infrastructure
 import { IRouteManager } from '../../../../../../shared/infrastructure/server/routes/IRouteManager';
 
 type Dependencies = {
-  fileSystem: IFileSystem;
-  basePath: string;
+  readonly fileSystem: IFileSystem;
 };
 
-export class ExpressPlayerUserRouteManager extends ExpressBaseRouteManager implements IRouteManager {
+export class ExpressPlayerUserRouteManager
+  extends ExpressBaseRouteManager
+  implements IRouteManager {
   private constructor(dependencies: Dependencies) {
     super(dependencies);
   }

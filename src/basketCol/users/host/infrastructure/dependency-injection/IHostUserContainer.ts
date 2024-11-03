@@ -16,7 +16,6 @@ import { IHostUserConfigFactory } from '../../application/ports/IHostUserConfigF
 import { IProfileImageUploader } from '../../../shared/application/ports/IProfileImageUploader';
 
 export interface IHostUserContainer {
-  basePath: string;
   businessDateService: BusinessDateService;
   createHostUserUseCase: ICreateHostUserUseCase;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;
