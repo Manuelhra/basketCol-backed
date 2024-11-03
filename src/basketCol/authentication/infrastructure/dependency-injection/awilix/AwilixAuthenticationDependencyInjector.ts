@@ -54,9 +54,10 @@ export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInje
       authenticateUserUseCase: AwilixDependencyInjector.registerAsFunction<IAuthenticateUserUseCase>(AuthenticateUserUseCase.create).singleton(),
       getAuthenticatedUserUseCase: AwilixDependencyInjector.registerAsFunction<IGetAuthenticatedUserUseCase>(GetAuthenticatedUserUseCase.create).singleton(),
       authenticationRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressAuthenticationRouteManager.create).singleton(),
-      basePath: AwilixDependencyInjector.registerAsValue<string>(__dirname),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
-      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(GlobFileSystem.create).singleton(),
+      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
+        basePath: __dirname,
+      })).singleton(),
       hostUserRepository: AwilixDependencyInjector.registerAsFunction<IHostUserRepository>(MongooseHostUserRepository.create).singleton(),
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
       leagueFounderUserRepository: AwilixDependencyInjector.registerAsFunction<ILeagueFounderUserRepository>(MongooseLeagueFounderUserRepository.create).singleton(),

@@ -10,6 +10,7 @@ import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/i
 const register = (router: Router) => {
   const pathPrefix: string = '/users';
 
+  // Endpoint - Create the host user for BasketCol
   router.post(
     `${pathPrefix}/host`,
     (createHostUserPOSTController as ExpressCreateHostUserPOSTController).getImageUploadMiddleware(),

@@ -7,8 +7,8 @@ import { IHttpResponseHandler } from '../../../../../shared/application/http/por
 import { ExpressBaseController } from '../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 
 type Dependencies = {
-  authenticateUserUseCase: IAuthenticateUserUseCase;
-  httpResponseHandler: IHttpResponseHandler;
+  readonly authenticateUserUseCase: IAuthenticateUserUseCase;
+  readonly httpResponseHandler: IHttpResponseHandler;
 };
 
 export class ExpressAuthenticateUserPOSTController extends ExpressBaseController {

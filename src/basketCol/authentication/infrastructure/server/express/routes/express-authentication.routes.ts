@@ -8,23 +8,28 @@ import {
 import { expressInputValidationMiddleware } from '../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
 import { authenticateUserPOSTControllerValidations } from './validations/authenticate-user-post-controller.validations';
 
-const register = (router: Router) => {
+const registerAuthenticationRoutes = (router: Router): void => {
+  const pathPrefix: string = '/authentication';
+
+  // Endpoint - Generate new access token
   router.post(
-    '/authentication/tokens',
+    `${pathPrefix}/tokens`,
     authenticateUserPOSTControllerValidations,
     expressInputValidationMiddleware,
     authenticateUserPOSTController.run.bind(authenticateUserPOSTController),
   );
 
+  // Endpoint - Validate and refresh existing token
   router.post(
-    '/authentication/tokens/refresh',
+    `${pathPrefix}/tokens/refresh`,
     validateAndRefreshAuthenticationTokenPOSTController.run.bind(validateAndRefreshAuthenticationTokenPOSTController),
   );
 
+  // Endpoint - Get authenticated user profile
   router.get(
-    '/authentication/users/me',
+    `${pathPrefix}/users/me`,
     getAuthenticatedUserGETController.run.bind(getAuthenticatedUserGETController),
   );
 };
 
-export default register;
+export default registerAuthenticationRoutes;

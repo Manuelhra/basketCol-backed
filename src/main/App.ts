@@ -17,6 +17,8 @@ import { leagueSeasonServerErrorHandler } from '../basketCol/competitions/league
 import { leagueSeasonFixtureServerErrorHandler } from '../basketCol/competitions/league/season/fixture/infrastructure/dependency-injection';
 import { leagueSeasonFixtureGameServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/infrastructure/dependency-injection';
 import { ExpressServer } from '../basketCol/shared/infrastructure/server/express/ExpressServer';
+import { playerUserCareerStatsRouteManager } from '../basketCol/users/player/career-stats/infrastructure/dependency-injection';
+import { playerUserAttributesRouteManager } from '../basketCol/users/player/attributes/shared/infrastructure/dependency-injection';
 
 export class App {
   readonly #server: IServer;
@@ -46,6 +48,8 @@ export class App {
       hostUserRouteManager,
       authenticationRouteManager,
       playerUserRouteManager,
+      playerUserCareerStatsRouteManager,
+      playerUserAttributesRouteManager,
     ]);
   }
 

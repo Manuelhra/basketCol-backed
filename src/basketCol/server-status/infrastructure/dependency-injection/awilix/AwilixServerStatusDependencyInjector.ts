@@ -15,9 +15,10 @@ export class AwilixServerStatusDependencyInjector extends AwilixDependencyInject
 
     this.createContainer();
     this.registerDependencies({
-      basePath: AwilixDependencyInjector.registerAsValue<string>(__dirname),
       serverStatusGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressServerStatusGETController.create).singleton(),
-      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(GlobFileSystem.create).singleton(),
+      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
+        basePath: __dirname,
+      })).singleton(),
       serverStatusRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressServerStatusRouteManager.create).singleton(),
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
     });

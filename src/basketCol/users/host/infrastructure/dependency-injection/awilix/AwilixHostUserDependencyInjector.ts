@@ -33,11 +33,12 @@ export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<I
 
     this.createContainer();
     this.registerDependencies({
-      basePath: AwilixDependencyInjector.registerAsValue<string>(__dirname),
       businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
       createHostUserUseCase: AwilixDependencyInjector.registerAsFunction<CreateHostUserUseCase>(CreateHostUserUseCase.create).singleton(),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
-      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(GlobFileSystem.create).singleton(),
+      fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
+        basePath: __dirname,
+      })).singleton(),
       hostUserConfigFactory: AwilixDependencyInjector.registerAsFunction<IHostUserConfigFactory>(HostUserConfigFactory.create).singleton(),
       createHostUserPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreateHostUserPOSTController.create).singleton(),
       hostUserRepository: AwilixDependencyInjector.registerAsFunction<IHostUserRepository>(MongooseHostUserRepository.create).singleton(),

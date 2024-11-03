@@ -4,7 +4,6 @@ import { IFileSystem } from '../../../file-system/IFileSystem';
 
 type Dependencies = {
   fileSystem: IFileSystem;
-  basePath: string;
 };
 
 export abstract class ExpressBaseRouteManager {

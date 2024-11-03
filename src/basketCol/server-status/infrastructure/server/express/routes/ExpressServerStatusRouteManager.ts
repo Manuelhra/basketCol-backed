@@ -4,7 +4,6 @@ import { IRouteManager } from '../../../../../shared/infrastructure/server/route
 
 type Dependencies = {
   fileSystem: IFileSystem;
-  basePath: string;
 };
 
 export class ExpressServerStatusRouteManager extends ExpressBaseRouteManager implements IRouteManager {

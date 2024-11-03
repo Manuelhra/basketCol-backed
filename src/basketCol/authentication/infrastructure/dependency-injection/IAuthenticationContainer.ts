@@ -28,7 +28,6 @@ export interface IAuthenticationContainer {
   authenticateUserUseCase: IAuthenticateUserUseCase;
   getAuthenticatedUserUseCase: IGetAuthenticatedUserUseCase;
   authenticationRouteManager: IRouteManager;
-  basePath: string;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;
   fileSystem: IFileSystem;
   hostUserRepository: IHostUserRepository;

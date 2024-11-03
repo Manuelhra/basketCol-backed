@@ -48,13 +48,13 @@ export class ExpressGetAuthenticatedUserGETController extends ExpressBaseControl
 
     const result = await this.#getAuthenticatedUserUseCase.execute({ authenticationToken });
     const successResult = this.#httpResponseHandler.handleSuccessResponse({
-      code: HttpStatus.CREATED,
-      message: HttpStatus.getMessage(HttpStatus.CREATED),
+      code: HttpStatus.OK,
+      message: HttpStatus.getMessage(HttpStatus.OK),
       data: {
         authenticatedUser: result.authenticatedUser.toPrimitives,
       },
     });
 
-    response.status(HttpStatus.CREATED).json(successResult);
+    response.status(HttpStatus.OK).json(successResult);
   }
 }

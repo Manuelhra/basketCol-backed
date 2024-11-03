@@ -4,7 +4,6 @@ import { IController } from '../../../shared/infrastructure/server/controllers/I
 import { IRouteManager } from '../../../shared/infrastructure/server/routes/IRouteManager';
 
 export interface IServerStatusContainer {
-  basePath: string;
   serverStatusGETController: IController;
   fileSystem: IFileSystem;
   serverStatusRouteManager: IRouteManager;

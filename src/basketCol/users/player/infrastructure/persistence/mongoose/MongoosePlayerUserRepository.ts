@@ -16,14 +16,16 @@ import { MongooseClientFactory } from '../../../../../shared/infrastructure/pers
 import { mongoosePlayerUserSchema } from './mongoose-player-user.schema';
 
 type Dependencies = {
-  securePasswordCreationService: SecurePasswordCreationService;
+  readonly securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongoosePlayerUserRepository extends MongooseRepository<IPlayerUserPrimitives, PlayerUser> implements IPlayerUserRepository {
+export class MongoosePlayerUserRepository
+  extends MongooseRepository<IPlayerUserPrimitives, PlayerUser>
+  implements IPlayerUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
-    return 'player-user';
+    return 'player_user';
   }
 
   private constructor(dependencies: Dependencies) {

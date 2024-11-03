@@ -1,0 +1,25 @@
+import { Router } from 'express';
+
+import { httpResponseHandler, tokenValidatorService } from '../../../../../../../shared/infrastructure/dependency-injection';
+import { expressAuthenticationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-authentication.middleware';
+import { expressUserTypeAuthorizationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
+import { createPlayerUserCareerStatsPOSTControllerValidations } from './validations/create-player-user-career-stats-post-controller.validations';
+import { expressInputValidationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
+import { createPlayerUserCareerStatsPOSTController } from '../../../dependency-injection';
+
+const register = (router: Router): void => {
+  const pathPrefix: string = '/users/players';
+  const careerStatsPath = `${pathPrefix}/:playerUserId/career-stats`;
+
+  // Endpoint - Create player user career stats
+  router.post(
+    careerStatsPath,
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    expressUserTypeAuthorizationMiddleware(['HOST_USER'], httpResponseHandler),
+    createPlayerUserCareerStatsPOSTControllerValidations,
+    expressInputValidationMiddleware,
+    createPlayerUserCareerStatsPOSTController.run.bind(createPlayerUserCareerStatsPOSTController),
+  );
+};
+
+export default register;

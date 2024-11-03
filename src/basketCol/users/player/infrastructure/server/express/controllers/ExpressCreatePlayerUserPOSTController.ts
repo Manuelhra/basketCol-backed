@@ -1,5 +1,5 @@
 import { DateValueObject, HttpStatus } from '@basketcol/domain';
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import multer from 'multer';
 
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
@@ -9,8 +9,8 @@ import { ImageFile, IProfileImageUploader } from '../../../../../shared/applicat
 import { MulterError } from '../../../../../../shared/infrastructure/exceptions/MulterError';
 
 type Dependencies = {
-  createPlayerUserUseCase: ICreatePlayerUserUseCase;
-  profileImageUploader: IProfileImageUploader;
+  readonly createPlayerUserUseCase: ICreatePlayerUserUseCase;
+  readonly profileImageUploader: IProfileImageUploader;
 };
 
 export class ExpressCreatePlayerUserPOSTController implements ExpressBaseController {
@@ -69,7 +69,7 @@ export class ExpressCreatePlayerUserPOSTController implements ExpressBaseControl
     response.status(HttpStatus.CREATED).send();
   }
 
-  public getImageUploadMiddleware() {
+  public getImageUploadMiddleware(): RequestHandler {
     return this.#imageUploadMiddleware.single('profileImage');
   }
 }
