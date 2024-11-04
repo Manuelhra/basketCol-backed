@@ -27,9 +27,9 @@ import { IController } from '../../../../../../../shared/infrastructure/server/c
 import { IRouteManager } from '../../../../../../../shared/infrastructure/server/routes/IRouteManager';
 import { CreateDefensiveAttributesUseCase } from '../../../../defensive/application/use-cases/CreateDefensiveAttributesUseCase';
 import { ICreateDefensiveAttributesUseCase } from '../../../../defensive/application/use-cases/ports/ICreateDefensiveAttributesUseCase';
-import { ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController } from '../../server/express/controllers/ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController.ts';
+import { ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController } from '../../server/express/controllers/ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController';
 import { ExpressPlayerUserAttributesRouteManager } from '../../server/express/routes/ExpressPlayerUserAttributesRouteManager';
-import { BulkCreatePlayerAttributesService } from '../../services/BulkCreatePlayerAttributesService';
+import { BulkCreatePlayerUserAttributeCategoriesService } from '../../services/BulkCreatePlayerUserAttributeCategoriesService';
 import { IPlayerUserAttributesContainer } from '../IPlayerUserAttributesContainer';
 import { MongoosePlayerUserDefensiveAttributesRepository } from '../../../../defensive/infrastructure/persistence/mongoose/MongoosePlayerUserDefensiveAttributesRepository';
 import { ICreateFinishingAttributesUseCase } from '../../../../finishing/application/use-cases/ports/ICreateFinishingAttributesUseCase';
@@ -49,6 +49,9 @@ import { CreateSkillAttributesUseCase } from '../../../../skill/application/use-
 import { MongoosePlayerUserSkillAttributesRepository } from '../../../../skill/infrastructure/persistence/mongoose/MongoosePlayerUserSkillAttributesRepository';
 import { MongoosePlayerUserRepository } from '../../../../../infrastructure/persistence/mongoose/MongoosePlayerUserRepository';
 import { BcryptPasswordHashingService } from '../../../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
+import { ExpressGetPlayerUserAttributeCategoriesGETController } from '../../server/express/controllers/ExpressGetPlayerUserAttributeCategoriesGETController';
+import { IGetPlayerUserAttributeCategoriesUseCase } from '../../../application/use-cases/ports/IGetPlayerUserAttributeCategoriesUseCase';
+import { GetPlayerUserAttributeCategoriesUseCase } from '../../../application/use-cases/GetPlayerUserAttributeCategoriesUseCase';
 
 export class AwilixPlayerUserAttributesDependencyInjector
   extends AwilixDependencyInjector<IPlayerUserAttributesContainer> {
@@ -59,12 +62,12 @@ export class AwilixPlayerUserAttributesDependencyInjector
     this.registerDependencies({
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
       excelManager: AwilixDependencyInjector.registerAsFunction<IExcelManager>(XLSXManager.create).singleton(),
-      bulkCreatePlayerUserAttributesFromExcelPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController.create).singleton(),
+      bulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController.create).singleton(),
       playerUserAttributesRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressPlayerUserAttributesRouteManager.create).singleton(),
       fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
         basePath: __dirname,
       })).singleton(),
-      bulkCreatePlayerAttributesService: AwilixDependencyInjector.registerAsFunction<BulkCreatePlayerAttributesService>(BulkCreatePlayerAttributesService.create).singleton(),
+      bulkCreatePlayerUserAttributeCategoriesService: AwilixDependencyInjector.registerAsFunction<BulkCreatePlayerUserAttributeCategoriesService>(BulkCreatePlayerUserAttributeCategoriesService.create).singleton(),
       createDefensiveAttributesUseCase: AwilixDependencyInjector.registerAsFunction<ICreateDefensiveAttributesUseCase>((cradle: IPlayerUserAttributesContainer) => CreateDefensiveAttributesUseCase.create({
         idUniquenessValidatorService: IdUniquenessValidatorService.create({
           idUniquenessValidatorServiceRepository: cradle.playerUserDefensiveAttributesRepository as IIdUniquenessValidatorServiceRepository,
@@ -125,6 +128,8 @@ export class AwilixPlayerUserAttributesDependencyInjector
       securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
       passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      getPlayerUserAttributeCategoriesGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressGetPlayerUserAttributeCategoriesGETController.create).singleton(),
+      getPlayerUserAttributeCategoriesUseCase: AwilixDependencyInjector.registerAsFunction<IGetPlayerUserAttributeCategoriesUseCase>(GetPlayerUserAttributeCategoriesUseCase.create).singleton(),
     });
   }
 

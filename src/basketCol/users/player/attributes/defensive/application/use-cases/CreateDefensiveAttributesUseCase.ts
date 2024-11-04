@@ -15,10 +15,10 @@ import { CreateDefensiveAttributesDTO } from '../dtos/CreateDefensiveAttributesD
 import { ICreateDefensiveAttributesUseCase } from './ports/ICreateDefensiveAttributesUseCase';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  playerUserValidationService: PlayerUserValidationService;
-  businessDateService: BusinessDateService;
-  playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
+  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly playerUserValidationService: PlayerUserValidationService;
+  readonly businessDateService: BusinessDateService;
+  readonly playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
 };
 
 export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttributesUseCase {

@@ -7,27 +7,27 @@ import { ExpressBaseController } from '../../../../../../../../shared/infrastruc
 import { MulterError } from '../../../../../../../../shared/infrastructure/exceptions/MulterError';
 import { IHttpResponseHandler } from '../../../../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IExcelManager } from '../../../../../../../../shared/infrastructure/excel/ports/IExcelManager';
-import { BulkCreatePlayerAttributesService } from '../../../services/BulkCreatePlayerAttributesService';
+import { BulkCreatePlayerUserAttributeCategoriesService } from '../../../services/BulkCreatePlayerUserAttributeCategoriesService';
 
 type Dependencies = {
   readonly httpResponseHandler: IHttpResponseHandler;
   readonly excelManager: IExcelManager;
-  readonly bulkCreatePlayerAttributesService: BulkCreatePlayerAttributesService;
+  readonly bulkCreatePlayerUserAttributeCategoriesService: BulkCreatePlayerUserAttributeCategoriesService;
 };
 
-export class ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController implements ExpressBaseController {
+export class ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController implements ExpressBaseController {
   readonly #excelFileUploadMiddleware: multer.Multer;
 
   readonly #httpResponseHandler: IHttpResponseHandler;
 
   readonly #excelManager: IExcelManager;
 
-  readonly #bulkCreatePlayerAttributesService: BulkCreatePlayerAttributesService;
+  readonly #bulkCreatePlayerUserAttributeCategoriesService: BulkCreatePlayerUserAttributeCategoriesService;
 
   private constructor(dependencies: Dependencies) {
     this.#httpResponseHandler = dependencies.httpResponseHandler;
     this.#excelManager = dependencies.excelManager;
-    this.#bulkCreatePlayerAttributesService = dependencies.bulkCreatePlayerAttributesService;
+    this.#bulkCreatePlayerUserAttributeCategoriesService = dependencies.bulkCreatePlayerUserAttributeCategoriesService;
     this.#excelFileUploadMiddleware = multer({
       storage: multer.memoryStorage(),
       limits: {
@@ -45,8 +45,8 @@ export class ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController implem
     });
   }
 
-  public static create(dependencies: Dependencies): ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController {
-    return new ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController(dependencies);
+  public static create(dependencies: Dependencies): ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController {
+    return new ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {
@@ -62,7 +62,7 @@ export class ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController implem
     }
 
     const workBook: WorkBook = await this.#excelManager.readExcelFileFromBuffer(request.file.buffer);
-    await this.#bulkCreatePlayerAttributesService.execute(workBook);
+    await this.#bulkCreatePlayerUserAttributeCategoriesService.execute(workBook);
 
     response.status(HttpStatus.OK).send();
   }

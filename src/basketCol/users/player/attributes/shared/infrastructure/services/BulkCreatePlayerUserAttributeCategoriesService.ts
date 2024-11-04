@@ -33,7 +33,7 @@ interface Dependencies {
   readonly createSkillAttributesUseCase: ICreateSkillAttributesUseCase;
 }
 
-export class BulkCreatePlayerAttributesService {
+export class BulkCreatePlayerUserAttributeCategoriesService {
   readonly #createDefensiveAttributesUseCase: ICreateDefensiveAttributesUseCase;
 
   readonly #createFinishingAttributesUseCase: ICreateFinishingAttributesUseCase;
@@ -55,8 +55,8 @@ export class BulkCreatePlayerAttributesService {
     this.#createSkillAttributesUseCase = dependencies.createSkillAttributesUseCase;
   }
 
-  public static create(dependencies: Dependencies): BulkCreatePlayerAttributesService {
-    return new BulkCreatePlayerAttributesService(dependencies);
+  public static create(dependencies: Dependencies): BulkCreatePlayerUserAttributeCategoriesService {
+    return new BulkCreatePlayerUserAttributeCategoriesService(dependencies);
   }
 
   public async execute(workbook: WorkBook): Promise<void> {

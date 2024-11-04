@@ -4,6 +4,7 @@ import {
   Nullable,
   PlayerUserSkillAttributes,
   PUSASkillAttributesId,
+  PUSASkillAttributesReferencedPlayerUserId,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -33,6 +34,22 @@ export class MongoosePlayerUserSkillAttributesRepository
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserSkillAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserSkillAttributesDocument>({ id: playerUserSkillAttributesId.value });
+
+    return document === null ? null : PlayerUserSkillAttributes.fromPrimitives(
+      document.id.valueOf(),
+      document.passAccuracy.valueOf(),
+      document.ballHandle.valueOf(),
+      document.speedWithBall.valueOf(),
+      document.playerUserId.valueOf(),
+      document.createdAt.valueOf(),
+      document.updatedAt.valueOf(),
+    );
+  }
+
+  public async searchByPlayerUserId(pUSAReferencedPlayerUserId: PUSASkillAttributesReferencedPlayerUserId): Promise<Nullable<PlayerUserSkillAttributes>> {
+    const MyModel = await this.model();
+
+    const document: Nullable<IMongoosePlayerUserSkillAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserSkillAttributesDocument>({ playerUserId: pUSAReferencedPlayerUserId.playerUserIdAsString });
 
     return document === null ? null : PlayerUserSkillAttributes.fromPrimitives(
       document.id.valueOf(),
