@@ -26,8 +26,8 @@ import { ExpressPlayerUserRouteManager } from '../../server/express/routes/Expre
 import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IFileSystem';
 import { GlobFileSystem } from '../../../../../shared/infrastructure/file-system/GlobFileSystem';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
-import { IProfileImageUploader } from '../../../../shared/application/ports/IProfileImageUploader';
-import { S3ProfileImageUploader } from '../../../../shared/infrastructure/aws/S3ProfileImageUploader';
+import { IProfileImageUploader } from '../../../../shared/application/file-upload/images/ports/IProfileImageUploader';
+import { S3ProfileImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3ProfileImageUploader';
 
 export class AwilixPlayerUserDependencyInjector
   extends AwilixDependencyInjector<IPlayerUserContainer> {

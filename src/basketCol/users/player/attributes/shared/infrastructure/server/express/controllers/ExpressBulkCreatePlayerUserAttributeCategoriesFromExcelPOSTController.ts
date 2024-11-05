@@ -61,8 +61,19 @@ export class ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTControll
       return;
     }
 
+    if (request.userContext === undefined) {
+      const errorResponse = this.#httpResponseHandler.handleSingleErrorResponse({
+        code: HttpStatus.UNAUTHORIZED,
+        message: 'Unauthorized request',
+        error: { name: 'UnauthorizedError', details: 'No user context found in request' },
+      });
+
+      response.status(HttpStatus.UNAUTHORIZED).json(errorResponse);
+      return;
+    }
+
     const workBook: WorkBook = await this.#excelManager.readExcelFileFromBuffer(request.file.buffer);
-    await this.#bulkCreatePlayerUserAttributeCategoriesService.execute(workBook);
+    await this.#bulkCreatePlayerUserAttributeCategoriesService.execute(workBook, request.userContext);
 
     response.status(HttpStatus.OK).send();
   }

@@ -24,8 +24,8 @@ import { ExpressHostUserServerErrorHandler } from '../../server/express/ExpressH
 import { IHostUserConfigFactory } from '../../../application/ports/IHostUserConfigFactory';
 import { HostUserConfigFactory } from '../../adapters/HostUserConfigFactory';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
-import { IProfileImageUploader } from '../../../../shared/application/ports/IProfileImageUploader';
-import { S3ProfileImageUploader } from '../../../../shared/infrastructure/aws/S3ProfileImageUploader';
+import { IProfileImageUploader } from '../../../../shared/application/file-upload/images/ports/IProfileImageUploader';
+import { S3ProfileImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3ProfileImageUploader';
 
 export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<IHostUserContainer> {
   private constructor() {

@@ -1,4 +1,4 @@
-import { IUserContext } from './IUserContext';
+import { IUserContext } from './ports/IUserContext';
 
 export class UserContext implements IUserContext {
   readonly #userId: string;

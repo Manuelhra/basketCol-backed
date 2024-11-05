@@ -10,7 +10,7 @@ import { refereeUserServerErrorHandler } from '../basketCol/users/referee/infras
 import { teamFounderUserServerErrorHandler } from '../basketCol/users/team-founder/infrastructure/dependency-injection';
 import { teamServerErrorHandler } from '../basketCol/team/infrastructure/dependency-injection';
 import { gymServerErrorHandler } from '../basketCol/facilities/gym/infrastructure/dependency-injection';
-import { courtServerErrorHandler } from '../basketCol/facilities/court/infrastructure/dependency-injection';
+import { courtRouteManager, courtServerErrorHandler } from '../basketCol/facilities/court/infrastructure/dependency-injection';
 import { competitionsSharedServerErrorHandler } from '../basketCol/competitions/shared/infrastructure/dependency-injection';
 import { leagueServerErrorHandler } from '../basketCol/competitions/league/infrastructure/dependency-injection';
 import { leagueSeasonServerErrorHandler } from '../basketCol/competitions/league/season/infrastructure/dependency-injection';
@@ -50,6 +50,7 @@ export class App {
       playerUserRouteManager,
       playerUserCareerStatsRouteManager,
       playerUserAttributesRouteManager,
+      courtRouteManager,
     ]);
   }
 

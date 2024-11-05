@@ -1,4 +1,4 @@
-import { IUserContext } from '../../../application/context/IUserContext';
+import { IUserContext } from '../../../application/context/ports/IUserContext';
 
 declare global {
   namespace Express {

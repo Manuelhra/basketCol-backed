@@ -1,5 +1,6 @@
 import {
   BusinessDateService,
+  HostUserType,
   IdUniquenessValidatorService,
   IPlayerUserShootingAttributesPrimitives,
   IPlayerUserShootingAttributesRepository,
@@ -13,6 +14,8 @@ import {
 
 import { CreateShootingAttributesDTO } from '../dtos/CreateShootingAttributesDTO';
 import { ICreateShootingAttributesUseCase } from './ports/ICreateShootingAttributesUseCase';
+import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
+import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
 
 type Dependencies = {
   idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -41,7 +44,11 @@ export class CreateShootingAttributesUseCase implements ICreateShootingAttribute
     return new CreateShootingAttributesUseCase(dependencies);
   }
 
-  public async execute(dto: CreateShootingAttributesDTO): Promise<void> {
+  public async execute(dto: CreateShootingAttributesDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create shooting attributes');
+    }
+
     const {
       id,
       closeShot,

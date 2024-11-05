@@ -1,5 +1,6 @@
 import {
   BusinessDateService,
+  HostUserType,
   IdUniquenessValidatorService,
   IPlayerUserPhysicalAttributesPrimitives,
   IPlayerUserPhysicalAttributesRepository,
@@ -13,6 +14,8 @@ import {
 
 import { CreatePhysicalAttributesDTO } from '../dtos/CreatePhysicalAttributesDTO';
 import { ICreatePhysicalAttributesUseCase } from './ports/ICreatePhysicalAttributesUseCase';
+import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -41,7 +44,11 @@ export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttribute
     return new CreatePhysicalAttributesUseCase(dependencies);
   }
 
-  public async execute(dto: CreatePhysicalAttributesDTO): Promise<void> {
+  public async execute(dto: CreatePhysicalAttributesDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create physical attributes');
+    }
+
     const {
       id,
       speed,

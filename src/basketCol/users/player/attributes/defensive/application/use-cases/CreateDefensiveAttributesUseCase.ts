@@ -1,5 +1,6 @@
 import {
   BusinessDateService,
+  HostUserType,
   IdUniquenessValidatorService,
   IPlayerUserDefensiveAttributesPrimitives,
   IPlayerUserDefensiveAttributesRepository,
@@ -13,6 +14,8 @@ import {
 
 import { CreateDefensiveAttributesDTO } from '../dtos/CreateDefensiveAttributesDTO';
 import { ICreateDefensiveAttributesUseCase } from './ports/ICreateDefensiveAttributesUseCase';
+import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   readonly idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -41,7 +44,11 @@ export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttribu
     return new CreateDefensiveAttributesUseCase(dependencies);
   }
 
-  public async execute(dto: CreateDefensiveAttributesDTO): Promise<void> {
+  public async execute(dto: CreateDefensiveAttributesDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create defensive attributes');
+    }
+
     const {
       id,
       interiorDefense,

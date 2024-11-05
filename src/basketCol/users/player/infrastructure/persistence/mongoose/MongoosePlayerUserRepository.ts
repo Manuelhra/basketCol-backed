@@ -55,7 +55,12 @@ export class MongoosePlayerUserRepository
       document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
-      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
+      {
+        url: document.profileImage.url.valueOf(),
+        uploadedAt: document.profileImage.uploadedAt.valueOf(),
+        alt: document.profileImage.alt.valueOf(),
+        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
+      },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -75,7 +80,12 @@ export class MongoosePlayerUserRepository
       document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
-      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
+      {
+        url: document.profileImage.url.valueOf(),
+        uploadedAt: document.profileImage.uploadedAt.valueOf(),
+        alt: document.profileImage.alt.valueOf(),
+        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
+      },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
@@ -95,7 +105,12 @@ export class MongoosePlayerUserRepository
       document.password.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
-      { url: document.profileImage.url.valueOf(), updatedAt: document.profileImage.updatedAt.valueOf() },
+      {
+        url: document.profileImage.url.valueOf(),
+        uploadedAt: document.profileImage.uploadedAt.valueOf(),
+        alt: document.profileImage.alt.valueOf(),
+        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
+      },
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );

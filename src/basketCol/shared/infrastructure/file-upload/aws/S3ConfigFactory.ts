@@ -1,4 +1,4 @@
-import { convictConfig } from '../../../../config';
+import { convictConfig } from '../../../../../config';
 import { IS3Config } from './IS3Config';
 
 export abstract class S3ConfigFactory {

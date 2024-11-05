@@ -17,7 +17,9 @@
       "accessKeyId": "AKIA27BF2YKO6ZLHTA5P",
       "secretAccessKey": "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",
       "bucketName": {
-        "userProfileImage": "basketcol-dev-profile-image"
+        "userProfileImage": "basketcol-dev-profile-image",
+        "facilityMainImage": "basketcol-dev-facility-main-image",
+        "facilityGalleryImages": "basketcol-dev-facility-gallery-images"
       }
     }
   }

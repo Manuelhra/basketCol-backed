@@ -50,6 +50,8 @@ export class CreateGymUseCase implements ICreateGymUseCase {
       location,
       establishmentDate,
       registeredById,
+      mainImage,
+      gallery,
     } = dto;
     const gymId: GymId = GymId.create(id);
     const gymRegisteredById: GymRegisteredById = GymRegisteredById.create(registeredById);
@@ -69,6 +71,8 @@ export class CreateGymUseCase implements ICreateGymUseCase {
       location,
       gymEstablishmentDate.value,
       gymRegisteredById.hostUserIdAsString,
+      mainImage,
+      gallery,
       gymCreatedAt.value,
       gymUpdatedAt.value,
     );

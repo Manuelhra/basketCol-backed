@@ -23,6 +23,7 @@ import { CreatePhysicalAttributesDTO } from '../../../physical/application/dtos/
 import { CreateReboundingAttributesDTO } from '../../../rebounding/application/dtos/CreateReboundingAttributesDTO';
 import { CreateShootingAttributesDTO } from '../../../shooting/application/dtos/CreateShootingAttributesDTO';
 import { CreateSkillAttributesDTO } from '../../../skill/application/dtos/CreateSkillAttributesDTO';
+import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
 
 interface Dependencies {
   readonly createDefensiveAttributesUseCase: ICreateDefensiveAttributesUseCase;
@@ -59,7 +60,7 @@ export class BulkCreatePlayerUserAttributeCategoriesService {
     return new BulkCreatePlayerUserAttributeCategoriesService(dependencies);
   }
 
-  public async execute(workbook: WorkBook): Promise<void> {
+  public async execute(workbook: WorkBook, userContext: IUserContext): Promise<void> {
     const processingPromises: Promise<void>[] = [];
 
     ALL_MAPPINGS.forEach((mapping) => {
@@ -71,22 +72,22 @@ export class BulkCreatePlayerUserAttributeCategoriesService {
 
       switch (mapping.sheetName) {
         case SHEET_NAMES.DEFENSIVE:
-          processingPromises.push(this.#processDefensiveAttributes(data));
+          processingPromises.push(this.#processDefensiveAttributes(data, userContext));
           break;
         case SHEET_NAMES.FINISHING:
-          processingPromises.push(this.#processFinishingAttributes(data));
+          processingPromises.push(this.#processFinishingAttributes(data, userContext));
           break;
         case SHEET_NAMES.PHYSICAL:
-          processingPromises.push(this.#processPhysicalAttributes(data));
+          processingPromises.push(this.#processPhysicalAttributes(data, userContext));
           break;
         case SHEET_NAMES.REBOUNDING:
-          processingPromises.push(this.#processReboundingAttributes(data));
+          processingPromises.push(this.#processReboundingAttributes(data, userContext));
           break;
         case SHEET_NAMES.SHOOTING:
-          processingPromises.push(this.#processShootingAttributes(data));
+          processingPromises.push(this.#processShootingAttributes(data, userContext));
           break;
         case SHEET_NAMES.SKILL:
-          processingPromises.push(this.#processSkillAttributes(data));
+          processingPromises.push(this.#processSkillAttributes(data, userContext));
           break;
       }
     });
@@ -94,39 +95,39 @@ export class BulkCreatePlayerUserAttributeCategoriesService {
     await Promise.all(processingPromises);
   }
 
-  async #processDefensiveAttributes(data: Record<string, any>[]): Promise<void> {
+  async #processDefensiveAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
     const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateDefensiveAttributesDTO>(row, DEFENSIVE_MAPPINGS.mappings));
-    const promises = dtos.map((dto) => this.#createDefensiveAttributesUseCase.execute(dto));
+    const promises = dtos.map((dto) => this.#createDefensiveAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
-  async #processFinishingAttributes(data: Record<string, any>[]): Promise<void> {
+  async #processFinishingAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
     const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateFinishingAttributesDTO>(row, FINISHING_MAPPINGS.mappings));
-    const promises = dtos.map((dto) => this.#createFinishingAttributesUseCase.execute(dto));
+    const promises = dtos.map((dto) => this.#createFinishingAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
-  async #processPhysicalAttributes(data: Record<string, any>[]): Promise<void> {
+  async #processPhysicalAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
     const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreatePhysicalAttributesDTO>(row, PHYSICAL_MAPPINGS.mappings));
-    const promises = dtos.map((dto) => this.#createPhysicalAttributesUseCase.execute(dto));
+    const promises = dtos.map((dto) => this.#createPhysicalAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
-  async #processReboundingAttributes(data: Record<string, any>[]): Promise<void> {
+  async #processReboundingAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
     const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateReboundingAttributesDTO>(row, REBOUNDING_MAPPINGS.mappings));
-    const promises = dtos.map((dto) => this.#createReboundingAttributesUseCase.execute(dto));
+    const promises = dtos.map((dto) => this.#createReboundingAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
-  async #processShootingAttributes(data: Record<string, any>[]): Promise<void> {
+  async #processShootingAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
     const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateShootingAttributesDTO>(row, SHOOTING_MAPPINGS.mappings));
-    const promises = dtos.map((dto) => this.#createShootingAttributesUseCase.execute(dto));
+    const promises = dtos.map((dto) => this.#createShootingAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
-  async #processSkillAttributes(data: Record<string, any>[]): Promise<void> {
+  async #processSkillAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
     const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateSkillAttributesDTO>(row, SKILL_MAPPINGS.mappings));
-    const promises = dtos.map((dto) => this.#createSkillAttributesUseCase.execute(dto));
+    const promises = dtos.map((dto) => this.#createSkillAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 }

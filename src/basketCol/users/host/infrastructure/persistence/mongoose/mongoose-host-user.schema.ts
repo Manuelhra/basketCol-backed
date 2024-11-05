@@ -48,7 +48,12 @@ export const mongooseHostUserSchema = new Schema<IMongooseHostUserDocument>({
   },
   profileImage: {
     url: { type: String, required: [true, "The host user's profile image url is required"] },
-    updatedAt: { type: String, required: [true, "The host user's profile image update date is required"] },
+    uploadedAt: { type: String, required: [true, "The host user's profile image uploaded date is required"] },
+    alt: { type: String, required: [true, "The host user's profile image alt is required"] },
+    dimensions: {
+      width: { type: Number, required: [true, "The host user's profile image width is required"] },
+      height: { type: Number, required: [true, "The host user's profile image height is required"] },
+    },
   },
   createdAt: {
     type: String,
