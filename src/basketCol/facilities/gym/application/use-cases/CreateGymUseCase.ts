@@ -7,6 +7,7 @@ import {
   GymId,
   GymRegisteredById,
   GymUpdatedAt,
+  HostUserType,
   HostUserValidationService,
   IdUniquenessValidatorService,
   IGymPrimitives,
@@ -15,6 +16,8 @@ import {
 
 import { CreateGymDTO } from '../dtos/CreateGymDTO';
 import { ICreateGymUseCase } from './ports/ICreateGymUseCase';
+import { IUserContext } from '../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -43,16 +46,22 @@ export class CreateGymUseCase implements ICreateGymUseCase {
     return new CreateGymUseCase(dependencies);
   }
 
-  public async execute(dto: CreateGymDTO): Promise<void> {
+  public async execute(dto: CreateGymDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a court');
+    }
+
     const {
       id,
       officialName,
       location,
       establishmentDate,
-      registeredById,
+      mainImage,
+      gallery,
     } = dto;
+
     const gymId: GymId = GymId.create(id);
-    const gymRegisteredById: GymRegisteredById = GymRegisteredById.create(registeredById);
+    const gymRegisteredById: GymRegisteredById = GymRegisteredById.create(userContext.userId);
     const gymEstablishmentDate: GymEstablishmentDate = GymEstablishmentDate.create(establishmentDate);
     const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
 
@@ -69,6 +78,8 @@ export class CreateGymUseCase implements ICreateGymUseCase {
       location,
       gymEstablishmentDate.value,
       gymRegisteredById.hostUserIdAsString,
+      mainImage,
+      gallery,
       gymCreatedAt.value,
       gymUpdatedAt.value,
     );

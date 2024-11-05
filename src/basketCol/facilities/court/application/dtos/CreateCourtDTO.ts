@@ -1,3 +1,4 @@
+import { IImageValueObjectProps } from '@basketcol/domain/build/types/basketCol/shared/domain/value-objects/ImageValueObject';
 import { ILocationValueObjectProps } from '@basketcol/domain/build/types/basketCol/shared/domain/value-objects/LocationValueObject';
 
 export interface CreateCourtDTO {
@@ -6,7 +7,10 @@ export interface CreateCourtDTO {
   establishmentDate: string;
   surface: string;
   hoopHeight: number;
-  registeredById: string;
   location: ILocationValueObjectProps;
-  gymId: string | null;
+  mainImage: IImageValueObjectProps;
+  gallery: {
+    images: IImageValueObjectProps[];
+  };
+  facilityId: string | null;
 }

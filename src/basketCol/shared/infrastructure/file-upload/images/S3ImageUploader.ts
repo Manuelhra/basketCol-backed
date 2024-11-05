@@ -10,30 +10,30 @@ import sharp from 'sharp';
 import crypto from 'crypto';
 
 import {
+  IImageUploader,
   ImageFile,
-  IProfileImageUploader,
   UploadedImageResult,
   UploadImageOptions,
-} from '../../application/ports/IProfileImageUploader';
-import { ImageUploadError } from '../exceptions/ImageUploadError';
-import { S3ClientFactory } from '../../../../shared/infrastructure/aws/S3ClientFactory';
-import { S3ProfileImageUploaderConfigFactory } from './S3ProfileImageUploaderConfigFactory';
+} from '../../../application/file-upload/images/ports/IImageUploader';
+import { ImageUploadError } from '../../../../users/shared/infrastructure/exceptions/ImageUploadError';
+import { S3ClientFactory } from '../aws/S3ClientFactory';
 
 type Dependencies = {
   folderPath: string;
+  bucketName: string;
 };
 
 interface ProcessedImageResult {
   buffer: Buffer;
   metadata: {
-    width?: number;
-    height?: number;
+    width: number;
+    height: number;
     format: string;
     size: number;
   };
 }
 
-export class S3ProfileImageUploader implements IProfileImageUploader {
+export class S3ImageUploader implements IImageUploader {
   readonly #s3Client: S3Client;
 
   readonly #bucketName: string;
@@ -50,18 +50,17 @@ export class S3ProfileImageUploader implements IProfileImageUploader {
     },
   };
 
-  private constructor(dependencies: Dependencies) {
+  protected constructor(dependencies: Dependencies) {
     this.#folderPath = dependencies.folderPath;
-    const { bucketName } = S3ProfileImageUploaderConfigFactory.createS3ProfileImageUploaderConfig();
-    this.#bucketName = bucketName;
+    this.#bucketName = dependencies.bucketName;
     this.#s3Client = S3ClientFactory.createS3Client();
   }
 
-  public static create(dependencies: Dependencies): S3ProfileImageUploader {
-    return new S3ProfileImageUploader(dependencies);
+  public static create(dependencies: Dependencies): S3ImageUploader {
+    return new S3ImageUploader(dependencies);
   }
 
-  public async uploadProfileImage(
+  public async uploadImage(
     imageFile: ImageFile,
     options?: Partial<UploadImageOptions>,
   ): Promise<UploadedImageResult> {
@@ -96,7 +95,7 @@ export class S3ProfileImageUploader implements IProfileImageUploader {
     }
   }
 
-  public async deleteProfileImage(imageKey: string): Promise<void> {
+  public async deleteImage(imageKey: string): Promise<void> {
     try {
       if (!await this.exists(imageKey)) {
         return; // Si no existe, consideramos la eliminación como exitosa

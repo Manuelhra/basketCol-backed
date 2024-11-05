@@ -4,11 +4,12 @@ import {
   CourtCreatedAt,
   CourtEstablishmentDate,
   CourtId,
-  CourtNullableFacilityId,
+  CourtNullableReferencedFacilityId,
   CourtRegisteredById,
   CourtUpdatedAt,
   DateValueObject,
   GymValidationService,
+  HostUserType,
   HostUserValidationService,
   ICourtPrimitives,
   ICourtRepository,
@@ -17,13 +18,15 @@ import {
 
 import { CreateCourtDTO } from '../dtos/CreateCourtDTO';
 import { ICreateCourtUseCase } from './ports/ICreateCourtUseCase';
+import { IUserContext } from '../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  hostUserValidationService: HostUserValidationService;
-  gymValidationService: GymValidationService;
-  businessDateService: BusinessDateService;
-  courtRepository: ICourtRepository;
+  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly hostUserValidationService: HostUserValidationService;
+  readonly gymValidationService: GymValidationService;
+  readonly businessDateService: BusinessDateService;
+  readonly courtRepository: ICourtRepository;
 };
 
 export class CreateCourtUseCase implements ICreateCourtUseCase {
@@ -49,20 +52,25 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
     return new CreateCourtUseCase(dependencies);
   }
 
-  public async execute(dto: CreateCourtDTO): Promise<void> {
+  public async execute(dto: CreateCourtDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a court');
+    }
+
     const {
       id,
       officialName,
       establishmentDate,
       surface,
       hoopHeight,
-      registeredById,
       location,
-      gymId,
+      mainImage,
+      gallery,
+      facilityId,
     } = dto;
 
     const courtId: CourtId = CourtId.create(id);
-    const courtRegisteredById: CourtRegisteredById = CourtRegisteredById.create(registeredById);
+    const courtRegisteredById: CourtRegisteredById = CourtRegisteredById.create(userContext.userId);
     const courtEstablishmentDate: CourtEstablishmentDate = CourtEstablishmentDate.create(establishmentDate);
     const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
 
@@ -73,9 +81,10 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
     const courtCreatedAt: CourtCreatedAt = this.#businessDateService.getCurrentDate();
     const courtUpdatedAt: CourtUpdatedAt = this.#businessDateService.getCurrentDate();
 
-    const courtNullableFacilityId: CourtNullableFacilityId = CourtNullableFacilityId.create(gymId);
+    const courtNullableFacilityId: CourtNullableReferencedFacilityId = CourtNullableReferencedFacilityId.create(facilityId);
 
     if (courtNullableFacilityId.value !== null) {
+      // TODO: Crear un servicio de dominio que valida si existe una instalación con ese ID.
       await this.#gymValidationService.ensureGymExists(courtNullableFacilityId.value);
     }
 
@@ -87,6 +96,8 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
       hoopHeight,
       courtRegisteredById.hostUserIdAsString,
       location,
+      mainImage,
+      gallery,
       courtNullableFacilityId.facilityIdAsStringOrNull,
       courtCreatedAt.value,
       courtUpdatedAt.value,

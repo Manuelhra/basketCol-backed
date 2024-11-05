@@ -19,7 +19,7 @@ import {
 import { CreatePlayerUserDTO } from '../dtos/CreatePlayerUserDTO';
 import { ICreatePlayerUserUseCase } from './ports/ICreatePlayerUserUseCase';
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
-import { IUserContext } from '../../../../shared/application/context/IUserContext';
+import { IUserContext } from '../../../../shared/application/context/ports/IUserContext';
 
 type Dependencies = {
   playerUserNicknameValidationService: PlayerUserNicknameValidationService;

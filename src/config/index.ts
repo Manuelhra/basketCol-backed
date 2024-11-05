@@ -92,6 +92,18 @@ export const convictConfig = convict<IConvictProps>({
           env: 'AWS_S3_BUCKET_NAME_USER_PROFILE_IMAGE',
           default: null,
         },
+        facilityMainImage: {
+          doc: 'The bucket name for the facility main image',
+          format: String,
+          env: 'AWS_S3_BUCKET_NAME_FACILITY_MAIN_IMAGE',
+          default: null,
+        },
+        facilityGalleryImages: {
+          doc: 'The bucket name for the facility gallery images',
+          format: String,
+          env: 'AWS_S3_BUCKET_NAME_FACILITY_GALLERY_IMAGES',
+          default: null,
+        },
       },
     },
   },

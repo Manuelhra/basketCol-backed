@@ -13,7 +13,7 @@ import { ICreateHostUserUseCase } from '../../application/use-cases/ports/ICreat
 import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
 import { IHostUserConfigFactory } from '../../application/ports/IHostUserConfigFactory';
-import { IProfileImageUploader } from '../../../shared/application/ports/IProfileImageUploader';
+import { IProfileImageUploader } from '../../../shared/application/file-upload/images/ports/IProfileImageUploader';
 
 export interface IHostUserContainer {
   businessDateService: BusinessDateService;

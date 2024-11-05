@@ -52,7 +52,12 @@ export const mongoosePlayerUserSchema = new Schema<IMongoosePlayerUserDocument>(
   },
   profileImage: {
     url: { type: String, required: [true, "The player user's profile image url is required"] },
-    updatedAt: { type: String, required: [true, "The player user's profile image update date is required"] },
+    uploadedAt: { type: String, required: [true, "The player user's profile image uploaded date is required"] },
+    alt: { type: String, required: [true, "The player user's profile image alt is required"] },
+    dimensions: {
+      width: { type: Number, required: [true, "The player user's profile image width is required"] },
+      height: { type: Number, required: [true, "The player user's profile image height is required"] },
+    },
   },
   createdAt: {
     type: String,

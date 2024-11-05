@@ -25,7 +25,7 @@ export class ExpressCreatePlayerUserCareerStatsPOSTController implements Express
     const { playerUserId } = request.params;
 
     createPlayerUserCareerStatsDTO.playerUserId = playerUserId;
-    await this.#createPlayerUserCareerStatsUseCase.execute(createPlayerUserCareerStatsDTO);
+    await this.#createPlayerUserCareerStatsUseCase.execute(createPlayerUserCareerStatsDTO, request.userContext);
 
     response.status(HttpStatus.CREATED).send();
   }

@@ -7,4 +7,6 @@ if (awilixCourtContainer === null) {
   throw DependencyContainerNotInitializedError.create();
 }
 
+export const courtRouteManager = awilixCourtContainer.resolve('courtRouteManager');
+export const createCourtPOSTController = awilixCourtContainer.resolve('createCourtPOSTController');
 export const courtServerErrorHandler = awilixCourtContainer.resolve('courtServerErrorHandler');

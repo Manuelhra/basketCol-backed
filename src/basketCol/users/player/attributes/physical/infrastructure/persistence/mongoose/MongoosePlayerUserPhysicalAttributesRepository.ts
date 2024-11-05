@@ -4,6 +4,7 @@ import {
   Nullable,
   PlayerUserPhysicalAttributes,
   PUPAId,
+  PUPAReferencedPlayerUserId,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -33,6 +34,24 @@ export class MongoosePlayerUserPhysicalAttributesRepository
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserPhysicalAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserPhysicalAttributesDocument>({ id: playerUserPhysicalAttributesId.value });
+
+    return document === null ? null : PlayerUserPhysicalAttributes.fromPrimitives(
+      document.id.valueOf(),
+      document.speed.valueOf(),
+      document.acceleration.valueOf(),
+      document.strength.valueOf(),
+      document.vertical.valueOf(),
+      document.stamina.valueOf(),
+      document.playerUserId.valueOf(),
+      document.createdAt.valueOf(),
+      document.updatedAt.valueOf(),
+    );
+  }
+
+  public async searchByPlayerUserId(pUPAReferencedPlayerUserId: PUPAReferencedPlayerUserId): Promise<Nullable<PlayerUserPhysicalAttributes>> {
+    const MyModel = await this.model();
+
+    const document: Nullable<IMongoosePlayerUserPhysicalAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserPhysicalAttributesDocument>({ playerUserId: pUPAReferencedPlayerUserId.playerUserIdAsString });
 
     return document === null ? null : PlayerUserPhysicalAttributes.fromPrimitives(
       document.id.valueOf(),

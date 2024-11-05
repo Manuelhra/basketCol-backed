@@ -4,6 +4,7 @@ import {
   Nullable,
   PlayerUserReboundingAttributes,
   PURAId,
+  PURAReferencedPlayerUserId,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -33,6 +34,21 @@ export class MongoosePlayerUserReboundingAttributesRepository
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserReboundingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserReboundingAttributesDocument>({ id: playerUserReboundingAttributesId.value });
+
+    return document === null ? null : PlayerUserReboundingAttributes.fromPrimitives(
+      document.id.valueOf(),
+      document.offensiveRebound.valueOf(),
+      document.defensiveRebound.valueOf(),
+      document.playerUserId.valueOf(),
+      document.createdAt.valueOf(),
+      document.updatedAt.valueOf(),
+    );
+  }
+
+  public async searchByPlayerUserId(pURAReferencedPlayerUserId: PURAReferencedPlayerUserId): Promise<Nullable<PlayerUserReboundingAttributes>> {
+    const MyModel = await this.model();
+
+    const document: Nullable<IMongoosePlayerUserReboundingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserReboundingAttributesDocument>({ playerUserId: pURAReferencedPlayerUserId.playerUserIdAsString });
 
     return document === null ? null : PlayerUserReboundingAttributes.fromPrimitives(
       document.id.valueOf(),

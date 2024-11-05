@@ -1,5 +1,6 @@
 import {
   BusinessDateService,
+  HostUserType,
   IdUniquenessValidatorService,
   IPlayerUserFinishingAttributesPrimitives,
   IPlayerUserFinishingAttributesRepository,
@@ -13,6 +14,8 @@ import {
 
 import { CreateFinishingAttributesDTO } from '../dtos/CreateFinishingAttributesDTO';
 import { ICreateFinishingAttributesUseCase } from './ports/ICreateFinishingAttributesUseCase';
+import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -41,7 +44,11 @@ export class CreateFinishingAttributesUseCase implements ICreateFinishingAttribu
     return new CreateFinishingAttributesUseCase(dependencies);
   }
 
-  public async execute(dto: CreateFinishingAttributesDTO): Promise<void> {
+  public async execute(dto: CreateFinishingAttributesDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create finishing attributes');
+    }
+
     const {
       id,
       drivingLayup,

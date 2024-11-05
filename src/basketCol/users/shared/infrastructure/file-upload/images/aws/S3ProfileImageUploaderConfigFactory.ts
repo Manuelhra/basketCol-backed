@@ -1,4 +1,4 @@
-import { convictConfig } from '../../../../../config';
+import { convictConfig } from '../../../../../../../config';
 
 export interface IS3ProfileImageUploaderConfig {
   bucketName: string;

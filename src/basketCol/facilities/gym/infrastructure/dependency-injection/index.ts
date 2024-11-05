@@ -7,4 +7,6 @@ if (awilixGymContainer === null) {
   throw DependencyContainerNotInitializedError.create();
 }
 
+export const gymRouteManager = awilixGymContainer.resolve('gymRouteManager');
+export const createGymPOSTController = awilixGymContainer.resolve('createGymPOSTController');
 export const gymServerErrorHandler = awilixGymContainer.resolve('gymServerErrorHandler');

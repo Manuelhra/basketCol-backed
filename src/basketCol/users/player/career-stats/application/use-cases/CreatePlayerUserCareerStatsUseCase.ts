@@ -1,5 +1,6 @@
 import {
   BusinessDateService,
+  HostUserType,
   IdUniquenessValidatorService,
   IPlayerUserCareerStatsPrimitives,
   IPlayerUserCareerStatsRepository,
@@ -13,6 +14,8 @@ import {
 
 import { CreatePlayerUserCareerStatsDTO } from '../dtos/CreatePlayerUserCareerStatsDTO';
 import { ICreatePlayerUserCareerStatsUseCase } from './ports/ICreatePlayerUserCareerStatsUseCase';
+import { IUserContext } from '../../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -41,7 +44,11 @@ export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCare
     return new CreatePlayerUserCareerStatsUseCase(dependencies);
   }
 
-  public async execute(dto: CreatePlayerUserCareerStatsDTO): Promise<void> {
+  public async execute(dto: CreatePlayerUserCareerStatsDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create player user career stats');
+    }
+
     const {
       id,
       totalGamesPlayed,

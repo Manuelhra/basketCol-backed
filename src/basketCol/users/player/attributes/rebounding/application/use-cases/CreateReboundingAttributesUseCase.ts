@@ -9,10 +9,13 @@ import {
   IPlayerUserReboundingAttributesPrimitives,
   PURACreatedAt,
   PURAUpdatedAt,
+  HostUserType,
 } from '@basketcol/domain';
 
 import { CreateReboundingAttributesDTO } from '../dtos/CreateReboundingAttributesDTO';
 import { ICreateReboundingAttributesUseCase } from './ports/ICreateReboundingAttributesUseCase';
+import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -41,7 +44,11 @@ export class CreateReboundingAttributesUseCase implements ICreateReboundingAttri
     return new CreateReboundingAttributesUseCase(dependencies);
   }
 
-  public async execute(dto: CreateReboundingAttributesDTO): Promise<void> {
+  public async execute(dto: CreateReboundingAttributesDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create rebounding attributes');
+    }
+
     const {
       id,
       offensiveRebound,

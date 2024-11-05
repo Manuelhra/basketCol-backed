@@ -24,15 +24,16 @@ import { ICreatePhysicalAttributesUseCase } from '../../../physical/application/
 import { ICreateReboundingAttributesUseCase } from '../../../rebounding/application/use-cases/ports/ICreateReboundingAttributesUseCase';
 import { ICreateShootingAttributesUseCase } from '../../../shooting/application/use-cases/ports/ICreateShootingAttributesUseCase';
 import { ICreateSkillAttributesUseCase } from '../../../skill/application/use-cases/ports/ICreateSkillAttributesUseCase';
-import { BulkCreatePlayerAttributesService } from '../services/BulkCreatePlayerAttributesService';
+import { BulkCreatePlayerUserAttributeCategoriesService } from '../services/BulkCreatePlayerUserAttributeCategoriesService';
+import { IGetPlayerUserAttributeCategoriesUseCase } from '../../application/use-cases/ports/IGetPlayerUserAttributeCategoriesUseCase';
 
 export interface IPlayerUserAttributesContainer {
   httpResponseHandler: IHttpResponseHandler;
   excelManager: IExcelManager;
-  bulkCreatePlayerUserAttributesFromExcelPOSTController: IController;
+  bulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController: IController;
   playerUserAttributesRouteManager: IRouteManager;
   fileSystem: IFileSystem;
-  bulkCreatePlayerAttributesService: BulkCreatePlayerAttributesService;
+  bulkCreatePlayerUserAttributeCategoriesService: BulkCreatePlayerUserAttributeCategoriesService;
   createDefensiveAttributesUseCase: ICreateDefensiveAttributesUseCase;
   playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
   createFinishingAttributesUseCase: ICreateFinishingAttributesUseCase;
@@ -51,4 +52,6 @@ export interface IPlayerUserAttributesContainer {
   securePasswordCreationService: SecurePasswordCreationService;
   passwordHashingService: IPasswordHashingService;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService
+  getPlayerUserAttributeCategoriesGETController: IController;
+  getPlayerUserAttributeCategoriesUseCase: IGetPlayerUserAttributeCategoriesUseCase;
 }

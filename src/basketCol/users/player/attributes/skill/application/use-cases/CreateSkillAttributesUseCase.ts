@@ -1,5 +1,6 @@
 import {
   BusinessDateService,
+  HostUserType,
   IdUniquenessValidatorService,
   IPlayerUserSkillAttributesPrimitives,
   IPlayerUserSkillAttributesRepository,
@@ -13,6 +14,8 @@ import {
 
 import { CreateSkillAttributesDTO } from '../dtos/CreateSkillAttributesDTO';
 import { ICreateSkillAttributesUseCase } from './ports/ICreateSkillAttributesUseCase';
+import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -41,7 +44,11 @@ export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCa
     return new CreateSkillAttributesUseCase(dependencies);
   }
 
-  public async execute(dto: CreateSkillAttributesDTO): Promise<void> {
+  public async execute(dto: CreateSkillAttributesDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create skill attributes');
+    }
+
     const {
       id,
       passAccuracy,

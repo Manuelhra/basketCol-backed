@@ -5,8 +5,9 @@ import multer from 'multer';
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 import { CreatePlayerUserDTO } from '../../../../application/dtos/CreatePlayerUserDTO';
 import { ICreatePlayerUserUseCase } from '../../../../application/use-cases/ports/ICreatePlayerUserUseCase';
-import { ImageFile, IProfileImageUploader } from '../../../../../shared/application/ports/IProfileImageUploader';
 import { MulterError } from '../../../../../../shared/infrastructure/exceptions/MulterError';
+import { IProfileImageUploader } from '../../../../../shared/application/file-upload/images/ports/IProfileImageUploader';
+import { ImageFile } from '../../../../../../shared/application/file-upload/images/ports/IImageUploader';
 
 type Dependencies = {
   readonly createPlayerUserUseCase: ICreatePlayerUserUseCase;
@@ -61,7 +62,15 @@ export class ExpressCreatePlayerUserPOSTController implements ExpressBaseControl
 
       const profileImage = await this.#profileImageUploader.uploadProfileImage(imageFile);
       const formattedDate = DateValueObject.getCurrentDate().dateAsString;
-      createPlayerUserDTO.profileImage = { url: profileImage.url, updatedAt: formattedDate };
+      createPlayerUserDTO.profileImage = {
+        url: profileImage.url,
+        uploadedAt: formattedDate,
+        alt: imageFile.originalName,
+        dimensions: {
+          width: profileImage.metadata.width,
+          height: profileImage.metadata.height,
+        },
+      };
     }
 
     await this.#createPlayerUserUseCase.execute(createPlayerUserDTO, request.userContext);

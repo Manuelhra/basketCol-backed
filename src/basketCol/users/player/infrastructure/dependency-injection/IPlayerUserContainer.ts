@@ -15,7 +15,7 @@ import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IS
 import { ICreatePlayerUserUseCase } from '../../application/use-cases/ports/ICreatePlayerUserUseCase';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
-import { IProfileImageUploader } from '../../../shared/application/ports/IProfileImageUploader';
+import { IProfileImageUploader } from '../../../shared/application/file-upload/images/ports/IProfileImageUploader';
 
 export interface IPlayerUserContainer {
   httpResponseHandler: IHttpResponseHandler;

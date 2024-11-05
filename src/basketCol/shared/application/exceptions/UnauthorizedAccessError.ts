@@ -1,6 +1,5 @@
 import { RootError } from '@basketcol/domain';
-
-import { IUserContext } from '../context/IUserContext';
+import { IUserContext } from '../context/ports/IUserContext';
 
 export class UnauthorizedAccessError extends RootError {
   private constructor(userContext: IUserContext, requiredRole: string, action: string) {

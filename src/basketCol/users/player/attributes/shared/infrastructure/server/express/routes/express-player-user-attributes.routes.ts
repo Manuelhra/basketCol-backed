@@ -1,16 +1,29 @@
 import { Router } from 'express';
 
-import { ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController } from '../controllers/ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController.ts';
-import { bulkCreatePlayerUserAttributesFromExcelPOSTController } from '../../../dependency-injection';
+import { ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController } from '../controllers/ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController';
+import { bulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController, getPlayerUserAttributeCategoriesGETController } from '../../../dependency-injection';
+import { expressAuthenticationMiddleware } from '../../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-authentication.middleware';
+import { httpResponseHandler, tokenValidatorService } from '../../../../../../../../shared/infrastructure/dependency-injection';
+import { expressUserTypeAuthorizationMiddleware } from '../../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
 
 const register = (router: Router) => {
   const pathPrefix: string = '/users/players';
 
-  // Endpoint - Create player user attributes
+  // Endpoint - Bulk create player user attribute categories from Excel
   router.post(
-    `${pathPrefix}/attributes/bulk-upload/excel`,
-    (bulkCreatePlayerUserAttributesFromExcelPOSTController as ExpressBulkCreatePlayerUserAttributesFromExcelPOSTController).getExcelFileUploadMiddleware(),
-    bulkCreatePlayerUserAttributesFromExcelPOSTController.run.bind(bulkCreatePlayerUserAttributesFromExcelPOSTController),
+    `${pathPrefix}/attribute-categories/bulk-upload/excel`,
+    (bulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController as ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController).getExcelFileUploadMiddleware(),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    expressUserTypeAuthorizationMiddleware(['HOST_USER'], httpResponseHandler),
+    bulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController.run.bind(bulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController),
+  );
+
+  // Endpoint - Get player user attribute categories
+  router.get(
+    `${pathPrefix}/:playerUserId/attribute-categories`,
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    expressUserTypeAuthorizationMiddleware(['HOST_USER', 'PLAYER_USER'], httpResponseHandler),
+    getPlayerUserAttributeCategoriesGETController.run.bind(getPlayerUserAttributeCategoriesGETController),
   );
 };
 

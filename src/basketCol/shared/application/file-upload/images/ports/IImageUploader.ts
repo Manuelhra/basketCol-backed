@@ -27,31 +27,31 @@ export interface UploadedImageResult {
   readonly metadata: {
     readonly size: number;
     readonly mimetype: string;
-    readonly width?: number;
-    readonly height?: number;
+    readonly width: number;
+    readonly height: number;
     readonly createdAt: string; // DD/MM/YYYY HH:mm:ss
   };
 }
 
-export interface IProfileImageUploader {
+export interface IImageUploader {
   /**
-   * Sube una imagen de perfil al almacenamiento en la nube
+   * Sube una imagen al almacenamiento en la nube
    * @param imageFile - Objeto que contiene el buffer y metadata de la imagen
    * @param options - Opciones de configuración para la subida
    * @throws {ImageUploadError} Si ocurre algún error durante la subida
    * @returns Promise con el resultado de la subida
    */
-  uploadProfileImage(
+  uploadImage(
     imageFile: ImageFile,
     options?: UploadImageOptions
   ): Promise<UploadedImageResult>;
 
   /**
-   * Elimina una imagen de perfil del almacenamiento
+   * Elimina una imagen del almacenamiento
    * @param imageKey - Clave única de la imagen en el almacenamiento
    * @throws {ImageUploadError} Si ocurre algún error durante la eliminación
    */
-  deleteProfileImage(imageKey: string): Promise<void>;
+  deleteImage(imageKey: string): Promise<void>;
 
   /**
    * Verifica si una imagen existe en el almacenamiento
