@@ -6,7 +6,6 @@ export interface CreateGymDTO {
   officialName: string;
   location: ILocationValueObjectProps;
   establishmentDate: string;
-  registeredById: string;
   mainImage: IImageValueObjectProps;
   gallery: {
     images: IImageValueObjectProps[];

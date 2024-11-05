@@ -9,7 +9,7 @@ import { playerUserRouteManager, playerUserServerErrorHandler } from '../basketC
 import { refereeUserServerErrorHandler } from '../basketCol/users/referee/infrastructure/dependency-injection';
 import { teamFounderUserServerErrorHandler } from '../basketCol/users/team-founder/infrastructure/dependency-injection';
 import { teamServerErrorHandler } from '../basketCol/team/infrastructure/dependency-injection';
-import { gymServerErrorHandler } from '../basketCol/facilities/gym/infrastructure/dependency-injection';
+import { gymRouteManager, gymServerErrorHandler } from '../basketCol/facilities/gym/infrastructure/dependency-injection';
 import { courtRouteManager, courtServerErrorHandler } from '../basketCol/facilities/court/infrastructure/dependency-injection';
 import { competitionsSharedServerErrorHandler } from '../basketCol/competitions/shared/infrastructure/dependency-injection';
 import { leagueServerErrorHandler } from '../basketCol/competitions/league/infrastructure/dependency-injection';
@@ -51,6 +51,7 @@ export class App {
       playerUserCareerStatsRouteManager,
       playerUserAttributesRouteManager,
       courtRouteManager,
+      gymRouteManager,
     ]);
   }
 

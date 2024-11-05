@@ -17,7 +17,7 @@ export class MongooseGymRepository
   extends MongooseRepository<IGymPrimitives, Gym>
   implements IGymRepository {
   protected collectionName(): string {
-    return 'court_facility';
+    return 'gym_facility';
   }
 
   private constructor() {

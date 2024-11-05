@@ -63,7 +63,7 @@ export class AwilixCourtDependencyInjector extends AwilixDependencyInjector<ICou
       gymValidationService: AwilixDependencyInjector.registerAsFunction<GymValidationService>(GymValidationService.create).singleton(),
       gymRepository: AwilixDependencyInjector.registerAsFunction<IGymRepository>(MongooseGymRepository.create).singleton(),
       hostUserValidationService: AwilixDependencyInjector.registerAsFunction<HostUserValidationService>(HostUserValidationService.create).singleton(),
-      hostUserRepository: AwilixCourtDependencyInjector.registerAsFunction<IHostUserRepository>(MongooseHostUserRepository.create).singleton(),
+      hostUserRepository: AwilixDependencyInjector.registerAsFunction<IHostUserRepository>(MongooseHostUserRepository.create).singleton(),
       facilityMainImageUploader: AwilixDependencyInjector.registerAsFunction<IFacilityMainImageUploader>(() => S3FacilityMainImageUploader.create({
         folderPath: 'court',
       })),
