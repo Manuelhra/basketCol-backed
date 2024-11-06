@@ -7,4 +7,6 @@ if (awilixLeagueContainer === null) {
   throw DependencyContainerNotInitializedError.create();
 }
 
+export const leagueRouteManager = awilixLeagueContainer.resolve('leagueRouteManager');
+export const createLeaguePOSTController = awilixLeagueContainer.resolve('createLeaguePOSTController');
 export const leagueServerErrorHandler = awilixLeagueContainer.resolve('leagueServerErrorHandler');

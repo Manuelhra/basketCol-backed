@@ -15,10 +15,12 @@ import { MongooseClientFactory } from '../../../../../shared/infrastructure/pers
 import { mongooseLeagueFounderUserSchema } from './mongoose-league-founder-user.schema';
 
 type Dependencies = {
-  securePasswordCreationService: SecurePasswordCreationService;
+  readonly securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongooseLeagueFounderUserRepository extends MongooseRepository<ILeagueFounderUserPrimitives, LeagueFounderUser> implements ILeagueFounderUserRepository {
+export class MongooseLeagueFounderUserRepository
+  extends MongooseRepository<ILeagueFounderUserPrimitives, LeagueFounderUser>
+  implements ILeagueFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {

@@ -1,6 +1,7 @@
 import {
   BusinessDateService,
   EmailUniquenessValidatorService,
+  HostUserType,
   IdUniquenessValidatorService,
   ILeagueFounderUserPrimitives,
   ILeagueFounderUserRepository,
@@ -15,6 +16,8 @@ import {
 
 import { CreateLeagueFounderUserDTO } from '../dtos/CreateLeagueFounderUserDTO';
 import { ICreateLeagueFounderUserUseCase } from './ports/ICreateLeagueFounderUserUseCase';
+import { IUserContext } from '../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   emailUniquenessValidatorService: EmailUniquenessValidatorService
@@ -43,7 +46,11 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
     return new CreateLeagueFounderUserUseCase(dependencies);
   }
 
-  public async execute(dto: CreateLeagueFounderUserDTO): Promise<void> {
+  public async execute(dto: CreateLeagueFounderUserDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a league founder user');
+    }
+
     const {
       id,
       email,

@@ -46,6 +46,15 @@ export const mongooseLeagueFounderUserSchema = new Schema<IMongooseLeagueFounder
     type: String,
     required: [true, "The league founder user's subscriptionType status is required"],
   },
+  profileImage: {
+    url: { type: String, required: [true, "The league founder user's profile image url is required"] },
+    uploadedAt: { type: String, required: [true, "The league founder user's profile image uploaded date is required"] },
+    alt: { type: String, required: [true, "The league founder user's profile image alt is required"] },
+    dimensions: {
+      width: { type: Number, required: [true, "The league founder user's profile image width is required"] },
+      height: { type: Number, required: [true, "The league founder user's profile image height is required"] },
+    },
+  },
   createdAt: {
     type: String,
     required: [true, "The league founder user's creation date is required"],

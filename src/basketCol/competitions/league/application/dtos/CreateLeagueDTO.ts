@@ -1,7 +1,4 @@
-interface IItem {
-  code: string;
-  label: string;
-}
+import { ILocationValueObjectProps } from '@basketcol/domain/build/types/basketCol/shared/domain/value-objects/LocationValueObject';
 
 export interface CreateLeagueDTO {
   id: string;
@@ -15,12 +12,7 @@ export interface CreateLeagueDTO {
   };
   rules: string;
   level: string;
-  location: {
-    country: IItem;
-    department: IItem;
-    city: IItem;
-    coords: { lat: number; lng: number; };
-  };
+  location: ILocationValueObjectProps;
   establishmentDate: string;
   leagueFounderUserId: string;
 }

@@ -4,7 +4,7 @@ import { IServer } from '../basketCol/shared/infrastructure/server';
 import { hostUserRouteManager, hostUserServerErrorHandler } from '../basketCol/users/host/infrastructure/dependency-injection';
 import { authenticationRouteManager, authenticationServerErrorHandler } from '../basketCol/authentication/infrastructure/dependency-injection';
 import { usersSharedServerErrorHandler } from '../basketCol/users/shared/infrastructure/dependency-injection';
-import { leagueFounderUserServerErrorHandler } from '../basketCol/users/league-founder/infrastructure/dependency-injection';
+import { leagueFounderUserRouteManager, leagueFounderUserServerErrorHandler } from '../basketCol/users/league-founder/infrastructure/dependency-injection';
 import { playerUserRouteManager, playerUserServerErrorHandler } from '../basketCol/users/player/infrastructure/dependency-injection';
 import { refereeUserServerErrorHandler } from '../basketCol/users/referee/infrastructure/dependency-injection';
 import { teamFounderUserServerErrorHandler } from '../basketCol/users/team-founder/infrastructure/dependency-injection';
@@ -12,7 +12,7 @@ import { teamServerErrorHandler } from '../basketCol/team/infrastructure/depende
 import { gymRouteManager, gymServerErrorHandler } from '../basketCol/facilities/gym/infrastructure/dependency-injection';
 import { courtRouteManager, courtServerErrorHandler } from '../basketCol/facilities/court/infrastructure/dependency-injection';
 import { competitionsSharedServerErrorHandler } from '../basketCol/competitions/shared/infrastructure/dependency-injection';
-import { leagueServerErrorHandler } from '../basketCol/competitions/league/infrastructure/dependency-injection';
+import { leagueRouteManager, leagueServerErrorHandler } from '../basketCol/competitions/league/infrastructure/dependency-injection';
 import { leagueSeasonServerErrorHandler } from '../basketCol/competitions/league/season/infrastructure/dependency-injection';
 import { leagueSeasonFixtureServerErrorHandler } from '../basketCol/competitions/league/season/fixture/infrastructure/dependency-injection';
 import { leagueSeasonFixtureGameServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/infrastructure/dependency-injection';
@@ -52,6 +52,8 @@ export class App {
       playerUserAttributesRouteManager,
       courtRouteManager,
       gymRouteManager,
+      leagueRouteManager,
+      leagueFounderUserRouteManager,
     ]);
   }
 

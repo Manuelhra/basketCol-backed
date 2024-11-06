@@ -1,6 +1,7 @@
 import {
   BusinessDateService,
   DateValueObject,
+  HostUserType,
   IdUniquenessValidatorService,
   ILeaguePrimitives,
   ILeagueRepository,
@@ -17,9 +18,11 @@ import {
 
 import { CreateLeagueDTO } from '../dtos/CreateLeagueDTO';
 import { ICreateLeagueUseCase } from './ports/ICreateLeagueUseCase';
+import { IUserContext } from '../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  BusinessDateService: BusinessDateService;
+  businessDateService: BusinessDateService;
   leagueValidationNameService: LeagueValidationNameService;
   leagueRepository: ILeagueRepository;
   leagueFounderUserValidationService: LeagueFounderUserValidationService;
@@ -38,7 +41,7 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
   readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
 
   private constructor(dependencies: Dependencies) {
-    this.#businessDateService = dependencies.BusinessDateService;
+    this.#businessDateService = dependencies.businessDateService;
     this.#leagueValidationNameService = dependencies.leagueValidationNameService;
     this.#leagueRepository = dependencies.leagueRepository;
     this.#leagueFounderUserValidationService = dependencies.leagueFounderUserValidationService;
@@ -49,7 +52,11 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
     return new CreateLeagueUseCase(dependencies);
   }
 
-  public async execute(dto: CreateLeagueDTO): Promise<void> {
+  public async execute(dto: CreateLeagueDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a league');
+    }
+
     const {
       id,
       name,
