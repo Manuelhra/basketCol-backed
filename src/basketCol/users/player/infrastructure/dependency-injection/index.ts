@@ -7,6 +7,6 @@ if (awilixPlayerUserContainer === null) {
   throw DependencyContainerNotInitializedError.create();
 }
 
-export const playerUserServerErrorHandler = awilixPlayerUserContainer.resolve('playerUserServerErrorHandler');
 export const createPlayerUserPOSTController = awilixPlayerUserContainer.resolve('createPlayerUserPOSTController');
 export const playerUserRouteManager = awilixPlayerUserContainer.resolve('playerUserRouteManager');
+export const playerUserServerErrorHandler = awilixPlayerUserContainer.resolve('playerUserServerErrorHandler');
