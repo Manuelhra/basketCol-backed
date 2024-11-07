@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { createGymPOSTController } from '../../../dependency-injection';
+import { createGymPOSTController, searchGymsGETController } from '../../../dependency-injection';
 import { ExpressCreateGymPOSTController } from '../controllers/ExpressCreateGymPOSTController';
 import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-extract-data-from-body.middleware';
 import { httpResponseHandler, tokenValidatorService } from '../../../../../../shared/infrastructure/dependency-injection';
@@ -22,6 +22,13 @@ const register = (router: Router) => {
     createGymPOSTControllerValidations,
     expressInputValidationMiddleware,
     createGymPOSTController.run.bind(createGymPOSTController),
+  );
+
+  // Endpoint - Search gyms
+  router.get(
+    `${pathPrefix}/gyms`,
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    searchGymsGETController.run.bind(searchGymsGETController),
   );
 };
 

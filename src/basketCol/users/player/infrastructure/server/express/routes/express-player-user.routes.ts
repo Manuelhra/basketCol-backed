@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { createPlayerUserPOSTController } from '../../../dependency-injection';
+import { createPlayerUserPOSTController, searchPlayerUsersGETController } from '../../../dependency-injection';
 import { expressInputValidationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
 import { expressAuthenticationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-authentication.middleware';
 import { httpResponseHandler, tokenValidatorService } from '../../../../../../shared/infrastructure/dependency-injection';
@@ -22,6 +22,13 @@ const register = (router: Router) => {
     createPlayerUserPOSTControllerValidations,
     expressInputValidationMiddleware,
     createPlayerUserPOSTController.run.bind(createPlayerUserPOSTController),
+  );
+
+  // Endpoint - Search player users
+  router.get(
+    `${pathPrefix}/players`,
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    searchPlayerUsersGETController.run.bind(searchPlayerUsersGETController),
   );
 };
 

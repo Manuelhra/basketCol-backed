@@ -28,6 +28,9 @@ import { GlobFileSystem } from '../../../../../shared/infrastructure/file-system
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
 import { IProfileImageUploader } from '../../../../shared/application/file-upload/images/ports/IProfileImageUploader';
 import { S3ProfileImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3ProfileImageUploader';
+import { ISearchPlayerUsersUseCase } from '../../../application/use-cases/ports/ISearchPlayerUsersUseCase';
+import { SearchPlayerUsersUseCase } from '../../../application/use-cases/SearchPlayerUsersUseCase';
+import { ExpressSearchPlayerUsersGETController } from '../../server/express/controllers/ExpressSearchPlayerUsersGETController';
 
 export class AwilixPlayerUserDependencyInjector
   extends AwilixDependencyInjector<IPlayerUserContainer> {
@@ -57,6 +60,8 @@ export class AwilixPlayerUserDependencyInjector
       profileImageUploader: AwilixDependencyInjector.registerAsFunction<IProfileImageUploader>(() => S3ProfileImageUploader.create({
         folderPath: 'player',
       })).singleton(),
+      searchPlayerUsersGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchPlayerUsersGETController.create).singleton(),
+      searchPlayerUsersUseCase: AwilixDependencyInjector.registerAsFunction<ISearchPlayerUsersUseCase>(SearchPlayerUsersUseCase.create).singleton(),
     });
   }
 

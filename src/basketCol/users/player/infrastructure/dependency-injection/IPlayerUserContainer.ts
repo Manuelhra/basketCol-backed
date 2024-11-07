@@ -16,6 +16,7 @@ import { ICreatePlayerUserUseCase } from '../../application/use-cases/ports/ICre
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
 import { IProfileImageUploader } from '../../../shared/application/file-upload/images/ports/IProfileImageUploader';
+import { ISearchPlayerUsersUseCase } from '../../application/use-cases/ports/ISearchPlayerUsersUseCase';
 
 export interface IPlayerUserContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -35,4 +36,6 @@ export interface IPlayerUserContainer {
   passwordHashingService: IPasswordHashingService;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;
   profileImageUploader: IProfileImageUploader;
+  searchPlayerUsersGETController: IController;
+  searchPlayerUsersUseCase: ISearchPlayerUsersUseCase;
 }
