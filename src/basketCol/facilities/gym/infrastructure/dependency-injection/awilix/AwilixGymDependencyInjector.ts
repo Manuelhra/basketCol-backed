@@ -32,6 +32,9 @@ import { S3FacilityMainImageUploader } from '../../../../shared/infrastructure/f
 import { IFacilityBatchImageUploader } from '../../../../shared/application/file-upload/images/ports/IFacilityBatchImageUploader';
 import { S3FacilityBatchImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3FacilityBatchImageUploader';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
+import { ExpressSearchGymsGETController } from '../../server/express/controllers/ExpressSearchGymsGETController';
+import { ISearchGymsUseCase } from '../../../application/use-cases/ports/ISearchGymsUseCase';
+import { SearchGymsUseCase } from '../../../application/use-cases/SearchGymsUseCase';
 
 export class AwilixGymDependencyInjector extends AwilixDependencyInjector<IGymContainer> {
   private constructor() {
@@ -67,6 +70,8 @@ export class AwilixGymDependencyInjector extends AwilixDependencyInjector<IGymCo
       securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
       passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      searchGymsGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchGymsGETController.create).singleton(),
+      searchGymsUseCase: AwilixDependencyInjector.registerAsFunction<ISearchGymsUseCase>(SearchGymsUseCase.create).singleton(),
     });
   }
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { createCourtPOSTController } from '../../../dependency-injection';
+import { createCourtPOSTController, searchCourtsGETController } from '../../../dependency-injection';
 import { ExpressCreateCourtPOSTController } from '../controllers/ExpressCreateCourtPOSTController';
 import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-extract-data-from-body.middleware';
 import { httpResponseHandler, tokenValidatorService } from '../../../../../../shared/infrastructure/dependency-injection';
@@ -22,6 +22,13 @@ const register = (router: Router) => {
     createCourtPOSTControllerValidations,
     expressInputValidationMiddleware,
     createCourtPOSTController.run.bind(createCourtPOSTController),
+  );
+
+  // Endpoint - Search courts
+  router.get(
+    `${pathPrefix}/courts`,
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    searchCourtsGETController.run.bind(searchCourtsGETController),
   );
 };
 

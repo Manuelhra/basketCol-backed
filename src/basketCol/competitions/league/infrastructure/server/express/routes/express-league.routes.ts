@@ -5,7 +5,7 @@ import { httpResponseHandler, tokenValidatorService } from '../../../../../../sh
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
 import { createLeaguePOSTControllerValidations } from './validations/create-league-post-controller.validations';
 import { expressInputValidationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
-import { createLeaguePOSTController } from '../../../dependency-injection';
+import { createLeaguePOSTController, searchLeaguesGETController } from '../../../dependency-injection';
 
 const register = (router: Router) => {
   const pathPrefix: string = '/competitions';
@@ -18,6 +18,13 @@ const register = (router: Router) => {
     createLeaguePOSTControllerValidations,
     expressInputValidationMiddleware,
     createLeaguePOSTController.run.bind(createLeaguePOSTController),
+  );
+
+  // Endpoint - Search leagues
+  router.get(
+    `${pathPrefix}/leagues`,
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    searchLeaguesGETController.run.bind(searchLeaguesGETController),
   );
 };
 

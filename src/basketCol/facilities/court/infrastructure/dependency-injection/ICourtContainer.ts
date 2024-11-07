@@ -18,6 +18,7 @@ import { IFacilityMainImageUploader } from '../../../shared/application/file-upl
 import { ICreateCourtUseCase } from '../../application/use-cases/ports/ICreateCourtUseCase';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
+import { ISearchCourtsUseCase } from '../../application/use-cases/ports/ISearchCourtsUseCase';
 
 export interface ICourtContainer {
   courtServerErrorHandler: IServerErrorHandler;
@@ -37,4 +38,6 @@ export interface ICourtContainer {
   securePasswordCreationService: SecurePasswordCreationService;
   passwordHashingService: IPasswordHashingService;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  searchCourtsGETController: IController;
+  searchCourtsUseCase: ISearchCourtsUseCase;
 }

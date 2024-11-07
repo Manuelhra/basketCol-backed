@@ -1,3 +1,4 @@
+import { IPaginationParams } from '@basketcol/domain';
 import { IErrorApiResponse, IErrorDetail } from './IErrorApiResponse';
 import { ISuccessApiResponse } from './ISuccessApiResponse';
 
@@ -6,6 +7,7 @@ export interface IHttpResponseHandler {
     code: number;
     message: string;
     data: T;
+    paginationParams?: IPaginationParams;
   }): ISuccessApiResponse<T>;
 
   handleSingleErrorResponse(payload: {

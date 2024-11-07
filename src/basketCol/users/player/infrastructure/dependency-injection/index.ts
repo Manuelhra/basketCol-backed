@@ -10,3 +10,4 @@ if (awilixPlayerUserContainer === null) {
 export const createPlayerUserPOSTController = awilixPlayerUserContainer.resolve('createPlayerUserPOSTController');
 export const playerUserRouteManager = awilixPlayerUserContainer.resolve('playerUserRouteManager');
 export const playerUserServerErrorHandler = awilixPlayerUserContainer.resolve('playerUserServerErrorHandler');
+export const searchPlayerUsersGETController = awilixPlayerUserContainer.resolve('searchPlayerUsersGETController');
