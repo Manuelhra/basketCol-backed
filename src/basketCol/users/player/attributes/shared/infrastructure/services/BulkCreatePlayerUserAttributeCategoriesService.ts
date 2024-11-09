@@ -1,16 +1,15 @@
 import XLSX, { WorkBook, WorkSheet } from 'xlsx';
 
 import {
-  ALL_MAPPINGS,
-  DEFENSIVE_MAPPINGS,
-  FINISHING_MAPPINGS,
-  PHYSICAL_MAPPINGS,
-  REBOUNDING_MAPPINGS,
+  ALL_ATTRIBUTES_MAPPINGS,
+  DEFENSIVE_ATTRIBUTE_MAPPINGS,
+  FINISHING_ATTRIBUTE_MAPPINGS,
+  PHYSICAL_ATTRIBUTE_MAPPINGS,
+  REBOUNDING_ATTRIBUTE_MAPPINGS,
+  SHOOTING_ATTRIBUTE_MAPPINGS,
+  SKILL_ATTRIBUTE_MAPPINGS,
   SHEET_NAMES,
-  SHOOTING_MAPPINGS,
-  SKILL_MAPPINGS,
-} from '../excel/constants/ExcelColumnMappings';
-import { ExcelToAttributeDTOMapper } from '../excel/mappers/ExcelToAttributeDTOMapper';
+} from '../excel/constants/mappings';
 import { ICreateDefensiveAttributesUseCase } from '../../../defensive/application/use-cases/ports/ICreateDefensiveAttributesUseCase';
 import { ICreateFinishingAttributesUseCase } from '../../../finishing/application/use-cases/ports/ICreateFinishingAttributesUseCase';
 import { ICreatePhysicalAttributesUseCase } from '../../../physical/application/use-cases/ports/ICreatePhysicalAttributesUseCase';
@@ -24,6 +23,7 @@ import { CreateReboundingAttributesDTO } from '../../../rebounding/application/d
 import { CreateShootingAttributesDTO } from '../../../shooting/application/dtos/CreateShootingAttributesDTO';
 import { CreateSkillAttributesDTO } from '../../../skill/application/dtos/CreateSkillAttributesDTO';
 import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
+import { ExcelToDTOMapper } from '../../../../../../shared/infrastructure/excel/mappers/ExcelToDTOMapper';
 
 interface Dependencies {
   readonly createDefensiveAttributesUseCase: ICreateDefensiveAttributesUseCase;
@@ -63,7 +63,7 @@ export class BulkCreatePlayerUserAttributeCategoriesService {
   public async execute(workbook: WorkBook, userContext: IUserContext): Promise<void> {
     const processingPromises: Promise<void>[] = [];
 
-    ALL_MAPPINGS.forEach((mapping) => {
+    ALL_ATTRIBUTES_MAPPINGS.forEach((mapping) => {
       const worksheet: WorkSheet | undefined = workbook.Sheets[mapping.sheetName];
 
       if (!worksheet) return;
@@ -96,37 +96,37 @@ export class BulkCreatePlayerUserAttributeCategoriesService {
   }
 
   async #processDefensiveAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
-    const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateDefensiveAttributesDTO>(row, DEFENSIVE_MAPPINGS.mappings));
+    const dtos = data.map((row) => ExcelToDTOMapper.mapToDTOFromArray<CreateDefensiveAttributesDTO>(row, DEFENSIVE_ATTRIBUTE_MAPPINGS.mappings));
     const promises = dtos.map((dto) => this.#createDefensiveAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
   async #processFinishingAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
-    const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateFinishingAttributesDTO>(row, FINISHING_MAPPINGS.mappings));
+    const dtos = data.map((row) => ExcelToDTOMapper.mapToDTOFromArray<CreateFinishingAttributesDTO>(row, FINISHING_ATTRIBUTE_MAPPINGS.mappings));
     const promises = dtos.map((dto) => this.#createFinishingAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
   async #processPhysicalAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
-    const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreatePhysicalAttributesDTO>(row, PHYSICAL_MAPPINGS.mappings));
+    const dtos = data.map((row) => ExcelToDTOMapper.mapToDTOFromArray<CreatePhysicalAttributesDTO>(row, PHYSICAL_ATTRIBUTE_MAPPINGS.mappings));
     const promises = dtos.map((dto) => this.#createPhysicalAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
   async #processReboundingAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
-    const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateReboundingAttributesDTO>(row, REBOUNDING_MAPPINGS.mappings));
+    const dtos = data.map((row) => ExcelToDTOMapper.mapToDTOFromArray<CreateReboundingAttributesDTO>(row, REBOUNDING_ATTRIBUTE_MAPPINGS.mappings));
     const promises = dtos.map((dto) => this.#createReboundingAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
   async #processShootingAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
-    const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateShootingAttributesDTO>(row, SHOOTING_MAPPINGS.mappings));
+    const dtos = data.map((row) => ExcelToDTOMapper.mapToDTOFromArray<CreateShootingAttributesDTO>(row, SHOOTING_ATTRIBUTE_MAPPINGS.mappings));
     const promises = dtos.map((dto) => this.#createShootingAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }
 
   async #processSkillAttributes(data: Record<string, any>[], userContext: IUserContext): Promise<void> {
-    const dtos = data.map((row) => ExcelToAttributeDTOMapper.mapToDTOFromArray<CreateSkillAttributesDTO>(row, SKILL_MAPPINGS.mappings));
+    const dtos = data.map((row) => ExcelToDTOMapper.mapToDTOFromArray<CreateSkillAttributesDTO>(row, SKILL_ATTRIBUTE_MAPPINGS.mappings));
     const promises = dtos.map((dto) => this.#createSkillAttributesUseCase.execute(dto, userContext));
     await Promise.all(promises);
   }

@@ -1,21 +1,20 @@
-import { HttpStatus } from '@basketcol/domain';
-import { Request, RequestHandler, Response } from 'express';
 import multer from 'multer';
+import { Request, RequestHandler, Response } from 'express';
 import { WorkBook } from 'xlsx';
+import { HttpStatus } from '@basketcol/domain';
 
-import { ExpressBaseController } from '../../../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
-import { MulterError } from '../../../../../../../../shared/infrastructure/exceptions/MulterError';
 import { IHttpResponseHandler } from '../../../../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IExcelManager } from '../../../../../../../../shared/infrastructure/excel/ports/IExcelManager';
-import { BulkCreatePlayerUserAttributeCategoriesService } from '../../../services/BulkCreatePlayerUserAttributeCategoriesService';
+import { ExpressBaseController } from '../../../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
+import { BulkCreateLeagueSeasonFixtureService } from '../../../services/BulkCreateLeagueSeasonFixtureService';
+import { MulterError } from '../../../../../../../../shared/infrastructure/exceptions/MulterError';
 
 type Dependencies = {
   readonly httpResponseHandler: IHttpResponseHandler;
   readonly excelManager: IExcelManager;
-  readonly bulkCreatePlayerUserAttributeCategoriesService: BulkCreatePlayerUserAttributeCategoriesService;
-};
+  readonly bulkCreateLeagueSeasonFixtureService: BulkCreateLeagueSeasonFixtureService; };
 
-export class ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController
+export class ExpressBulkCreateLeagueSeasonFixtureFromExcelPOSTController
 implements ExpressBaseController {
   readonly #excelFileUploadMiddleware: multer.Multer;
 
@@ -23,12 +22,12 @@ implements ExpressBaseController {
 
   readonly #excelManager: IExcelManager;
 
-  readonly #bulkCreatePlayerUserAttributeCategoriesService: BulkCreatePlayerUserAttributeCategoriesService;
+  readonly #bulkCreateLeagueSeasonFixtureService: BulkCreateLeagueSeasonFixtureService;
 
   private constructor(dependencies: Dependencies) {
     this.#httpResponseHandler = dependencies.httpResponseHandler;
     this.#excelManager = dependencies.excelManager;
-    this.#bulkCreatePlayerUserAttributeCategoriesService = dependencies.bulkCreatePlayerUserAttributeCategoriesService;
+    this.#bulkCreateLeagueSeasonFixtureService = dependencies.bulkCreateLeagueSeasonFixtureService;
     this.#excelFileUploadMiddleware = multer({
       storage: multer.memoryStorage(),
       limits: {
@@ -46,8 +45,8 @@ implements ExpressBaseController {
     });
   }
 
-  public static create(dependencies: Dependencies): ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController {
-    return new ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController(dependencies);
+  public static create(dependencies: Dependencies): ExpressBulkCreateLeagueSeasonFixtureFromExcelPOSTController {
+    return new ExpressBulkCreateLeagueSeasonFixtureFromExcelPOSTController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {
@@ -55,7 +54,7 @@ implements ExpressBaseController {
       const errorResponse = this.#httpResponseHandler.handleSingleErrorResponse({
         code: HttpStatus.BAD_REQUEST,
         message: 'No file found to upload data',
-        error: { name: 'NoFileError', details: 'No file found to upload player attributes' },
+        error: { name: 'NoFileError', details: 'No file found to upload league season fixtures' },
       });
 
       response.status(HttpStatus.BAD_REQUEST).json(errorResponse);
@@ -74,12 +73,11 @@ implements ExpressBaseController {
     }
 
     const workBook: WorkBook = await this.#excelManager.readExcelFileFromBuffer(request.file.buffer);
-    await this.#bulkCreatePlayerUserAttributeCategoriesService.execute(workBook, request.userContext);
-
+    await this.#bulkCreateLeagueSeasonFixtureService.execute(workBook, request.userContext);
     response.status(HttpStatus.CREATED).send();
   }
 
   public getExcelFileUploadMiddleware(): RequestHandler {
-    return this.#excelFileUploadMiddleware.single('playerAttributes');
+    return this.#excelFileUploadMiddleware.single('fixtures');
   }
 }

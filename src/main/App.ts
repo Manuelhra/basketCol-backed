@@ -13,8 +13,8 @@ import { gymRouteManager, gymServerErrorHandler } from '../basketCol/facilities/
 import { courtRouteManager, courtServerErrorHandler } from '../basketCol/facilities/court/infrastructure/dependency-injection';
 import { competitionsSharedServerErrorHandler } from '../basketCol/competitions/shared/infrastructure/dependency-injection';
 import { leagueRouteManager, leagueServerErrorHandler } from '../basketCol/competitions/league/infrastructure/dependency-injection';
-import { leagueSeasonServerErrorHandler } from '../basketCol/competitions/league/season/infrastructure/dependency-injection';
-import { leagueSeasonFixtureServerErrorHandler } from '../basketCol/competitions/league/season/fixture/infrastructure/dependency-injection';
+import { leagueSeasonRouteManager, leagueSeasonServerErrorHandler } from '../basketCol/competitions/league/season/infrastructure/dependency-injection';
+import { leagueSeasonFixtureRouteManager, leagueSeasonFixtureServerErrorHandler } from '../basketCol/competitions/league/season/fixture/infrastructure/dependency-injection';
 import { leagueSeasonFixtureGameServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/infrastructure/dependency-injection';
 import { ExpressServer } from '../basketCol/shared/infrastructure/server/express/ExpressServer';
 import { playerUserCareerStatsRouteManager } from '../basketCol/users/player/career-stats/infrastructure/dependency-injection';
@@ -54,6 +54,8 @@ export class App {
       gymRouteManager,
       leagueRouteManager,
       leagueFounderUserRouteManager,
+      leagueSeasonRouteManager,
+      leagueSeasonFixtureRouteManager,
     ]);
   }
 

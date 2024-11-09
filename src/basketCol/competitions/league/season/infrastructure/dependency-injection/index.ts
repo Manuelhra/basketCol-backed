@@ -7,4 +7,6 @@ if (awilixLeagueSeasonContainer === null) {
   throw DependencyContainerNotInitializedError.create();
 }
 
+export const createLeagueSeasonPOSTController = awilixLeagueSeasonContainer.resolve('createLeagueSeasonPOSTController');
+export const leagueSeasonRouteManager = awilixLeagueSeasonContainer.resolve('leagueSeasonRouteManager');
 export const leagueSeasonServerErrorHandler = awilixLeagueSeasonContainer.resolve('leagueSeasonServerErrorHandler');

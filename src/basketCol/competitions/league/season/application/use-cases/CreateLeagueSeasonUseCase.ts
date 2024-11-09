@@ -1,6 +1,7 @@
 import {
   BusinessDateService,
   CourtValidationService,
+  EmptyCourtIdListError,
   IdUniquenessValidatorService,
   ILeagueSeasonPrimitives,
   ILeagueSeasonRepository,
@@ -18,11 +19,11 @@ import { CreateLeagueSeasonDTO } from '../dtos/CreateLeagueSeasonDTO';
 import { ICreateLeagueSeasonUseCase } from './ports/ICreateLeagueSeasonUseCase';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  leagueSeasonRepository: ILeagueSeasonRepository;
-  leagueValidationService: LeagueValidationService;
-  businessDateService: BusinessDateService;
-  courtValidationService: CourtValidationService;
+  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly leagueSeasonRepository: ILeagueSeasonRepository;
+  readonly leagueValidationService: LeagueValidationService;
+  readonly businessDateService: BusinessDateService;
+  readonly courtValidationService: CourtValidationService;
 };
 
 export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
@@ -56,6 +57,10 @@ export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
       endDate,
       courtIdList,
     } = dto;
+
+    if (courtIdList.length === 0) {
+      throw EmptyCourtIdListError.create();
+    }
 
     const leagueSeasonId: LeagueSeasonId = LeagueSeasonId.create(id);
     const leagueSeasonStatus: LeagueSeasonStatus = LeagueSeasonStatus.createUpcoming();

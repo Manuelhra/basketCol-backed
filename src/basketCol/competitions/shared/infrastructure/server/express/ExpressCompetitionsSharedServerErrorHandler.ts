@@ -3,6 +3,8 @@ import {
   HttpStatus,
   SameRefereeError,
   SameTeamError,
+  InvalidFGameStatusError,
+  DateNotWithinLeagueSeasonError,
 } from '@basketcol/domain';
 import { Response } from 'express';
 
@@ -34,6 +36,8 @@ export class ExpressCompetitionsSharedServerErrorHandler implements IServerError
       case error instanceof SameTeamError:
       case error instanceof SameRefereeError:
       case error instanceof InvalidGameTypeError:
+      case error instanceof InvalidFGameStatusError:
+      case error instanceof DateNotWithinLeagueSeasonError:
         errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,
           message: HttpStatus.getMessage(HttpStatus.BAD_REQUEST),

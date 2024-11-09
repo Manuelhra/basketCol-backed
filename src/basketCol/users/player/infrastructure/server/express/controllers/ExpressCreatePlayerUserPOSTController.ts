@@ -74,7 +74,6 @@ export class ExpressCreatePlayerUserPOSTController implements ExpressBaseControl
     }
 
     await this.#createPlayerUserUseCase.execute(createPlayerUserDTO, request.userContext);
-
     response.status(HttpStatus.CREATED).send();
   }
 
