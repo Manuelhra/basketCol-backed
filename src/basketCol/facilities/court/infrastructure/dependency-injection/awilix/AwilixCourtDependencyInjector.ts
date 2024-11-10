@@ -35,9 +35,9 @@ import { ExpressCourtRouteManager } from '../../server/express/routes/ExpressCou
 import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IFileSystem';
 import { GlobFileSystem } from '../../../../../shared/infrastructure/file-system/GlobFileSystem';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
-import { ExpressSearchCourtsGETController } from '../../server/express/controllers/ExpressSearchCourtsGETController';
-import { ISearchCourtsUseCase } from '../../../application/use-cases/ports/ISearchCourtsUseCase';
-import { SearchCourtsUseCase } from '../../../application/use-cases/SearchCourtsUseCase';
+import { ExpressSearchAllCourtsGETController } from '../../server/express/controllers/ExpressSearchAllCourtsGETController';
+import { ISearchAllCourtsUseCase } from '../../../application/use-cases/ports/ISearchAllCourtsUseCase';
+import { SearchAllCourtsUseCase } from '../../../application/use-cases/SearchAllCourtsUseCase';
 
 export class AwilixCourtDependencyInjector extends AwilixDependencyInjector<ICourtContainer> {
   private constructor() {
@@ -76,8 +76,8 @@ export class AwilixCourtDependencyInjector extends AwilixDependencyInjector<ICou
       securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
       passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
-      searchCourtsGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchCourtsGETController.create).singleton(),
-      searchCourtsUseCase: AwilixDependencyInjector.registerAsFunction<ISearchCourtsUseCase>(SearchCourtsUseCase.create).singleton(),
+      searchAllCourtsGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchAllCourtsGETController.create).singleton(),
+      searchAllCourtsUseCase: AwilixDependencyInjector.registerAsFunction<ISearchAllCourtsUseCase>(SearchAllCourtsUseCase.create).singleton(),
     });
   }
 

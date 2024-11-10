@@ -30,7 +30,7 @@ export class MongoosePlayerUserDefensiveAttributesRepository
     return new MongoosePlayerUserDefensiveAttributesRepository();
   }
 
-  public async searchById(playerUserDefensiveAttributesId: PUDAId): Promise<Nullable<PlayerUserDefensiveAttributes>> {
+  public async findById(playerUserDefensiveAttributesId: PUDAId): Promise<Nullable<PlayerUserDefensiveAttributes>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserDefensiveAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserDefensiveAttributesDocument>({ id: playerUserDefensiveAttributesId.value });
@@ -47,7 +47,7 @@ export class MongoosePlayerUserDefensiveAttributesRepository
     );
   }
 
-  public async searchByPlayerUserId(pUDAReferencedPlayerUserId: PUDAReferencedPlayerUserId): Promise<Nullable<PlayerUserDefensiveAttributes>> {
+  public async findByPlayerUserId(pUDAReferencedPlayerUserId: PUDAReferencedPlayerUserId): Promise<Nullable<PlayerUserDefensiveAttributes>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserDefensiveAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserDefensiveAttributesDocument>({ playerUserId: pUDAReferencedPlayerUserId.playerUserIdAsString });

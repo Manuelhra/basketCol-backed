@@ -29,7 +29,7 @@ export class MongoosePlayerUserCareerStatsRepository
     return new MongoosePlayerUserCareerStatsRepository();
   }
 
-  public async searchById(pUCStatsId: PUCStatsId): Promise<Nullable<PlayerUserCareerStats>> {
+  public async findById(pUCStatsId: PUCStatsId): Promise<Nullable<PlayerUserCareerStats>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserCareerStatsDocument> = await MyModel.findOne<IMongoosePlayerUserCareerStatsDocument>({ id: pUCStatsId.value });

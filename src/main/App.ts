@@ -6,8 +6,8 @@ import { authenticationRouteManager, authenticationServerErrorHandler } from '..
 import { usersSharedServerErrorHandler } from '../basketCol/users/shared/infrastructure/dependency-injection';
 import { leagueFounderUserRouteManager, leagueFounderUserServerErrorHandler } from '../basketCol/users/league-founder/infrastructure/dependency-injection';
 import { playerUserRouteManager, playerUserServerErrorHandler } from '../basketCol/users/player/infrastructure/dependency-injection';
-import { refereeUserServerErrorHandler } from '../basketCol/users/referee/infrastructure/dependency-injection';
-import { teamFounderUserServerErrorHandler } from '../basketCol/users/team-founder/infrastructure/dependency-injection';
+import { refereeUserRouteManager, refereeUserServerErrorHandler } from '../basketCol/users/referee/infrastructure/dependency-injection';
+import { teamFounderUserRouteManager, teamFounderUserServerErrorHandler } from '../basketCol/users/team-founder/infrastructure/dependency-injection';
 import { teamServerErrorHandler } from '../basketCol/team/infrastructure/dependency-injection';
 import { gymRouteManager, gymServerErrorHandler } from '../basketCol/facilities/gym/infrastructure/dependency-injection';
 import { courtRouteManager, courtServerErrorHandler } from '../basketCol/facilities/court/infrastructure/dependency-injection';
@@ -56,6 +56,8 @@ export class App {
       leagueFounderUserRouteManager,
       leagueSeasonRouteManager,
       leagueSeasonFixtureRouteManager,
+      refereeUserRouteManager,
+      teamFounderUserRouteManager,
     ]);
   }
 

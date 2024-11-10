@@ -90,23 +90,23 @@ export class ValidateAndRefreshAuthenticationTokenUseCase implements IValidateAn
 
     switch (userType) {
       case PlayerUserType.value:
-        userFound = await this.#playerUserRepository.searchById(PlayerUserId.create(userId));
+        userFound = await this.#playerUserRepository.findById(PlayerUserId.create(userId));
         break;
 
       case HostUserType.value:
-        userFound = await this.#hostUserRepository.searchById(HostUserId.create(userId));
+        userFound = await this.#hostUserRepository.findById(HostUserId.create(userId));
         break;
 
       case LeagueFounderUserType.value:
-        userFound = await this.#leagueFounderUserRepository.searchById(LeagueFounderUserId.create(userId));
+        userFound = await this.#leagueFounderUserRepository.findById(LeagueFounderUserId.create(userId));
         break;
 
       case RefereeUserType.value:
-        userFound = await this.#refereeUserRepository.searchById(RefereeUserId.create(userId));
+        userFound = await this.#refereeUserRepository.findById(RefereeUserId.create(userId));
         break;
 
       case TeamFounderUserType.value:
-        userFound = await this.#teamFounderUserRepository.searchById(TeamFounderUserId.create(userId));
+        userFound = await this.#teamFounderUserRepository.findById(TeamFounderUserId.create(userId));
         break;
 
       default:

@@ -1,6 +1,7 @@
 import {
   BusinessDateService,
   EmailUniquenessValidatorService,
+  HostUserType,
   IdUniquenessValidatorService,
   IRefereeUserPrimitives,
   IRefereeUserRepository,
@@ -15,12 +16,14 @@ import {
 
 import { CreateRefereeUserDTO } from '../dtos/CreateRefereeUserDTO';
 import { ICreateRefereeUserUseCase } from './ports/ICreateRefereeUserUseCase';
+import { IUserContext } from '../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  emailUniquenessValidatorService: EmailUniquenessValidatorService;
-  businessDateService: BusinessDateService;
-  refereeUserRepository: IRefereeUserRepository;
+  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  readonly businessDateService: BusinessDateService;
+  readonly refereeUserRepository: IRefereeUserRepository;
 };
 
 export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
@@ -43,7 +46,11 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
     return new CreateRefereeUserUseCase(dependencies);
   }
 
-  public async execute(dto: CreateRefereeUserDTO): Promise<void> {
+  public async execute(dto: CreateRefereeUserDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a referee user');
+    }
+
     const {
       id,
       name,

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { createPlayerUserPOSTController, searchPlayerUsersGETController } from '../../../dependency-injection';
+import { createPlayerUserPOSTController, searchAllPlayerUsersGETController } from '../../../dependency-injection';
 import { expressInputValidationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
 import { expressAuthenticationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-authentication.middleware';
 import { httpResponseHandler, tokenValidatorService } from '../../../../../../shared/infrastructure/dependency-injection';
@@ -8,6 +8,7 @@ import { expressUserTypeAuthorizationMiddleware } from '../../../../../../shared
 import { createPlayerUserPOSTControllerValidations } from './validations/create-player-user-post-controller.validations';
 import { ExpressCreatePlayerUserPOSTController } from '../controllers/ExpressCreatePlayerUserPOSTController';
 import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-extract-data-from-body.middleware';
+import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
   const pathPrefix: string = '/users';
@@ -15,20 +16,28 @@ const register = (router: Router) => {
   // Endpoint - Create player user
   router.post(
     `${pathPrefix}/players`,
-    (createPlayerUserPOSTController as ExpressCreatePlayerUserPOSTController).getImageUploadMiddleware(),
-    expressExtractDataFromBodyMiddleware(httpResponseHandler),
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Create player user',
+    }, httpResponseHandler),
     expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
     expressUserTypeAuthorizationMiddleware(['HOST_USER'], httpResponseHandler),
+    (createPlayerUserPOSTController as ExpressCreatePlayerUserPOSTController).getImageUploadMiddleware(),
+    expressExtractDataFromBodyMiddleware(httpResponseHandler),
     createPlayerUserPOSTControllerValidations,
     expressInputValidationMiddleware,
     createPlayerUserPOSTController.run.bind(createPlayerUserPOSTController),
   );
 
-  // Endpoint - Search player users
+  // Endpoint - Search All player users
   router.get(
     `${pathPrefix}/players`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Search all player users',
+    }, httpResponseHandler),
     expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
-    searchPlayerUsersGETController.run.bind(searchPlayerUsersGETController),
+    searchAllPlayerUsersGETController.run.bind(searchAllPlayerUsersGETController),
   );
 };
 

@@ -15,7 +15,7 @@ import { ICreateLeagueUseCase } from '../../application/use-cases/ports/ICreateL
 import { IController } from '../../../../shared/infrastructure/server/controllers/IController';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
-import { ISearchLeaguesUseCase } from '../../application/use-cases/ports/ISearchLeaguesUseCase';
+import { ISearchAllLeaguesUseCase } from '../../application/use-cases/ports/ISearchAllLeaguesUseCase';
 
 export interface ILeagueContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -32,6 +32,6 @@ export interface ILeagueContainer {
   securePasswordCreationService: SecurePasswordCreationService;
   passwordHashingService: IPasswordHashingService;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;
-  searchLeaguesGETController: IController;
-  searchLeaguesUseCase: ISearchLeaguesUseCase;
+  searchAllLeaguesGETController: IController;
+  searchAllLeaguesUseCase: ISearchAllLeaguesUseCase;
 }

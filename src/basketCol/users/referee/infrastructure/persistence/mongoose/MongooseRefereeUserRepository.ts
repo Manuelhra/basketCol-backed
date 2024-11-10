@@ -15,10 +15,12 @@ import { MongooseClientFactory } from '../../../../../shared/infrastructure/pers
 import { mongooseRefereeUserSchema } from './mongoose-referee-user.schema';
 
 type Dependencies = {
-  securePasswordCreationService: SecurePasswordCreationService;
+  readonly securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUserPrimitives, RefereeUser> implements IRefereeUserRepository {
+export class MongooseRefereeUserRepository
+  extends MongooseRepository<IRefereeUserPrimitives, RefereeUser>
+  implements IRefereeUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
@@ -38,7 +40,7 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
     return new MongooseRefereeUserRepository(dependencies);
   }
 
-  public async searchById(refereeUserId: RefereeUserId): Promise<Nullable<RefereeUser>> {
+  public async findById(refereeUserId: RefereeUserId): Promise<Nullable<RefereeUser>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findOne<IMongooseRefereeUserDocument>({ id: refereeUserId.value });
@@ -62,7 +64,7 @@ export class MongooseRefereeUserRepository extends MongooseRepository<IRefereeUs
     );
   }
 
-  public async searchByEmail(refereeUserEmail: RefereeUserEmail): Promise<Nullable<RefereeUser>> {
+  public async findByEmail(refereeUserEmail: RefereeUserEmail): Promise<Nullable<RefereeUser>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findOne<IMongooseRefereeUserDocument>({ 'email.value': refereeUserEmail.value.value });

@@ -31,14 +31,14 @@ export class MongooseCourtRepository
     return 'court_facility';
   }
 
-  public async searchById(courtId: CourtId): Promise<Nullable<Court>> {
+  public async findById(courtId: CourtId): Promise<Nullable<Court>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseCourtDocument> = await MyModel.findOne<IMongooseCourtDocument>({ id: courtId.value });
 
     return document ? this.#mapDocumentToCourt(document) : null;
   }
 
-  public async searchByIdList(courtIdList: ReferencedCourtIdList): Promise<Court[]> {
+  public async findAllByIdList(courtIdList: ReferencedCourtIdList): Promise<Court[]> {
     const MyModel = await this.model();
     const documents: IMongooseCourtDocument[] = await MyModel.find<IMongooseCourtDocument>({ id: { $in: courtIdList.value.map((courtId) => courtId.value) } });
 

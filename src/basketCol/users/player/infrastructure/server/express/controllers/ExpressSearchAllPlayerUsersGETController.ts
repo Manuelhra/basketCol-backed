@@ -2,26 +2,26 @@ import { Request, Response } from 'express';
 import { HttpStatus } from '@basketcol/domain';
 
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
-import { ISearchPlayerUsersUseCase } from '../../../../application/use-cases/ports/ISearchPlayerUsersUseCase';
+import { ISearchAllPlayerUsersUseCase } from '../../../../application/use-cases/ports/ISearchAllPlayerUsersUseCase';
 import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
 
 type Dependencies = {
-  readonly searchPlayerUsersUseCase: ISearchPlayerUsersUseCase;
+  readonly searchAllPlayerUsersUseCase: ISearchAllPlayerUsersUseCase;
   readonly httpResponseHandler: IHttpResponseHandler;
 };
 
-export class ExpressSearchPlayerUsersGETController implements ExpressBaseController {
-  readonly #searchPlayerUsersUseCase: ISearchPlayerUsersUseCase;
+export class ExpressSearchAllPlayerUsersGETController implements ExpressBaseController {
+  readonly #searchAllPlayerUsersUseCase: ISearchAllPlayerUsersUseCase;
 
   readonly #httpResponseHandler: IHttpResponseHandler;
 
   private constructor(dependencies: Dependencies) {
-    this.#searchPlayerUsersUseCase = dependencies.searchPlayerUsersUseCase;
+    this.#searchAllPlayerUsersUseCase = dependencies.searchAllPlayerUsersUseCase;
     this.#httpResponseHandler = dependencies.httpResponseHandler;
   }
 
-  public static create(dependencies: Dependencies): ExpressSearchPlayerUsersGETController {
-    return new ExpressSearchPlayerUsersGETController(dependencies);
+  public static create(dependencies: Dependencies): ExpressSearchAllPlayerUsersGETController {
+    return new ExpressSearchAllPlayerUsersGETController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {
@@ -33,7 +33,7 @@ export class ExpressSearchPlayerUsersGETController implements ExpressBaseControl
       perPage: this.#parseNumber(perPage, 10),
     };
 
-    const { data, pagination } = await this.#searchPlayerUsersUseCase.execute(dto);
+    const { data, pagination } = await this.#searchAllPlayerUsersUseCase.execute(dto);
 
     const successResult = this.#httpResponseHandler.handleSuccessResponse({
       code: HttpStatus.OK,

@@ -2,26 +2,26 @@ import { Request, Response } from 'express';
 import { HttpStatus } from '@basketcol/domain';
 
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
-import { ISearchGymsUseCase } from '../../../../application/use-cases/ports/ISearchGymsUseCase';
+import { ISearchAllLeaguesUseCase } from '../../../../application/use-cases/ports/ISearchAllLeaguesUseCase';
 import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
 
 type Dependencies = {
-  readonly searchGymsUseCase: ISearchGymsUseCase;
+  readonly searchAllLeaguesUseCase: ISearchAllLeaguesUseCase;
   readonly httpResponseHandler: IHttpResponseHandler;
 };
 
-export class ExpressSearchGymsGETController implements ExpressBaseController {
-  readonly #searchGymsUseCase: ISearchGymsUseCase;
+export class ExpressSearchAllLeaguesGETController implements ExpressBaseController {
+  readonly #searchAllLeaguesUseCase: ISearchAllLeaguesUseCase;
 
   readonly #httpResponseHandler: IHttpResponseHandler;
 
   private constructor(dependencies: Dependencies) {
-    this.#searchGymsUseCase = dependencies.searchGymsUseCase;
+    this.#searchAllLeaguesUseCase = dependencies.searchAllLeaguesUseCase;
     this.#httpResponseHandler = dependencies.httpResponseHandler;
   }
 
-  public static create(dependencies: Dependencies): ExpressSearchGymsGETController {
-    return new ExpressSearchGymsGETController(dependencies);
+  public static create(dependencies: Dependencies): ExpressSearchAllLeaguesGETController {
+    return new ExpressSearchAllLeaguesGETController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {
@@ -33,13 +33,13 @@ export class ExpressSearchGymsGETController implements ExpressBaseController {
       perPage: this.#parseNumber(perPage, 10),
     };
 
-    const { data, pagination } = await this.#searchGymsUseCase.execute(dto);
+    const { data, pagination } = await this.#searchAllLeaguesUseCase.execute(dto);
 
     const successResult = this.#httpResponseHandler.handleSuccessResponse({
       code: HttpStatus.OK,
       message: HttpStatus.getMessage(HttpStatus.OK),
       data: {
-        gyms: data.map((gym) => gym.toPrimitives),
+        leagues: data.map((league) => league.toPrimitives),
       },
       paginationParams: pagination,
     });

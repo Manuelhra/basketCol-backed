@@ -42,19 +42,19 @@ export class MongoosePlayerUserRepository
     return new MongoosePlayerUserRepository(dependencies);
   }
 
-  public async searchById(playerUserId: PlayerUserId): Promise<Nullable<PlayerUser>> {
+  public async findById(playerUserId: PlayerUserId): Promise<Nullable<PlayerUser>> {
     const MyModel = await this.model();
     const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ id: playerUserId.value });
     return document === null ? null : this.#mapDocumentToPlayerUser(document);
   }
 
-  public async searchByEmail(playerUserEmail: PlayerUserEmail): Promise<Nullable<PlayerUser>> {
+  public async findByEmail(playerUserEmail: PlayerUserEmail): Promise<Nullable<PlayerUser>> {
     const MyModel = await this.model();
     const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ 'email.value': playerUserEmail.value.value });
     return document === null ? null : this.#mapDocumentToPlayerUser(document);
   }
 
-  public async searchByNickname(playerUserNickname: PlayerUserNickname): Promise<Nullable<PlayerUser>> {
+  public async findByNickname(playerUserNickname: PlayerUserNickname): Promise<Nullable<PlayerUser>> {
     const MyModel = await this.model();
     const document: Nullable<IMongoosePlayerUserDocument> = await MyModel.findOne<IMongoosePlayerUserDocument>({ nickname: playerUserNickname.value });
     return document === null ? null : this.#mapDocumentToPlayerUser(document);

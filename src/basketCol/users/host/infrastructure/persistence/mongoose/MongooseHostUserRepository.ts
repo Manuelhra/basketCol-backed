@@ -40,80 +40,24 @@ export class MongooseHostUserRepository
     return new MongooseHostUserRepository(dependencies);
   }
 
-  public async search(): Promise<Nullable<HostUser>> {
+  public async find(): Promise<Nullable<HostUser>> {
     const MyModel = await this.model();
-
     const documentList = await MyModel.find<IMongooseHostUserDocument>();
-
     if (documentList.length === 0) return null;
-
     const document = documentList[0];
-
-    return document === null ? null : HostUser.fromPrimitives(
-      document.id.valueOf(),
-      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
-      document.biography.valueOf(),
-      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      document.password.valueOf(),
-      document.accountStatus.valueOf(),
-      document.subscriptionType.valueOf(),
-      {
-        url: document.profileImage.url.valueOf(),
-        uploadedAt: document.profileImage.uploadedAt.valueOf(),
-        alt: document.profileImage.alt.valueOf(),
-        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
-      },
-      document.createdAt.valueOf(),
-      document.updatedAt.valueOf(),
-    );
+    return document === null ? null : this.#mapDocumentToHostUser(document);
   }
 
-  public async searchById(hostUserId: HostUserId): Promise<Nullable<HostUser>> {
+  public async findById(hostUserId: HostUserId): Promise<Nullable<HostUser>> {
     const MyModel = await this.model();
-
     const document: Nullable<IMongooseHostUserDocument> = await MyModel.findOne<IMongooseHostUserDocument>({ id: hostUserId.value });
-
-    return document === null ? null : HostUser.fromPrimitives(
-      document.id.valueOf(),
-      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
-      document.biography.valueOf(),
-      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      document.password.valueOf(),
-      document.accountStatus.valueOf(),
-      document.subscriptionType.valueOf(),
-      {
-        url: document.profileImage.url.valueOf(),
-        uploadedAt: document.profileImage.uploadedAt.valueOf(),
-        alt: document.profileImage.alt.valueOf(),
-        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
-      },
-      document.createdAt.valueOf(),
-      document.updatedAt.valueOf(),
-    );
+    return document === null ? null : this.#mapDocumentToHostUser(document);
   }
 
-  public async searchByEmail(hostUserEmail: HostUserEmail): Promise<Nullable<HostUser>> {
+  public async findByEmail(hostUserEmail: HostUserEmail): Promise<Nullable<HostUser>> {
     const MyModel = await this.model();
-
     const document = await MyModel.findOne<IMongooseHostUserDocument>({ 'email.value': hostUserEmail.value.value });
-
-    return document === null ? null : HostUser.fromPrimitives(
-      document.id.valueOf(),
-      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
-      document.biography.valueOf(),
-      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      document.password.valueOf(),
-      document.accountStatus.valueOf(),
-      document.subscriptionType.valueOf(),
-      {
-        url: document.profileImage.url.valueOf(),
-        uploadedAt: document.profileImage.uploadedAt.valueOf(),
-        alt: document.profileImage.alt.valueOf(),
-        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
-      },
-      document.createdAt.valueOf(),
-      document.updatedAt.valueOf(),
-    );
+    return document === null ? null : this.#mapDocumentToHostUser(document);
   }
 
   public save(hostUser: HostUser): Promise<void> {
@@ -131,5 +75,25 @@ export class MongooseHostUserRepository
     } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
+  }
+
+  #mapDocumentToHostUser(document: IMongooseHostUserDocument): HostUser {
+    return HostUser.fromPrimitives(
+      document.id.valueOf(),
+      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
+      document.biography.valueOf(),
+      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
+      document.password.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
+      {
+        url: document.profileImage.url.valueOf(),
+        uploadedAt: document.profileImage.uploadedAt.valueOf(),
+        alt: document.profileImage.alt.valueOf(),
+        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
+      },
+      document.createdAt.valueOf(),
+      document.updatedAt.valueOf(),
+    );
   }
 }

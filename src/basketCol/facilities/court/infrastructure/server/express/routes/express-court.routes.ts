@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { createCourtPOSTController, searchCourtsGETController } from '../../../dependency-injection';
+import { createCourtPOSTController, searchAllCourtsGETController } from '../../../dependency-injection';
 import { ExpressCreateCourtPOSTController } from '../controllers/ExpressCreateCourtPOSTController';
 import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-extract-data-from-body.middleware';
 import { httpResponseHandler, tokenValidatorService } from '../../../../../../shared/infrastructure/dependency-injection';
@@ -8,6 +8,7 @@ import { expressAuthenticationMiddleware } from '../../../../../../shared/infras
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
 import { createCourtPOSTControllerValidations } from './validations/create-court-post-controller.validations';
 import { expressInputValidationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
+import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
   const pathPrefix: string = '/facilities';
@@ -15,20 +16,28 @@ const register = (router: Router) => {
   // Endpoint - Create court
   router.post(
     `${pathPrefix}/courts`,
-    (createCourtPOSTController as ExpressCreateCourtPOSTController).getImagesUploadMiddleware(),
-    expressExtractDataFromBodyMiddleware(httpResponseHandler),
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Create court',
+    }, httpResponseHandler),
     expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
     expressUserTypeAuthorizationMiddleware(['HOST_USER'], httpResponseHandler),
+    (createCourtPOSTController as ExpressCreateCourtPOSTController).getImagesUploadMiddleware(),
+    expressExtractDataFromBodyMiddleware(httpResponseHandler),
     createCourtPOSTControllerValidations,
     expressInputValidationMiddleware,
     createCourtPOSTController.run.bind(createCourtPOSTController),
   );
 
-  // Endpoint - Search courts
+  // Endpoint - Search All courts
   router.get(
     `${pathPrefix}/courts`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Search all courts',
+    }, httpResponseHandler),
     expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
-    searchCourtsGETController.run.bind(searchCourtsGETController),
+    searchAllCourtsGETController.run.bind(searchAllCourtsGETController),
   );
 };
 

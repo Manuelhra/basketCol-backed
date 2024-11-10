@@ -40,7 +40,7 @@ export class MongooseLeagueFounderUserRepository
     return new MongooseLeagueFounderUserRepository(dependencies);
   }
 
-  public async searchById(leagueFounderUserId: LeagueFounderUserId): Promise<Nullable<LeagueFounderUser>> {
+  public async findById(leagueFounderUserId: LeagueFounderUserId): Promise<Nullable<LeagueFounderUser>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongooseLeagueFounderUserDocument> = await MyModel.findOne<IMongooseLeagueFounderUserDocument>({ id: leagueFounderUserId.value });
@@ -64,7 +64,7 @@ export class MongooseLeagueFounderUserRepository
     );
   }
 
-  public async searchByEmail(leagueFounderUserEmail: LeagueFounderUserEmail): Promise<Nullable<LeagueFounderUser>> {
+  public async findByEmail(leagueFounderUserEmail: LeagueFounderUserEmail): Promise<Nullable<LeagueFounderUser>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongooseLeagueFounderUserDocument> = await MyModel.findOne<IMongooseLeagueFounderUserDocument>({ 'email.value': leagueFounderUserEmail.value.value });

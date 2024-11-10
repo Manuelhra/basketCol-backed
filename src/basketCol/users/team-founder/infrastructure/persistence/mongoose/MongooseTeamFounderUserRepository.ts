@@ -15,10 +15,12 @@ import { MongooseClientFactory } from '../../../../../shared/infrastructure/pers
 import { mongooseTeamFounderUserSchema } from './mongoose-team-founder-user.schema';
 
 type Dependencies = {
-  securePasswordCreationService: SecurePasswordCreationService;
+  readonly securePasswordCreationService: SecurePasswordCreationService;
 };
 
-export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamFounderUserPrimitives, TeamFounderUser> implements ITeamFounderUserRepository {
+export class MongooseTeamFounderUserRepository
+  extends MongooseRepository<ITeamFounderUserPrimitives, TeamFounderUser>
+  implements ITeamFounderUserRepository {
   readonly #securePasswordCreationService: SecurePasswordCreationService;
 
   protected collectionName(): string {
@@ -38,7 +40,7 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
     return new MongooseTeamFounderUserRepository(dependencies);
   }
 
-  public async searchById(teamFounderUserId: TeamFounderUserId): Promise<Nullable<TeamFounderUser>> {
+  public async findById(teamFounderUserId: TeamFounderUserId): Promise<Nullable<TeamFounderUser>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongooseTeamFounderUserDocument> = await MyModel.findOne<IMongooseTeamFounderUserDocument>({ id: teamFounderUserId.value });
@@ -62,7 +64,7 @@ export class MongooseTeamFounderUserRepository extends MongooseRepository<ITeamF
     );
   }
 
-  public async searchByEmail(teamFounderUserEmail: TeamFounderUserEmail): Promise<Nullable<TeamFounderUser>> {
+  public async findByEmail(teamFounderUserEmail: TeamFounderUserEmail): Promise<Nullable<TeamFounderUser>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongooseTeamFounderUserDocument> = await MyModel.findOne<IMongooseTeamFounderUserDocument>({ 'email.value': teamFounderUserEmail.value.value });
