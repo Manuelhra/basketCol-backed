@@ -30,7 +30,7 @@ export class MongoosePlayerUserFinishingAttributesRepository
     return new MongoosePlayerUserFinishingAttributesRepository();
   }
 
-  public async searchById(playerUserFinishingAttributesId: PUFAId): Promise<Nullable<PlayerUserFinishingAttributes>> {
+  public async findById(playerUserFinishingAttributesId: PUFAId): Promise<Nullable<PlayerUserFinishingAttributes>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserFinishingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserFinishingAttributesDocument>({ id: playerUserFinishingAttributesId.value });
@@ -47,7 +47,7 @@ export class MongoosePlayerUserFinishingAttributesRepository
     );
   }
 
-  public async searchByPlayerUserId(pUFAReferencedPlayerUserId: PUFAReferencedPlayerUserId): Promise<Nullable<PlayerUserFinishingAttributes>> {
+  public async findByPlayerUserId(pUFAReferencedPlayerUserId: PUFAReferencedPlayerUserId): Promise<Nullable<PlayerUserFinishingAttributes>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserFinishingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserFinishingAttributesDocument>({ playerUserId: pUFAReferencedPlayerUserId.playerUserIdAsString });

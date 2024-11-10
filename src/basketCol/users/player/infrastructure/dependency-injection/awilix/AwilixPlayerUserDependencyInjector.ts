@@ -2,11 +2,15 @@ import {
   BusinessDateService,
   EmailUniquenessValidatorService,
   IdUniquenessValidatorService,
+  IEmailUniquenessValidatorServiceRepository,
+  IIdUniquenessValidatorServiceRepository,
   IPasswordHashingService,
   IPasswordValueObjectCreationService,
+  IPlayerUserCareerStatsRepository,
   IPlayerUserRepository,
   PasswordValueObjectCreationService,
   PlayerUserNicknameValidationService,
+  PlayerUserValidationService,
   SecurePasswordCreationService,
 } from '@basketcol/domain';
 
@@ -28,9 +32,14 @@ import { GlobFileSystem } from '../../../../../shared/infrastructure/file-system
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
 import { IProfileImageUploader } from '../../../../shared/application/file-upload/images/ports/IProfileImageUploader';
 import { S3ProfileImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3ProfileImageUploader';
-import { ISearchPlayerUsersUseCase } from '../../../application/use-cases/ports/ISearchPlayerUsersUseCase';
-import { SearchPlayerUsersUseCase } from '../../../application/use-cases/SearchPlayerUsersUseCase';
-import { ExpressSearchPlayerUsersGETController } from '../../server/express/controllers/ExpressSearchPlayerUsersGETController';
+import { ISearchAllPlayerUsersUseCase } from '../../../application/use-cases/ports/ISearchAllPlayerUsersUseCase';
+import { SearchAllPlayerUsersUseCase } from '../../../application/use-cases/SearchAllPlayerUsersUseCase';
+import { ExpressSearchAllPlayerUsersGETController } from '../../server/express/controllers/ExpressSearchAllPlayerUsersGETController';
+import { ICreatePlayerUserCareerStatsUseCase } from '../../../career-stats/application/use-cases/ports/ICreatePlayerUserCareerStatsUseCase';
+import { CreatePlayerUserCareerStatsUseCase } from '../../../career-stats/application/use-cases/CreatePlayerUserCareerStatsUseCase';
+import { MongoosePlayerUserCareerStatsRepository } from '../../../career-stats/infrastructure/persistence/mongoose/MongoosePlayerUserCareerStatsRepository';
+import { IUuidGenerator } from '../../../../../shared/application/uuid/ports/IUuidGenerator';
+import { UuidV4Generator } from '../../../../../shared/infrastructure/uuid/UuidV4Generator';
 
 export class AwilixPlayerUserDependencyInjector
   extends AwilixDependencyInjector<IPlayerUserContainer> {
@@ -47,21 +56,41 @@ export class AwilixPlayerUserDependencyInjector
       playerUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressPlayerUserServerErrorHandler.create).singleton(),
       createPlayerUserPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreatePlayerUserPOSTController.create).singleton(),
       businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
-      createPlayerUserUseCase: AwilixDependencyInjector.registerAsFunction<ICreatePlayerUserUseCase>(CreatePlayerUserUseCase.create).singleton(),
-      emailUniquenessValidatorService: AwilixDependencyInjector.registerAsFunction<EmailUniquenessValidatorService>(EmailUniquenessValidatorService.create).singleton(),
-      emailUniquenessValidatorServiceRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserRepository>(MongoosePlayerUserRepository.create).singleton(),
-      idUniquenessValidatorService: AwilixDependencyInjector.registerAsFunction<IdUniquenessValidatorService>(IdUniquenessValidatorService.create).singleton(),
+      createPlayerUserUseCase: AwilixDependencyInjector.registerAsFunction<ICreatePlayerUserUseCase>((cradle: IPlayerUserContainer) => CreatePlayerUserUseCase.create({
+        idUniquenessValidatorService: IdUniquenessValidatorService.create({
+          idUniquenessValidatorServiceRepository: cradle.playerUserRepository as IIdUniquenessValidatorServiceRepository,
+        }),
+        businessDateService: cradle.businessDateService,
+        emailUniquenessValidatorService: EmailUniquenessValidatorService.create({
+          emailUniquenessValidatorServiceRepository: cradle.playerUserRepository as IEmailUniquenessValidatorServiceRepository,
+        }),
+        playerUserNicknameValidationService: cradle.playerUserNicknameValidationService,
+        createPlayerUserCareerStatsUseCase: cradle.createPlayerUserCareerStatsUseCase,
+        playerUserRepository: cradle.playerUserRepository,
+        uuidGenerator: cradle.uuidGenerator,
+      })).singleton(),
       playerUserNicknameValidationService: AwilixDependencyInjector.registerAsFunction<PlayerUserNicknameValidationService>(PlayerUserNicknameValidationService.create).singleton(),
       playerUserRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserRepository>(MongoosePlayerUserRepository.create).singleton(),
-      idUniquenessValidatorServiceRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserRepository>(MongoosePlayerUserRepository.create).singleton(),
       passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
       securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
       profileImageUploader: AwilixDependencyInjector.registerAsFunction<IProfileImageUploader>(() => S3ProfileImageUploader.create({
         folderPath: 'player',
       })).singleton(),
-      searchPlayerUsersGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchPlayerUsersGETController.create).singleton(),
-      searchPlayerUsersUseCase: AwilixDependencyInjector.registerAsFunction<ISearchPlayerUsersUseCase>(SearchPlayerUsersUseCase.create).singleton(),
+      searchAllPlayerUsersGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchAllPlayerUsersGETController.create).singleton(),
+      searchAllPlayerUsersUseCase: AwilixDependencyInjector.registerAsFunction<ISearchAllPlayerUsersUseCase>(SearchAllPlayerUsersUseCase.create).singleton(),
+      createPlayerUserCareerStatsUseCase: AwilixDependencyInjector.registerAsFunction<ICreatePlayerUserCareerStatsUseCase>((cradle: IPlayerUserContainer) => CreatePlayerUserCareerStatsUseCase.create({
+        idUniquenessValidatorService: IdUniquenessValidatorService.create({
+          idUniquenessValidatorServiceRepository: cradle.playerUserCareerStatsRepository as IIdUniquenessValidatorServiceRepository,
+        }),
+        businessDateService: cradle.businessDateService,
+        playerUserCareerStatsRepository: cradle.playerUserCareerStatsRepository,
+        playerUserValidationService: PlayerUserValidationService.create({
+          playerUserRepository: cradle.playerUserRepository,
+        }),
+      })),
+      playerUserCareerStatsRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserCareerStatsRepository>(MongoosePlayerUserCareerStatsRepository.create).singleton(),
+      uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
     });
   }
 

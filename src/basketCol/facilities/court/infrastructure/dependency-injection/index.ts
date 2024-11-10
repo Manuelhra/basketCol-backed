@@ -10,4 +10,4 @@ if (awilixCourtContainer === null) {
 export const courtRouteManager = awilixCourtContainer.resolve('courtRouteManager');
 export const createCourtPOSTController = awilixCourtContainer.resolve('createCourtPOSTController');
 export const courtServerErrorHandler = awilixCourtContainer.resolve('courtServerErrorHandler');
-export const searchCourtsGETController = awilixCourtContainer.resolve('searchCourtsGETController');
+export const searchAllCourtsGETController = awilixCourtContainer.resolve('searchAllCourtsGETController');

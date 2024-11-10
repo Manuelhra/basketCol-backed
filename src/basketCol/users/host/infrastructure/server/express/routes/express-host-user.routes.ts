@@ -6,6 +6,7 @@ import { expressInputValidationMiddleware } from '../../../../../../shared/infra
 import { ExpressCreateHostUserPOSTController } from '../controllers/ExpressCreateHostUserPOSTController';
 import { httpResponseHandler } from '../../../../../../shared/infrastructure/dependency-injection';
 import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-extract-data-from-body.middleware';
+import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
   const pathPrefix: string = '/users';
@@ -13,6 +14,10 @@ const register = (router: Router) => {
   // Endpoint - Create the host user for BasketCol
   router.post(
     `${pathPrefix}/host`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Create host user',
+    }, httpResponseHandler),
     (createHostUserPOSTController as ExpressCreateHostUserPOSTController).getImageUploadMiddleware(),
     expressExtractDataFromBodyMiddleware(httpResponseHandler),
     createHostUserPOSTControllerValidations,

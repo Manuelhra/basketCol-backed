@@ -7,4 +7,6 @@ if (awilixTeamFounderUserContainer === null) {
   throw DependencyContainerNotInitializedError.create();
 }
 
+export const createTeamFounderUserPOSTController = awilixTeamFounderUserContainer.resolve('createTeamFounderUserPOSTController');
+export const teamFounderUserRouteManager = awilixTeamFounderUserContainer.resolve('teamFounderUserRouteManager');
 export const teamFounderUserServerErrorHandler = awilixTeamFounderUserContainer.resolve('teamFounderUserServerErrorHandler');

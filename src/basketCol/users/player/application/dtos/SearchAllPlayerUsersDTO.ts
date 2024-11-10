@@ -1,3 +1,3 @@
 import { SearchDTO } from '../../../../shared/application/dtos/SearchDTO';
 
-export interface SearchPlayerUsersDTO extends SearchDTO {}
+export interface SearchAllPlayerUsersDTO extends SearchDTO {}

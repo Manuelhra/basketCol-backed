@@ -170,9 +170,9 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     let playerUserFound: Nullable<PlayerUser> = null;
 
     if (playerUserNickname !== undefined && playerUserNickname !== null) {
-      playerUserFound = await this.#playerUserRepository.searchByNickname(playerUserNickname);
+      playerUserFound = await this.#playerUserRepository.findByNickname(playerUserNickname);
     } else if (playerUserEmail !== undefined && playerUserEmail !== null) {
-      playerUserFound = await this.#playerUserRepository.searchByEmail(playerUserEmail);
+      playerUserFound = await this.#playerUserRepository.findByEmail(playerUserEmail);
     }
 
     if (playerUserFound === null || playerUserFound === undefined) {
@@ -184,7 +184,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
   }
 
   async #authenticateHostUser(hostUserEmail: HostUserEmail, hostUserPassword: HostUserPassword): Promise<Nullable<HostUser>> {
-    const hostUserFound = await this.#hostUserRepository.searchByEmail(hostUserEmail);
+    const hostUserFound = await this.#hostUserRepository.findByEmail(hostUserEmail);
     if (hostUserFound === null || hostUserFound === undefined) {
       return null;
     }
@@ -194,7 +194,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
   }
 
   async #authenticateRefereeUser(refereeUserEmail: RefereeUserEmail, refereeUserPassword: RefereeUserPassword): Promise<Nullable<RefereeUser>> {
-    const refereeUserFound = await this.#refereeUserRepository.searchByEmail(refereeUserEmail);
+    const refereeUserFound = await this.#refereeUserRepository.findByEmail(refereeUserEmail);
     if (refereeUserFound === null || refereeUserFound === undefined) {
       return null;
     }
@@ -207,7 +207,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
     leagueFounderUserEmail: LeagueFounderUserEmail,
     leagueFounderUserPassword: LeagueFounderUserPassword,
   ): Promise<Nullable<LeagueFounderUser>> {
-    const leagueFounderUserFound = await this.#leagueFounderUserRepository.searchByEmail(leagueFounderUserEmail);
+    const leagueFounderUserFound = await this.#leagueFounderUserRepository.findByEmail(leagueFounderUserEmail);
     if (leagueFounderUserFound === null || leagueFounderUserFound === undefined) {
       return null;
     }
@@ -217,7 +217,7 @@ export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {
   }
 
   async #authenticateTeamFounderUser(teamFounderUserEmail: TeamFounderUserEmail, teamFounderUserPassword: TeamFounderUserPassword): Promise<Nullable<TeamFounderUser>> {
-    const teamFounderUserFound = await this.#teamFounderUserRepository.searchByEmail(teamFounderUserEmail);
+    const teamFounderUserFound = await this.#teamFounderUserRepository.findByEmail(teamFounderUserEmail);
     if (teamFounderUserFound === null || teamFounderUserFound === undefined) {
       return null;
     }

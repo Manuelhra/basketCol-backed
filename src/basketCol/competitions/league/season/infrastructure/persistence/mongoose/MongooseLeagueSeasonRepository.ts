@@ -30,7 +30,7 @@ export class MongooseLeagueSeasonRepository
     return new MongooseLeagueSeasonRepository();
   }
 
-  public async searchById(leagueSeasonId: LeagueSeasonId): Promise<Nullable<LeagueSeason>> {
+  public async findById(leagueSeasonId: LeagueSeasonId): Promise<Nullable<LeagueSeason>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseLeagueSeasonDocument> = await MyModel.findOne<IMongooseLeagueSeasonDocument>({ id: leagueSeasonId.value });
     return document === null ? null : this.#mapDocumentToLeagueSeason(document);

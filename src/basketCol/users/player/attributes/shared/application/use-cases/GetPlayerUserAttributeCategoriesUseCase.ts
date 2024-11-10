@@ -92,12 +92,12 @@ export class GetPlayerUserAttributeCategoriesUseCase implements IGetPlayerUserAt
       shootingAttributes,
       skillAttributes,
     ] = await Promise.all([
-      this.#playerUserDefensiveAttributesRepository.searchByPlayerUserId(referencedIds.defensive),
-      this.#playerUserFinishingAttributesRepository.searchByPlayerUserId(referencedIds.finishing),
-      this.#playerUserPhysicalAttributesRepository.searchByPlayerUserId(referencedIds.physical),
-      this.#playerUserReboundingAttributesRepository.searchByPlayerUserId(referencedIds.rebounding),
-      this.#playerUserShootingAttributesRepository.searchByPlayerUserId(referencedIds.shooting),
-      this.#playerUserSkillAttributesRepository.searchByPlayerUserId(referencedIds.skill),
+      this.#playerUserDefensiveAttributesRepository.findByPlayerUserId(referencedIds.defensive),
+      this.#playerUserFinishingAttributesRepository.findByPlayerUserId(referencedIds.finishing),
+      this.#playerUserPhysicalAttributesRepository.findByPlayerUserId(referencedIds.physical),
+      this.#playerUserReboundingAttributesRepository.findByPlayerUserId(referencedIds.rebounding),
+      this.#playerUserShootingAttributesRepository.findByPlayerUserId(referencedIds.shooting),
+      this.#playerUserSkillAttributesRepository.findByPlayerUserId(referencedIds.skill),
     ]);
 
     return {

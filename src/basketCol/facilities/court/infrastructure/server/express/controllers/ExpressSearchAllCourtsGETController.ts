@@ -2,26 +2,26 @@ import { Request, Response } from 'express';
 import { HttpStatus } from '@basketcol/domain';
 
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
-import { ISearchCourtsUseCase } from '../../../../application/use-cases/ports/ISearchCourtsUseCase';
+import { ISearchAllCourtsUseCase } from '../../../../application/use-cases/ports/ISearchAllCourtsUseCase';
 import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
 
 type Dependencies = {
-  readonly searchCourtsUseCase: ISearchCourtsUseCase;
+  readonly searchAllCourtsUseCase: ISearchAllCourtsUseCase;
   readonly httpResponseHandler: IHttpResponseHandler;
 };
 
-export class ExpressSearchCourtsGETController implements ExpressBaseController {
-  readonly #searchCourtsUseCase: ISearchCourtsUseCase;
+export class ExpressSearchAllCourtsGETController implements ExpressBaseController {
+  readonly #searchAllCourtsUseCase: ISearchAllCourtsUseCase;
 
   readonly #httpResponseHandler: IHttpResponseHandler;
 
   private constructor(dependencies: Dependencies) {
-    this.#searchCourtsUseCase = dependencies.searchCourtsUseCase;
+    this.#searchAllCourtsUseCase = dependencies.searchAllCourtsUseCase;
     this.#httpResponseHandler = dependencies.httpResponseHandler;
   }
 
-  public static create(dependencies: Dependencies): ExpressSearchCourtsGETController {
-    return new ExpressSearchCourtsGETController(dependencies);
+  public static create(dependencies: Dependencies): ExpressSearchAllCourtsGETController {
+    return new ExpressSearchAllCourtsGETController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {
@@ -33,7 +33,7 @@ export class ExpressSearchCourtsGETController implements ExpressBaseController {
       perPage: this.#parseNumber(perPage, 10),
     };
 
-    const { data, pagination } = await this.#searchCourtsUseCase.execute(dto);
+    const { data, pagination } = await this.#searchAllCourtsUseCase.execute(dto);
 
     const successResult = this.#httpResponseHandler.handleSuccessResponse({
       code: HttpStatus.OK,

@@ -10,4 +10,4 @@ if (awilixLeagueContainer === null) {
 export const leagueRouteManager = awilixLeagueContainer.resolve('leagueRouteManager');
 export const createLeaguePOSTController = awilixLeagueContainer.resolve('createLeaguePOSTController');
 export const leagueServerErrorHandler = awilixLeagueContainer.resolve('leagueServerErrorHandler');
-export const searchLeaguesGETController = awilixLeagueContainer.resolve('searchLeaguesGETController');
+export const searchAllLeaguesGETController = awilixLeagueContainer.resolve('searchAllLeaguesGETController');

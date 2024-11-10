@@ -31,20 +31,20 @@ export class MongooseLeagueRepository
     return new MongooseLeagueRepository();
   }
 
-  public async searchById(leagueId: LeagueId): Promise<Nullable<League>> {
+  public async findById(leagueId: LeagueId): Promise<Nullable<League>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseLeagueDocument> = await MyModel.findOne<IMongooseLeagueDocument>({ id: leagueId.value });
     return document === null ? null : this.#mapDocumentToLeague(document);
   }
 
-  public async searchByOfficialName(leagueName: LeagueName): Promise<Nullable<League>> {
+  public async findByOfficialName(leagueName: LeagueName): Promise<Nullable<League>> {
     const MyModel = await this.model();
     const officialName: string = leagueName.value.official;
     const document: Nullable<IMongooseLeagueDocument> = await MyModel.findOne<IMongooseLeagueDocument>({ 'name.official': officialName });
     return document === null ? null : this.#mapDocumentToLeague(document);
   }
 
-  public async searchByShortName(leagueName: LeagueName): Promise<Nullable<League>> {
+  public async findByShortName(leagueName: LeagueName): Promise<Nullable<League>> {
     const MyModel = await this.model();
     const shortName: string = leagueName.value.short;
     const document: Nullable<IMongooseLeagueDocument> = await MyModel.findOne<IMongooseLeagueDocument>({ 'name.short': shortName });

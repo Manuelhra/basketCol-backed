@@ -32,19 +32,19 @@ export class MongooseGymRepository
     return new MongooseGymRepository();
   }
 
-  public async searchById(gymId: GymId): Promise<Nullable<Gym>> {
+  public async findById(gymId: GymId): Promise<Nullable<Gym>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseGymDocument> = await MyModel.findOne<IMongooseGymDocument>({ id: gymId.value });
     return document === null ? null : this.#mapDocumentToGym(document);
   }
 
-  public async searchByIdList(gymIdList: ReferencedGymIdList): Promise<Gym[]> {
+  public async findByIdList(gymIdList: ReferencedGymIdList): Promise<Gym[]> {
     const MyModel = await this.model();
     const documents: IMongooseGymDocument[] = await MyModel.find<IMongooseGymDocument>({ id: { $in: gymIdList.value.map((id) => id.value) } });
     return documents.map(this.#mapDocumentToGym);
   }
 
-  public async searchByOfficialName(gymOfficialName: GymOfficialName): Promise<Nullable<Gym>> {
+  public async findByOfficialName(gymOfficialName: GymOfficialName): Promise<Nullable<Gym>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseGymDocument> = await MyModel.findOne<IMongooseGymDocument>({ officialName: gymOfficialName.value.toUpperCase() });
     return document === null ? null : this.#mapDocumentToGym(document);
@@ -92,6 +92,12 @@ export class MongooseGymRepository
         lastPage: totalPages,
       },
     };
+  }
+
+  public async findAllByIdList(gymIdList: ReferencedGymIdList): Promise<Gym[]> {
+    const MyModel = await this.model();
+    const documents: IMongooseGymDocument[] = await MyModel.find<IMongooseGymDocument>({ id: { $in: gymIdList.value.map((id) => id.value) } });
+    return documents.map(this.#mapDocumentToGym);
   }
 
   public save(gym: Gym): Promise<void> {

@@ -29,9 +29,9 @@ import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IF
 import { ExpressLeagueRouteManager } from '../../server/express/routes/ExpressLeagueRouteManager';
 import { GlobFileSystem } from '../../../../../shared/infrastructure/file-system/GlobFileSystem';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
-import { ExpressSearchLeaguesGETController } from '../../server/express/controllers/ExpressSearchLeaguesGETController';
-import { ISearchLeaguesUseCase } from '../../../application/use-cases/ports/ISearchLeaguesUseCase';
-import { SearchLeaguesUseCase } from '../../../application/use-cases/SearchLeaguesUseCase';
+import { ExpressSearchAllLeaguesGETController } from '../../server/express/controllers/ExpressSearchAllLeaguesGETController';
+import { ISearchAllLeaguesUseCase } from '../../../application/use-cases/ports/ISearchAllLeaguesUseCase';
+import { SearchAllLeaguesUseCase } from '../../../application/use-cases/SearchAllLeaguesUseCase';
 
 export class AwilixLeagueDependencyInjector extends AwilixDependencyInjector<ILeagueContainer> {
   private constructor() {
@@ -63,8 +63,8 @@ export class AwilixLeagueDependencyInjector extends AwilixDependencyInjector<ILe
       securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
       passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
       passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
-      searchLeaguesGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchLeaguesGETController.create).singleton(),
-      searchLeaguesUseCase: AwilixDependencyInjector.registerAsFunction<ISearchLeaguesUseCase>(SearchLeaguesUseCase.create).singleton(),
+      searchAllLeaguesGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchAllLeaguesGETController.create).singleton(),
+      searchAllLeaguesUseCase: AwilixDependencyInjector.registerAsFunction<ISearchAllLeaguesUseCase>(SearchAllLeaguesUseCase.create).singleton(),
     });
   }
 

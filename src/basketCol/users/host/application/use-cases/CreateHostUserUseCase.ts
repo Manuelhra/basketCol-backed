@@ -41,7 +41,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
   }
 
   public async execute(dto: CreateHostUserDTO): Promise<void> {
-    const hostUserFound: Nullable<HostUser> = await this.#hostUserRepository.search();
+    const hostUserFound: Nullable<HostUser> = await this.#hostUserRepository.find();
 
     if (hostUserFound) {
       throw MultipleHostUsersException.create();

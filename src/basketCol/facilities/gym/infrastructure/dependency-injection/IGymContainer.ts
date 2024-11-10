@@ -16,7 +16,7 @@ import { IFacilityMainImageUploader } from '../../../shared/application/file-upl
 import { ICreateGymUseCase } from '../../application/use-cases/ports/ICreateGymUseCase';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
-import { ISearchGymsUseCase } from '../../application/use-cases/ports/ISearchGymsUseCase';
+import { ISearchAllGymsUseCase } from '../../application/use-cases/ports/ISearchAllGymsUseCase';
 
 export interface IGymContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -34,6 +34,6 @@ export interface IGymContainer {
   securePasswordCreationService: SecurePasswordCreationService;
   passwordHashingService: IPasswordHashingService;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;
-  searchGymsGETController: IController;
-  searchGymsUseCase: ISearchGymsUseCase;
+  searchAllGymsGETController: IController;
+  searchAllGymsUseCase: ISearchAllGymsUseCase;
 }

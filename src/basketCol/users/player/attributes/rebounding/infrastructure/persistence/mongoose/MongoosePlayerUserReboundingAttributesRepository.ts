@@ -30,7 +30,7 @@ export class MongoosePlayerUserReboundingAttributesRepository
     return new MongoosePlayerUserReboundingAttributesRepository();
   }
 
-  public async searchById(playerUserReboundingAttributesId: PURAId): Promise<Nullable<PlayerUserReboundingAttributes>> {
+  public async findById(playerUserReboundingAttributesId: PURAId): Promise<Nullable<PlayerUserReboundingAttributes>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserReboundingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserReboundingAttributesDocument>({ id: playerUserReboundingAttributesId.value });
@@ -45,7 +45,7 @@ export class MongoosePlayerUserReboundingAttributesRepository
     );
   }
 
-  public async searchByPlayerUserId(pURAReferencedPlayerUserId: PURAReferencedPlayerUserId): Promise<Nullable<PlayerUserReboundingAttributes>> {
+  public async findByPlayerUserId(pURAReferencedPlayerUserId: PURAReferencedPlayerUserId): Promise<Nullable<PlayerUserReboundingAttributes>> {
     const MyModel = await this.model();
 
     const document: Nullable<IMongoosePlayerUserReboundingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserReboundingAttributesDocument>({ playerUserId: pURAReferencedPlayerUserId.playerUserIdAsString });

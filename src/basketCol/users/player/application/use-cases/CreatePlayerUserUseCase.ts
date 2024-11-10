@@ -20,44 +20,41 @@ import { CreatePlayerUserDTO } from '../dtos/CreatePlayerUserDTO';
 import { ICreatePlayerUserUseCase } from './ports/ICreatePlayerUserUseCase';
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 import { IUserContext } from '../../../../shared/application/context/ports/IUserContext';
+import { ICreatePlayerUserCareerStatsUseCase } from '../../career-stats/application/use-cases/ports/ICreatePlayerUserCareerStatsUseCase';
+import { CreatePlayerUserCareerStatsDTO } from '../../career-stats/application/dtos/CreatePlayerUserCareerStatsDTO';
+import { IUuidGenerator } from '../../../../shared/application/uuid/ports/IUuidGenerator';
 
 type Dependencies = {
-  playerUserNicknameValidationService: PlayerUserNicknameValidationService;
-  emailUniquenessValidatorService: EmailUniquenessValidatorService;
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  playerUserRepository: IPlayerUserRepository;
-  businessDateService: BusinessDateService;
+  readonly playerUserNicknameValidationService: PlayerUserNicknameValidationService;
+  readonly emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly playerUserRepository: IPlayerUserRepository;
+  readonly businessDateService: BusinessDateService;
+  readonly createPlayerUserCareerStatsUseCase: ICreatePlayerUserCareerStatsUseCase;
+  readonly uuidGenerator: IUuidGenerator;
 };
 
 export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
-
-  readonly #playerUserNicknameValidationService: PlayerUserNicknameValidationService;
-
-  readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
-
-  readonly #businessDateService: BusinessDateService;
-
-  readonly #playerUserRepository: IPlayerUserRepository;
-
-  private constructor(dependencies: Dependencies) {
-    this.#playerUserNicknameValidationService = dependencies.playerUserNicknameValidationService;
-    this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#playerUserRepository = dependencies.playerUserRepository;
-    this.#playerUserRepository = dependencies.playerUserRepository;
-    this.#businessDateService = dependencies.businessDateService;
-  }
+  private constructor(private readonly dependencies: Dependencies) {}
 
   public static create(dependencies: Dependencies): CreatePlayerUserUseCase {
     return new CreatePlayerUserUseCase(dependencies);
   }
 
   public async execute(dto: CreatePlayerUserDTO, userContext: IUserContext): Promise<void> {
-    if (userContext.userType !== HostUserType.value) {
-      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a player user');
-    }
+    this.#validateUserAccess(userContext);
+    const playerUser: PlayerUser = await this.#createPlayerUser(dto);
+    await this.#createPlayerUserCareerStats(playerUser.toPrimitives.id, userContext);
+    return this.dependencies.playerUserRepository.save(playerUser);
+  }
 
+  #validateUserAccess(userContext: IUserContext): void {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a team');
+    }
+  }
+
+  async #createPlayerUser(dto: CreatePlayerUserDTO): Promise<PlayerUser> {
     const {
       id,
       name,
@@ -72,16 +69,14 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     const playerUserNickname: PlayerUserNickname = PlayerUserNickname.create(nickname);
     const playerUserEmail: PlayerUserEmail = PlayerUserEmail.create({ value: email.value, verified: false });
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PlayerUserId, IPlayerUserPrimitives, PlayerUser>(playerUserId);
-    await this.#playerUserNicknameValidationService.ensureNicknameIsUnique(playerUserNickname);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<PlayerUserEmail, IPlayerUserPrimitives, PlayerUser>(playerUserEmail);
+    await this.#validatePlayerUserCreation(playerUserId, playerUserNickname, playerUserEmail);
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;
-    const playerUserCreatedAt: PlayerUserCreatedAt = this.#businessDateService.getCurrentDate();
-    const playerUserUpdatedAt: PlayerUserUpdatedAt = this.#businessDateService.getCurrentDate();
+    const playerUserCreatedAt: PlayerUserCreatedAt = this.dependencies.businessDateService.getCurrentDate();
+    const playerUserUpdatedAt: PlayerUserUpdatedAt = this.dependencies.businessDateService.getCurrentDate();
 
-    const playerUser: PlayerUser = PlayerUser.create(
+    return PlayerUser.create(
       playerUserId.value,
       name,
       biography,
@@ -94,7 +89,42 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
       playerUserCreatedAt.value,
       playerUserUpdatedAt.value,
     );
+  }
 
-    return this.#playerUserRepository.save(playerUser);
+  async #validatePlayerUserCreation(
+    playerUserId: PlayerUserId,
+    playerUserNickname: PlayerUserNickname,
+    playerUserEmail: PlayerUserEmail,
+  ): Promise<void> {
+    await this.dependencies.idUniquenessValidatorService.ensureUniqueId<PlayerUserId, IPlayerUserPrimitives, PlayerUser>(playerUserId);
+    await this.dependencies.playerUserNicknameValidationService.ensureNicknameIsUnique(playerUserNickname);
+    await this.dependencies.emailUniquenessValidatorService.ensureUniqueEmail<PlayerUserEmail, IPlayerUserPrimitives, PlayerUser>(playerUserEmail);
+  }
+
+  async #createPlayerUserCareerStats(playerUserId: string, userContext: IUserContext): Promise<void> {
+    const dto: CreatePlayerUserCareerStatsDTO = {
+      id: this.dependencies.uuidGenerator.generate(),
+      playerUserId,
+      totalAssists: 0,
+      totalBlocks: 0,
+      totalDefensiveRebounds: 0,
+      totalFieldGoalsAttempted: 0,
+      totalFieldGoalsMade: 0,
+      totalFouls: 0,
+      totalFreeThrowsAttempted: 0,
+      totalFreeThrowsMade: 0,
+      totalGamesPlayed: 0,
+      totalGamesWon: 0,
+      totalOffensiveRebounds: 0,
+      totalPoints: 0,
+      totalSeasonsLeaguePlayed: 0,
+      totalSeasonsLeagueWon: 0,
+      totalSteals: 0,
+      totalThreePointersAttempted: 0,
+      totalThreePointersMade: 0,
+      totalTurnovers: 0,
+    };
+
+    await this.dependencies.createPlayerUserCareerStatsUseCase.execute(dto, userContext);
   }
 }

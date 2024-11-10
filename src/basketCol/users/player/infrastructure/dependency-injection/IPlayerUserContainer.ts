@@ -1,9 +1,8 @@
 import {
   BusinessDateService,
-  EmailUniquenessValidatorService,
-  IdUniquenessValidatorService,
   IPasswordHashingService,
   IPasswordValueObjectCreationService,
+  IPlayerUserCareerStatsRepository,
   IPlayerUserRepository,
   PlayerUserNicknameValidationService,
   SecurePasswordCreationService,
@@ -16,7 +15,9 @@ import { ICreatePlayerUserUseCase } from '../../application/use-cases/ports/ICre
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
 import { IProfileImageUploader } from '../../../shared/application/file-upload/images/ports/IProfileImageUploader';
-import { ISearchPlayerUsersUseCase } from '../../application/use-cases/ports/ISearchPlayerUsersUseCase';
+import { ISearchAllPlayerUsersUseCase } from '../../application/use-cases/ports/ISearchAllPlayerUsersUseCase';
+import { ICreatePlayerUserCareerStatsUseCase } from '../../career-stats/application/use-cases/ports/ICreatePlayerUserCareerStatsUseCase';
+import { IUuidGenerator } from '../../../../shared/application/uuid/ports/IUuidGenerator';
 
 export interface IPlayerUserContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -24,11 +25,7 @@ export interface IPlayerUserContainer {
   createPlayerUserPOSTController: IController;
   createPlayerUserUseCase: ICreatePlayerUserUseCase;
   playerUserRepository: IPlayerUserRepository;
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  idUniquenessValidatorServiceRepository: IPlayerUserRepository;
-  emailUniquenessValidatorServiceRepository: IPlayerUserRepository;
   playerUserNicknameValidationService: PlayerUserNicknameValidationService;
-  emailUniquenessValidatorService: EmailUniquenessValidatorService;
   businessDateService: BusinessDateService;
   playerUserRouteManager: IRouteManager;
   fileSystem: IFileSystem;
@@ -36,6 +33,9 @@ export interface IPlayerUserContainer {
   passwordHashingService: IPasswordHashingService;
   passwordValueObjectCreationService: IPasswordValueObjectCreationService;
   profileImageUploader: IProfileImageUploader;
-  searchPlayerUsersGETController: IController;
-  searchPlayerUsersUseCase: ISearchPlayerUsersUseCase;
+  searchAllPlayerUsersGETController: IController;
+  searchAllPlayerUsersUseCase: ISearchAllPlayerUsersUseCase;
+  createPlayerUserCareerStatsUseCase: ICreatePlayerUserCareerStatsUseCase;
+  playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
+  uuidGenerator: IUuidGenerator;
 }

@@ -26,12 +26,12 @@ import { InvalidAuthenticationTokenError } from '../exceptions/InvalidAuthentica
 import { UserNotFoundError } from '../../../users/shared/application/exceptions/UserNotFoundError';
 
 type Dependencies = {
-  tokenValidatorService: ITokenValidatorService;
-  playerUserRepository: IPlayerUserRepository;
-  hostUserRepository: IHostUserRepository;
-  refereeUserRepository: IRefereeUserRepository;
-  teamFounderUserRepository: ITeamFounderUserRepository;
-  leagueFounderUserRepository: ILeagueFounderUserRepository;
+  readonly tokenValidatorService: ITokenValidatorService;
+  readonly playerUserRepository: IPlayerUserRepository;
+  readonly hostUserRepository: IHostUserRepository;
+  readonly refereeUserRepository: IRefereeUserRepository;
+  readonly teamFounderUserRepository: ITeamFounderUserRepository;
+  readonly leagueFounderUserRepository: ILeagueFounderUserRepository;
 };
 
 export class GetAuthenticatedUserUseCase implements IGetAuthenticatedUserUseCase {
@@ -85,23 +85,23 @@ export class GetAuthenticatedUserUseCase implements IGetAuthenticatedUserUseCase
 
     switch (userType) {
       case PlayerUserType.value:
-        userFound = await this.#playerUserRepository.searchById(PlayerUserId.create(userId));
+        userFound = await this.#playerUserRepository.findById(PlayerUserId.create(userId));
         break;
 
       case HostUserType.value:
-        userFound = await this.#hostUserRepository.searchById(HostUserId.create(userId));
+        userFound = await this.#hostUserRepository.findById(HostUserId.create(userId));
         break;
 
       case LeagueFounderUserType.value:
-        userFound = await this.#leagueFounderUserRepository.searchById(LeagueFounderUserId.create(userId));
+        userFound = await this.#leagueFounderUserRepository.findById(LeagueFounderUserId.create(userId));
         break;
 
       case RefereeUserType.value:
-        userFound = await this.#refereeUserRepository.searchById(RefereeUserId.create(userId));
+        userFound = await this.#refereeUserRepository.findById(RefereeUserId.create(userId));
         break;
 
       case TeamFounderUserType.value:
-        userFound = await this.#teamFounderUserRepository.searchById(TeamFounderUserId.create(userId));
+        userFound = await this.#teamFounderUserRepository.findById(TeamFounderUserId.create(userId));
         break;
 
       default:

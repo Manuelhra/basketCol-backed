@@ -1,5 +1,6 @@
 import {
   BusinessDateService,
+  HostUserType,
   IdUniquenessValidatorService,
   ITeamAllTimeStatsPrimitives,
   ITeamAllTimeStatsRepository,
@@ -13,6 +14,8 @@ import {
 
 import { CreateTeamAllTimeStatsDTO } from '../dtos/CreateTeamAllTimeStatsDTO';
 import { ICreateTeamAllTimeStatsUseCase } from './ports/ICreateTeamAllTimeStatsUseCase';
+import { IUserContext } from '../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
   idUniquenessValidatorService: IdUniquenessValidatorService;
@@ -41,7 +44,11 @@ export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUse
     return new CreateTeamAllTimeStatsUseCase(dependencies);
   }
 
-  public async execute(dto: CreateTeamAllTimeStatsDTO): Promise<void> {
+  public async execute(dto: CreateTeamAllTimeStatsDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a team all-time stats');
+    }
+
     const {
       id,
       totalGamesPlayed,
