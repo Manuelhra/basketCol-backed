@@ -1,11 +1,11 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUser,
   HostUserCreatedAt,
   HostUserUpdatedAt,
   IHostUserRepository,
   Nullable,
-  SecurePasswordCreationService,
+  SecurePasswordCreationDomainService,
   UserAccountState,
   UserSubscriptionType,
 } from '@basketcol/domain';
@@ -19,8 +19,8 @@ import { IHostUserConfigFactory } from '../ports/IHostUserConfigFactory';
 type Dependencies = {
   hostUserConfigFactory: IHostUserConfigFactory;
   hostUserRepository: IHostUserRepository;
-  securePasswordCreationService: SecurePasswordCreationService;
-  businessDateService: BusinessDateService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
 };
 
 export class CreateHostUserUseCase implements ICreateHostUserUseCase {
@@ -28,12 +28,12 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
 
   readonly #hostUserRepository: IHostUserRepository;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   private constructor(dependencies: Dependencies) {
     this.#hostUserConfigFactory = dependencies.hostUserConfigFactory;
     this.#hostUserRepository = dependencies.hostUserRepository;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
   }
 
   public static create(dependencies: Dependencies): CreateHostUserUseCase {
@@ -67,8 +67,8 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.premium;
-    const hostUserCreatedAt: HostUserCreatedAt = this.#businessDateService.getCurrentDate();
-    const hostUserUpdatedAt: HostUserUpdatedAt = this.#businessDateService.getCurrentDate();
+    const hostUserCreatedAt: HostUserCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const hostUserUpdatedAt: HostUserUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const hostUser: HostUser = HostUser.create(
       id,
@@ -76,6 +76,7 @@ export class CreateHostUserUseCase implements ICreateHostUserUseCase {
       biography,
       { value: email.value, verified: true },
       password,
+      'OTHER',
       accountState,
       subscriptionType,
       profileImage,

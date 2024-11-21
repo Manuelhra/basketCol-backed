@@ -1,14 +1,14 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IPlayerUserDefensiveAttributesPrimitives,
   IPlayerUserDefensiveAttributesRepository,
   PlayerUserDefensiveAttributes,
-  PlayerUserValidationService,
+  PlayerUserValidationDomainService,
   PUDACreatedAt,
   PUDAId,
-  PUDAReferencedPlayerUserId,
+  PUDAPlayerUserId,
   PUDAUpdatedAt,
 } from '@basketcol/domain';
 
@@ -18,25 +18,25 @@ import { IUserContext } from '../../../../../../shared/application/context/ports
 import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
-  readonly playerUserValidationService: PlayerUserValidationService;
-  readonly businessDateService: BusinessDateService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly playerUserValidationDomainService: PlayerUserValidationDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
   readonly playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
 };
 
 export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttributesUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#playerUserDefensiveAttributesRepository = dependencies.playerUserDefensiveAttributesRepository;
   }
 
@@ -59,13 +59,13 @@ export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttribu
     } = dto;
 
     const pUDAId: PUDAId = PUDAId.create(id);
-    const pUDAReferencedPlayerUserId: PUDAReferencedPlayerUserId = PUDAReferencedPlayerUserId.create(playerUserId);
+    const pUDAPlayerUserId: PUDAPlayerUserId = PUDAPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUDAId, IPlayerUserDefensiveAttributesPrimitives, PlayerUserDefensiveAttributes>(pUDAId);
-    await this.#playerUserValidationService.ensurePlayerUserExists(pUDAReferencedPlayerUserId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<PUDAId, IPlayerUserDefensiveAttributesPrimitives, PlayerUserDefensiveAttributes>(pUDAId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(pUDAPlayerUserId);
 
-    const pUDACreatedAt: PUDACreatedAt = this.#businessDateService.getCurrentDate();
-    const pUDAUpdatedAt: PUDAUpdatedAt = this.#businessDateService.getCurrentDate();
+    const pUDACreatedAt: PUDACreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const pUDAUpdatedAt: PUDAUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const playerUserDefensiveAttributes: PlayerUserDefensiveAttributes = PlayerUserDefensiveAttributes.create(
       pUDAId.value,
@@ -73,7 +73,7 @@ export class CreateDefensiveAttributesUseCase implements ICreateDefensiveAttribu
       perimeterDefense,
       steal,
       block,
-      pUDAReferencedPlayerUserId.playerUserIdAsString,
+      pUDAPlayerUserId.value,
       pUDACreatedAt.value,
       pUDAUpdatedAt.value,
     );

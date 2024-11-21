@@ -8,17 +8,18 @@ import { leagueFounderUserRouteManager, leagueFounderUserServerErrorHandler } fr
 import { playerUserRouteManager, playerUserServerErrorHandler } from '../basketCol/users/player/infrastructure/dependency-injection';
 import { refereeUserRouteManager, refereeUserServerErrorHandler } from '../basketCol/users/referee/infrastructure/dependency-injection';
 import { teamFounderUserRouteManager, teamFounderUserServerErrorHandler } from '../basketCol/users/team-founder/infrastructure/dependency-injection';
-import { teamServerErrorHandler } from '../basketCol/team/infrastructure/dependency-injection';
+import { teamRouteManager, teamServerErrorHandler } from '../basketCol/team/infrastructure/dependency-injection';
 import { gymRouteManager, gymServerErrorHandler } from '../basketCol/facilities/gym/infrastructure/dependency-injection';
 import { courtRouteManager, courtServerErrorHandler } from '../basketCol/facilities/court/infrastructure/dependency-injection';
 import { competitionsSharedServerErrorHandler } from '../basketCol/competitions/shared/infrastructure/dependency-injection';
 import { leagueRouteManager, leagueServerErrorHandler } from '../basketCol/competitions/league/infrastructure/dependency-injection';
 import { leagueSeasonRouteManager, leagueSeasonServerErrorHandler } from '../basketCol/competitions/league/season/infrastructure/dependency-injection';
 import { leagueSeasonFixtureRouteManager, leagueSeasonFixtureServerErrorHandler } from '../basketCol/competitions/league/season/fixture/infrastructure/dependency-injection';
-import { leagueSeasonFixtureGameServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/infrastructure/dependency-injection';
+import { leagueSeasonFixtureGameRouteManager, leagueSeasonFixtureGameServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/infrastructure/dependency-injection';
 import { ExpressServer } from '../basketCol/shared/infrastructure/server/express/ExpressServer';
 import { playerUserCareerStatsRouteManager } from '../basketCol/users/player/career-stats/infrastructure/dependency-injection';
 import { playerUserAttributesRouteManager } from '../basketCol/users/player/attributes/shared/infrastructure/dependency-injection';
+import { teamPlayerRouteManager, teamPlayerServerErrorHandler } from '../basketCol/team/team-player/infrastructure/dependency-injection';
 
 export class App {
   readonly #server: IServer;
@@ -58,6 +59,9 @@ export class App {
       leagueSeasonFixtureRouteManager,
       refereeUserRouteManager,
       teamFounderUserRouteManager,
+      leagueSeasonFixtureGameRouteManager,
+      teamRouteManager,
+      teamPlayerRouteManager,
     ]);
   }
 
@@ -79,6 +83,7 @@ export class App {
       leagueSeasonServerErrorHandler,
       leagueSeasonFixtureServerErrorHandler,
       leagueSeasonFixtureGameServerErrorHandler,
+      teamPlayerServerErrorHandler,
     ]);
   }
 }

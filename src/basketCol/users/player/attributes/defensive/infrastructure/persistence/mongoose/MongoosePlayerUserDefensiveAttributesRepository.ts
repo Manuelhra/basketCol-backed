@@ -4,7 +4,7 @@ import {
   Nullable,
   PlayerUserDefensiveAttributes,
   PUDAId,
-  PUDAReferencedPlayerUserId,
+  PUDAPlayerUserId,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -47,10 +47,10 @@ export class MongoosePlayerUserDefensiveAttributesRepository
     );
   }
 
-  public async findByPlayerUserId(pUDAReferencedPlayerUserId: PUDAReferencedPlayerUserId): Promise<Nullable<PlayerUserDefensiveAttributes>> {
+  public async findByPlayerUserId(pUDAPlayerUserId: PUDAPlayerUserId): Promise<Nullable<PlayerUserDefensiveAttributes>> {
     const MyModel = await this.model();
 
-    const document: Nullable<IMongoosePlayerUserDefensiveAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserDefensiveAttributesDocument>({ playerUserId: pUDAReferencedPlayerUserId.playerUserIdAsString });
+    const document: Nullable<IMongoosePlayerUserDefensiveAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserDefensiveAttributesDocument>({ playerUserId: pUDAPlayerUserId.value });
 
     return document === null ? null : PlayerUserDefensiveAttributes.fromPrimitives(
       document.id.valueOf(),

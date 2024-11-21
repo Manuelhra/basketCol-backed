@@ -1,8 +1,8 @@
 import {
-  BusinessDateService,
-  CourtValidationService,
+  BusinessDateDomainService,
+  CourtValidationDomainService,
   EmptyCourtIdListError,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   ILeagueSeasonPrimitives,
   ILeagueSeasonRepository,
   LeagueId,
@@ -11,39 +11,23 @@ import {
   LeagueSeasonId,
   LeagueSeasonStatus,
   LeagueSeasonUpdatedAt,
-  LeagueValidationService,
-  LSReferencedCourtIdList,
+  LeagueValidationDomainService,
+  LeagueSeasonCourtIdList,
 } from '@basketcol/domain';
 
 import { CreateLeagueSeasonDTO } from '../dtos/CreateLeagueSeasonDTO';
 import { ICreateLeagueSeasonUseCase } from './ports/ICreateLeagueSeasonUseCase';
 
 type Dependencies = {
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
   readonly leagueSeasonRepository: ILeagueSeasonRepository;
-  readonly leagueValidationService: LeagueValidationService;
-  readonly businessDateService: BusinessDateService;
-  readonly courtValidationService: CourtValidationService;
+  readonly leagueValidationDomainService: LeagueValidationDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
+  readonly courtValidationDomainService: CourtValidationDomainService;
 };
 
 export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
-
-  readonly #leagueSeasonRepository: ILeagueSeasonRepository;
-
-  readonly #leagueValidationService: LeagueValidationService;
-
-  readonly #businessDateService: BusinessDateService;
-
-  readonly #courtValidationService: CourtValidationService;
-
-  private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#leagueSeasonRepository = dependencies.leagueSeasonRepository;
-    this.#leagueValidationService = dependencies.leagueValidationService;
-    this.#businessDateService = dependencies.businessDateService;
-    this.#courtValidationService = dependencies.courtValidationService;
-  }
+  private constructor(private readonly dependencies: Dependencies) {}
 
   public static create(dependencies: Dependencies): CreateLeagueSeasonUseCase {
     return new CreateLeagueSeasonUseCase(dependencies);
@@ -65,14 +49,14 @@ export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
     const leagueSeasonId: LeagueSeasonId = LeagueSeasonId.create(id);
     const leagueSeasonStatus: LeagueSeasonStatus = LeagueSeasonStatus.createUpcoming();
     const leagueId: LeagueId = LeagueId.create(dto.leagueId);
-    const leagueSeasonCourtIdList: LSReferencedCourtIdList = LSReferencedCourtIdList.create(courtIdList);
+    const leagueSeasonCourtIdList: LeagueSeasonCourtIdList = LeagueSeasonCourtIdList.create(courtIdList);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonId, ILeagueSeasonPrimitives, LeagueSeason>(leagueSeasonId);
-    await this.#leagueValidationService.ensureLeagueExist(leagueId);
-    await this.#courtValidationService.ensureCourtsExist(leagueSeasonCourtIdList);
+    await this.dependencies.idUniquenessValidatorDomainService.ensureUniqueId<LeagueSeasonId, ILeagueSeasonPrimitives, LeagueSeason>(leagueSeasonId);
+    await this.dependencies.leagueValidationDomainService.ensureLeagueExists(leagueId);
+    await this.dependencies.courtValidationDomainService.ensureCourtsExists(leagueSeasonCourtIdList);
 
-    const leagueSeasonCreatedAt: LeagueSeasonCreatedAt = this.#businessDateService.getCurrentDate();
-    const leagueSeasonUpdatedAt: LeagueSeasonUpdatedAt = this.#businessDateService.getCurrentDate();
+    const leagueSeasonCreatedAt: LeagueSeasonCreatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
+    const leagueSeasonUpdatedAt: LeagueSeasonUpdatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
 
     const leagueSeason: LeagueSeason = LeagueSeason.create(
       leagueSeasonId.value,
@@ -80,12 +64,12 @@ export class CreateLeagueSeasonUseCase implements ICreateLeagueSeasonUseCase {
       startDate,
       endDate,
       leagueSeasonStatus.value,
-      leagueSeasonCourtIdList.courtIdListAsStrings,
+      leagueSeasonCourtIdList.value,
       leagueId.value,
       leagueSeasonCreatedAt.value,
       leagueSeasonUpdatedAt.value,
     );
 
-    return this.#leagueSeasonRepository.save(leagueSeason);
+    return this.dependencies.leagueSeasonRepository.save(leagueSeason);
   }
 }

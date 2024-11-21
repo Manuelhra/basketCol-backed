@@ -30,6 +30,10 @@ export const mongooseRefereeUserSchema = new Schema<IMongooseRefereeUserDocument
     type: String,
     required: [true, "The referee user's password is required"],
   },
+  gender: {
+    type: String,
+    required: [true, "The referee user's gender is required"],
+  },
   biography: {
     type: String,
     required: [true, "The referee user's biography is required"],

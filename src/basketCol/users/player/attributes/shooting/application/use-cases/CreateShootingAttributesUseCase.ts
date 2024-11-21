@@ -1,14 +1,14 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IPlayerUserShootingAttributesPrimitives,
   IPlayerUserShootingAttributesRepository,
   PlayerUserShootingAttributes,
-  PlayerUserValidationService,
+  PlayerUserValidationDomainService,
   PUShootingAttributesCreatedAt,
   PUShootingAttributesId,
-  PUShootingAttributesReferencedPlayerUserId,
+  PUShootingAttributesPlayerUserId,
   PUShootingAttributesUpdatedAt,
 } from '@basketcol/domain';
 
@@ -18,25 +18,25 @@ import { UnauthorizedAccessError } from '../../../../../../shared/application/ex
 import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  playerUserValidationService: PlayerUserValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   playerUserShootingAttributesRepository: IPlayerUserShootingAttributesRepository;
 };
 
 export class CreateShootingAttributesUseCase implements ICreateShootingAttributesUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #playerUserShootingAttributesRepository: IPlayerUserShootingAttributesRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#playerUserShootingAttributesRepository = dependencies.playerUserShootingAttributesRepository;
   }
 
@@ -59,13 +59,13 @@ export class CreateShootingAttributesUseCase implements ICreateShootingAttribute
     } = dto;
 
     const pUShootingAttributesId: PUShootingAttributesId = PUShootingAttributesId.create(id);
-    const pUShootingAttributesReferencedPlayerUserId: PUShootingAttributesReferencedPlayerUserId = PUShootingAttributesReferencedPlayerUserId.create(playerUserId);
+    const pUShootingAttributesPlayerUserId: PUShootingAttributesPlayerUserId = PUShootingAttributesPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUShootingAttributesId, IPlayerUserShootingAttributesPrimitives, PlayerUserShootingAttributes>(pUShootingAttributesId);
-    await this.#playerUserValidationService.ensurePlayerUserExists(pUShootingAttributesReferencedPlayerUserId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<PUShootingAttributesId, IPlayerUserShootingAttributesPrimitives, PlayerUserShootingAttributes>(pUShootingAttributesId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(pUShootingAttributesPlayerUserId);
 
-    const pUShootingAttributesCreatedAt: PUShootingAttributesCreatedAt = this.#businessDateService.getCurrentDate();
-    const pUShootingAttributesUpdatedAt: PUShootingAttributesUpdatedAt = this.#businessDateService.getCurrentDate();
+    const pUShootingAttributesCreatedAt: PUShootingAttributesCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const pUShootingAttributesUpdatedAt: PUShootingAttributesUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const playerUserShootingAttributes: PlayerUserShootingAttributes = PlayerUserShootingAttributes.create(
       pUShootingAttributesId.value,
@@ -73,7 +73,7 @@ export class CreateShootingAttributesUseCase implements ICreateShootingAttribute
       midRangeShot,
       threePointShot,
       freeThrow,
-      pUShootingAttributesReferencedPlayerUserId.playerUserIdAsString,
+      pUShootingAttributesPlayerUserId.value,
       pUShootingAttributesCreatedAt.value,
       pUShootingAttributesUpdatedAt.value,
     );

@@ -1,12 +1,12 @@
 import {
-  BusinessDateService,
-  CourtValidationService,
+  BusinessDateDomainService,
+  CourtValidationDomainService,
   ICourtRepository,
-  IdUniquenessValidatorService,
-  IIdUniquenessValidatorServiceRepository,
+  IdUniquenessValidatorDomainService,
+  IIdUniquenessValidatorDomainServiceRepository,
   ILeagueRepository,
   ILeagueSeasonRepository,
-  LeagueValidationService,
+  LeagueValidationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -41,19 +41,19 @@ export class AwilixLeagueSeasonDependencyInjector extends AwilixDependencyInject
       leagueSeasonServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressLeagueSeasonServerErrorHandler.create).singleton(),
       createLeagueSeasonPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreateLeagueSeasonPOSTController.create).singleton(),
       createLeagueSeasonUseCase: AwilixDependencyInjector.registerAsFunction<ICreateLeagueSeasonUseCase>((cradle: ILeagueSeasonContainer) => CreateLeagueSeasonUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.leagueSeasonRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.leagueSeasonRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        courtValidationService: cradle.courtValidationService,
-        leagueValidationService: cradle.leagueValidationService,
+        businessDateDomainService: cradle.businessDateDomainService,
+        courtValidationDomainService: cradle.courtValidationDomainService,
+        leagueValidationDomainService: cradle.leagueValidationDomainService,
         leagueSeasonRepository: cradle.leagueSeasonRepository,
       })),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       leagueSeasonRepository: AwilixDependencyInjector.registerAsFunction<ILeagueSeasonRepository>(MongooseLeagueSeasonRepository.create).singleton(),
-      courtValidationService: AwilixDependencyInjector.registerAsFunction<CourtValidationService>(CourtValidationService.create).singleton(),
+      courtValidationDomainService: AwilixDependencyInjector.registerAsFunction<CourtValidationDomainService>(CourtValidationDomainService.create).singleton(),
       courtRepository: AwilixDependencyInjector.registerAsFunction<ICourtRepository>(MongooseCourtRepository.create).singleton(),
-      leagueValidationService: AwilixDependencyInjector.registerAsFunction<LeagueValidationService>(LeagueValidationService.create).singleton(),
+      leagueValidationDomainService: AwilixDependencyInjector.registerAsFunction<LeagueValidationDomainService>(LeagueValidationDomainService.create).singleton(),
       leagueRepository: AwilixDependencyInjector.registerAsFunction<ILeagueRepository>(MongooseLeagueRepository.create).singleton(),
     });
   }

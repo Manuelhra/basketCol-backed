@@ -1,11 +1,11 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IPlayerUserCareerStatsPrimitives,
   IPlayerUserCareerStatsRepository,
   PlayerUserCareerStats,
-  PlayerUserValidationService,
+  PlayerUserValidationDomainService,
   PUCStatsCreatedAt,
   PUCStatsId,
   PUCStatsPlayerUserId,
@@ -18,9 +18,9 @@ import { IUserContext } from '../../../../../shared/application/context/ports/IU
 import { UnauthorizedAccessError } from '../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
-  readonly playerUserValidationService: PlayerUserValidationService;
-  readonly businessDateService: BusinessDateService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly playerUserValidationDomainService: PlayerUserValidationDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
   readonly playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
 };
 
@@ -62,11 +62,11 @@ export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCare
     const pUCStatsId: PUCStatsId = PUCStatsId.create(id);
     const pUCStatsPlayerUserId: PUCStatsPlayerUserId = PUCStatsPlayerUserId.create(playerUserId);
 
-    await this.dependencies.idUniquenessValidatorService.ensureUniqueId<PUCStatsId, IPlayerUserCareerStatsPrimitives, PlayerUserCareerStats>(pUCStatsId);
-    await this.dependencies.playerUserValidationService.ensurePlayerUserExists(pUCStatsPlayerUserId.value);
+    await this.dependencies.idUniquenessValidatorDomainService.ensureUniqueId<PUCStatsId, IPlayerUserCareerStatsPrimitives, PlayerUserCareerStats>(pUCStatsId);
+    await this.dependencies.playerUserValidationDomainService.ensurePlayerUserExists(pUCStatsPlayerUserId);
 
-    const pUCStatsCreatedAt: PUCStatsCreatedAt = this.dependencies.businessDateService.getCurrentDate();
-    const pUCStatsUpdatedAt: PUCStatsUpdatedAt = this.dependencies.businessDateService.getCurrentDate();
+    const pUCStatsCreatedAt: PUCStatsCreatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
+    const pUCStatsUpdatedAt: PUCStatsUpdatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
 
     const playerUserCareerStats: PlayerUserCareerStats = PlayerUserCareerStats.create(
       pUCStatsId.value,
@@ -88,7 +88,7 @@ export class CreatePlayerUserCareerStatsUseCase implements ICreatePlayerUserCare
       totalFreeThrowsMade,
       totalFieldGoalsAttempted,
       totalFieldGoalsMade,
-      pUCStatsPlayerUserId.playerUserIdAsString,
+      pUCStatsPlayerUserId.value,
       pUCStatsCreatedAt.value,
       pUCStatsUpdatedAt.value,
     );

@@ -1,14 +1,14 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IPlayerUserFinishingAttributesPrimitives,
   IPlayerUserFinishingAttributesRepository,
   PlayerUserFinishingAttributes,
-  PlayerUserValidationService,
+  PlayerUserValidationDomainService,
   PUFACreatedAt,
   PUFAId,
-  PUFAReferencedPlayerUserId,
+  PUFAPlayerUserId,
   PUFAUpdatedAt,
 } from '@basketcol/domain';
 
@@ -18,25 +18,25 @@ import { IUserContext } from '../../../../../../shared/application/context/ports
 import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  playerUserValidationService: PlayerUserValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   playerUserFinishingAttributesRepository: IPlayerUserFinishingAttributesRepository;
 };
 
 export class CreateFinishingAttributesUseCase implements ICreateFinishingAttributesUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #playerUserFinishingAttributesRepository: IPlayerUserFinishingAttributesRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#playerUserFinishingAttributesRepository = dependencies.playerUserFinishingAttributesRepository;
   }
 
@@ -59,13 +59,13 @@ export class CreateFinishingAttributesUseCase implements ICreateFinishingAttribu
     } = dto;
 
     const pUFAId: PUFAId = PUFAId.create(id);
-    const pUFAReferencedPlayerUserId: PUFAReferencedPlayerUserId = PUFAReferencedPlayerUserId.create(playerUserId);
+    const pUFAPlayerUserId: PUFAPlayerUserId = PUFAPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUFAId, IPlayerUserFinishingAttributesPrimitives, PlayerUserFinishingAttributes>(pUFAId);
-    await this.#playerUserValidationService.ensurePlayerUserExists(pUFAReferencedPlayerUserId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<PUFAId, IPlayerUserFinishingAttributesPrimitives, PlayerUserFinishingAttributes>(pUFAId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(pUFAPlayerUserId);
 
-    const pUFACreatedAt: PUFACreatedAt = this.#businessDateService.getCurrentDate();
-    const pUFAUpdatedAt: PUFAUpdatedAt = this.#businessDateService.getCurrentDate();
+    const pUFACreatedAt: PUFACreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const pUFAUpdatedAt: PUFAUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const playerUserFinishingAttributes: PlayerUserFinishingAttributes = PlayerUserFinishingAttributes.create(
       pUFAId.value,
@@ -73,7 +73,7 @@ export class CreateFinishingAttributesUseCase implements ICreateFinishingAttribu
       drivingDunk,
       standingDunk,
       postControl,
-      pUFAReferencedPlayerUserId.playerUserIdAsString,
+      pUFAPlayerUserId.value,
       pUFACreatedAt.value,
       pUFAUpdatedAt.value,
     );

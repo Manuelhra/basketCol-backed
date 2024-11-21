@@ -6,28 +6,28 @@ import { ExpressBaseController } from '../../../../../../shared/infrastructure/s
 import { MulterError } from '../../../../../../shared/infrastructure/exceptions/MulterError';
 import { CreateCourtDTO } from '../../../../application/dtos/CreateCourtDTO';
 import { ImageFile } from '../../../../../../shared/application/file-upload/images/ports/IImageUploader';
-import { IFacilityMainImageUploader } from '../../../../../shared/application/file-upload/images/ports/IFacilityMainImageUploader';
-import { IFacilityBatchImageUploader } from '../../../../../shared/application/file-upload/images/ports/IFacilityBatchImageUploader';
 import { ICreateCourtUseCase } from '../../../../application/use-cases/ports/ICreateCourtUseCase';
+import { IMainImageUploader } from '../../../../../../shared/application/file-upload/images/ports/IMainImageUploader';
+import { IBatchGalleryImagesUploader } from '../../../../../../shared/application/file-upload/images/ports/IBatchGalleryImagesUploader';
 
 type Dependencies = {
-  readonly facilityMainImageUploader: IFacilityMainImageUploader;
-  readonly facilityBatchImageUploader: IFacilityBatchImageUploader;
+  readonly mainImageUploader: IMainImageUploader;
+  readonly batchGalleryImagesUploader: IBatchGalleryImagesUploader;
   readonly createCourtUseCase: ICreateCourtUseCase;
 };
 
 export class ExpressCreateCourtPOSTController implements ExpressBaseController {
   readonly #imageUploadMiddleware: multer.Multer;
 
-  readonly #facilityMainImageUploader: IFacilityMainImageUploader;
+  readonly #mainImageUploader: IMainImageUploader;
 
-  readonly #facilityBatchImageUploader: IFacilityBatchImageUploader;
+  readonly #batchGalleryImagesUploader: IBatchGalleryImagesUploader;
 
   readonly #createCourtUseCase: ICreateCourtUseCase;
 
   private constructor(dependencies: Dependencies) {
-    this.#facilityMainImageUploader = dependencies.facilityMainImageUploader;
-    this.#facilityBatchImageUploader = dependencies.facilityBatchImageUploader;
+    this.#mainImageUploader = dependencies.mainImageUploader;
+    this.#batchGalleryImagesUploader = dependencies.batchGalleryImagesUploader;
     this.#createCourtUseCase = dependencies.createCourtUseCase;
     this.#imageUploadMiddleware = multer({
       storage: multer.memoryStorage(),
@@ -79,7 +79,7 @@ export class ExpressCreateCourtPOSTController implements ExpressBaseController {
 
   async #uploadMainImage(file: Express.Multer.File) {
     const imageFile: ImageFile = this.#createImageFile(file);
-    const mainImage = await this.#facilityMainImageUploader.uploadMainImage(imageFile);
+    const mainImage = await this.#mainImageUploader.uploadMainImage(imageFile);
     const formattedDate = DateValueObject.getCurrentDate().dateAsString;
 
     return {
@@ -97,7 +97,7 @@ export class ExpressCreateCourtPOSTController implements ExpressBaseController {
     if (files.length === 0) return [];
 
     const galleryImages = files.map(this.#createImageFile);
-    const gallery = await this.#facilityBatchImageUploader.uploadGalleryImages(galleryImages);
+    const gallery = await this.#batchGalleryImagesUploader.uploadGalleryImages(galleryImages);
     const formattedDate = DateValueObject.getCurrentDate().dateAsString;
 
     return gallery.successful.map((image, idx) => ({

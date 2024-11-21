@@ -1,13 +1,12 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   ILeagueSeasonFixturePrimitives,
   ILeagueSeasonFixtureRepository,
   LeagueSeasonFixture,
-  LeagueSeasonFixtureDateValidatorService,
-  LeagueSeasonFixtureValidationService,
-  LeagueSeasonValidationService,
+  LeagueSeasonFixtureValidationDomainService,
+  LeagueSeasonValidationDomainService,
   LSFixtureCreatedAt,
   LSFixtureDate,
   LSFixtureId,
@@ -21,34 +20,30 @@ import { IUserContext } from '../../../../../../shared/application/context/ports
 import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
-  readonly leagueSeasonValidationService: LeagueSeasonValidationService;
-  readonly leagueSeasonFixtureValidationService: LeagueSeasonFixtureValidationService;
-  readonly businessDateService: BusinessDateService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly leagueSeasonValidationDomainService: LeagueSeasonValidationDomainService;
+  readonly leagueSeasonFixtureValidationDomainService: LeagueSeasonFixtureValidationDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
   readonly leagueSeasonFixtureRepository: ILeagueSeasonFixtureRepository;
-  readonly leagueSeasonFixtureDateValidatorService: LeagueSeasonFixtureDateValidatorService;
 };
 
 export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixtureUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #leagueSeasonValidationService: LeagueSeasonValidationService;
+  readonly #leagueSeasonValidationDomainService: LeagueSeasonValidationDomainService;
 
-  readonly #leagueSeasonFixtureValidationService: LeagueSeasonFixtureValidationService;
+  readonly #leagueSeasonFixtureValidationDomainService: LeagueSeasonFixtureValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #leagueSeasonFixtureRepository: ILeagueSeasonFixtureRepository;
 
-  readonly #leagueSeasonFixtureDateValidatorService: LeagueSeasonFixtureDateValidatorService;
-
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#leagueSeasonValidationService = dependencies.leagueSeasonValidationService;
-    this.#leagueSeasonFixtureValidationService = dependencies.leagueSeasonFixtureValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#leagueSeasonValidationDomainService = dependencies.leagueSeasonValidationDomainService;
+    this.#leagueSeasonFixtureValidationDomainService = dependencies.leagueSeasonFixtureValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#leagueSeasonFixtureRepository = dependencies.leagueSeasonFixtureRepository;
-    this.#leagueSeasonFixtureDateValidatorService = dependencies.leagueSeasonFixtureDateValidatorService;
   }
 
   public static create(dependencies: Dependencies): CreateLeagueSeasonFixtureUseCase {
@@ -71,19 +66,19 @@ export class CreateLeagueSeasonFixtureUseCase implements ICreateLeagueSeasonFixt
     const lSFixtureDate: LSFixtureDate = LSFixtureDate.create(date);
     const lSFixtureLeagueSeasonId: LSFixtureLeagueSeasonId = LSFixtureLeagueSeasonId.create(leagueSeasonId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LSFixtureId, ILeagueSeasonFixturePrimitives, LeagueSeasonFixture>(lSFixtureId);
-    await this.#leagueSeasonValidationService.ensureLeagueSeasonExists(lSFixtureLeagueSeasonId.value);
-    await this.#leagueSeasonFixtureValidationService.ensureNoFixtureExistsForDateAndLeagueSeason(lSFixtureLeagueSeasonId, lSFixtureDate);
-    await this.#leagueSeasonFixtureDateValidatorService.ensureDateWithinLeagueSeason(lSFixtureLeagueSeasonId, lSFixtureDate);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<LSFixtureId, ILeagueSeasonFixturePrimitives, LeagueSeasonFixture>(lSFixtureId);
+    await this.#leagueSeasonValidationDomainService.ensureLeagueSeasonExists(lSFixtureLeagueSeasonId);
+    await this.#leagueSeasonFixtureValidationDomainService.ensureNoFixtureExistsForDateAndLeagueSeason(lSFixtureLeagueSeasonId, lSFixtureDate);
+    await this.#leagueSeasonFixtureValidationDomainService.ensureDateWithinLeagueSeason(lSFixtureLeagueSeasonId, lSFixtureDate);
 
-    const lSFixtureCreatedAt: LSFixtureCreatedAt = this.#businessDateService.getCurrentDate();
-    const lSFixtureUpdatedAt: LSFixtureUpdatedAt = this.#businessDateService.getCurrentDate();
+    const lSFixtureCreatedAt: LSFixtureCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const lSFixtureUpdatedAt: LSFixtureUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const leagueSeasonFixture: LeagueSeasonFixture = LeagueSeasonFixture.create(
       lSFixtureId.value,
       lSFixtureDate.dateAsString,
       name,
-      lSFixtureLeagueSeasonId.leagueSeasonIdAsString,
+      lSFixtureLeagueSeasonId.value,
       lSFixtureCreatedAt.value,
       lSFixtureUpdatedAt.value,
     );

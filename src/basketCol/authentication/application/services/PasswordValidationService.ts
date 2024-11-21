@@ -1,14 +1,14 @@
-import { IPasswordHashingService, UserPassword } from '@basketcol/domain';
+import { IPasswordHashingDomainService, UserPassword } from '@basketcol/domain';
 
 type Dependencies = {
-  passwordHashingService: IPasswordHashingService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
 };
 
 export class PasswordValidationService {
-  readonly #passwordHashingService: IPasswordHashingService;
+  readonly #passwordHashingDomainService: IPasswordHashingDomainService;
 
   private constructor(dependencies: Dependencies) {
-    this.#passwordHashingService = dependencies.passwordHashingService;
+    this.#passwordHashingDomainService = dependencies.passwordHashingDomainService;
   }
 
   public static create(dependencies: Dependencies): PasswordValidationService {
@@ -16,6 +16,6 @@ export class PasswordValidationService {
   }
 
   public validate<T extends UserPassword>(plainTextPassword: T, hashedPassword: T): Promise<boolean> {
-    return this.#passwordHashingService.verifyPassword(plainTextPassword.value, hashedPassword.value);
+    return this.#passwordHashingDomainService.verifyPassword(plainTextPassword.value, hashedPassword.value);
   }
 }

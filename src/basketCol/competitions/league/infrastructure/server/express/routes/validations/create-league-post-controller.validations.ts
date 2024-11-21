@@ -31,6 +31,12 @@ export const createLeaguePOSTControllerValidations: ValidationChain[] = [
     .isString()
     .withMessage('Complete description must be a string'),
 
+  body('gender')
+    .notEmpty()
+    .withMessage('Gender is required')
+    .isString()
+    .withMessage('Gender must be a string'),
+
   body('rules')
     .notEmpty()
     .withMessage('Rules are required')

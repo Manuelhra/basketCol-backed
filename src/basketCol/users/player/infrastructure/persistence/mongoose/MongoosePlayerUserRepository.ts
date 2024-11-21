@@ -7,7 +7,7 @@ import {
   PlayerUserEmail,
   PlayerUserId,
   PlayerUserNickname,
-  SecurePasswordCreationService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 import { Model } from 'mongoose';
 
@@ -17,13 +17,13 @@ import { MongooseClientFactory } from '../../../../../shared/infrastructure/pers
 import { mongoosePlayerUserSchema } from './mongoose-player-user.schema';
 
 type Dependencies = {
-  readonly securePasswordCreationService: SecurePasswordCreationService;
+  readonly securePasswordCreationDomainService: SecurePasswordCreationDomainService;
 };
 
 export class MongoosePlayerUserRepository
   extends MongooseRepository<IPlayerUserPrimitives, PlayerUser>
   implements IPlayerUserRepository {
-  readonly #securePasswordCreationService: SecurePasswordCreationService;
+  readonly #securePasswordCreationDomainService: SecurePasswordCreationDomainService;
 
   protected collectionName(): string {
     return 'player_user';
@@ -35,7 +35,7 @@ export class MongoosePlayerUserRepository
       mongooseSchema: mongoosePlayerUserSchema,
     });
 
-    this.#securePasswordCreationService = dependencies.securePasswordCreationService;
+    this.#securePasswordCreationDomainService = dependencies.securePasswordCreationDomainService;
   }
 
   public static create(dependencies: Dependencies): MongoosePlayerUserRepository {
@@ -110,7 +110,7 @@ export class MongoosePlayerUserRepository
 
   protected override async persist(aggregate: PlayerUser): Promise<void> {
     const MyModel: Model<{ [key: string]: any }> = await this.model();
-    const userHashedPassword = await this.#securePasswordCreationService.createFromPlainText(aggregate.password);
+    const userHashedPassword = await this.#securePasswordCreationDomainService.createFromPlainText(aggregate.password);
 
     const {
       id,
@@ -129,6 +129,7 @@ export class MongoosePlayerUserRepository
       document.nickname.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       document.password.valueOf(),
+      document.gender.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       {

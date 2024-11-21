@@ -1,11 +1,11 @@
 import {
-  BusinessDateService,
-  IdUniquenessValidatorService,
+  BusinessDateDomainService,
+  IdUniquenessValidatorDomainService,
   IPlayerUserLeagueSeasonFixtureGameBoxScorePrimitives,
   IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository,
-  LeagueSeasonFixtureGameValidationService,
+  LeagueSeasonFixtureGameValidationDomainService,
   PlayerUserLeagueSeasonFixtureGameBoxScore,
-  PlayerUserValidationService,
+  PlayerUserValidationDomainService,
   PLSFGBoxScoreCreatedAt,
   PLSFGBoxScoreFixtureGameId,
   PLSFGBoxScoreId,
@@ -17,29 +17,29 @@ import { CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO } from '../dtos/Crea
 import { ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase } from './ports/ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  leagueSeasonFixtureGameValidationService: LeagueSeasonFixtureGameValidationService;
-  playerUserValidationService: PlayerUserValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  leagueSeasonFixtureGameValidationDomainService: LeagueSeasonFixtureGameValidationDomainService;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   playerUserLeagueSeasonFixtureGameBoxScoreRepository: IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository;
 };
 
 export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #leagueSeasonFixtureGameValidationService: LeagueSeasonFixtureGameValidationService;
+  readonly #leagueSeasonFixtureGameValidationDomainService: LeagueSeasonFixtureGameValidationDomainService;
 
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #playerUserLeagueSeasonFixtureGameBoxScoreRepository: IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#leagueSeasonFixtureGameValidationService = dependencies.leagueSeasonFixtureGameValidationService;
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#leagueSeasonFixtureGameValidationDomainService = dependencies.leagueSeasonFixtureGameValidationDomainService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#playerUserLeagueSeasonFixtureGameBoxScoreRepository = dependencies.playerUserLeagueSeasonFixtureGameBoxScoreRepository;
   }
 
@@ -72,12 +72,12 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
     const pLSFGBoxScoreFixtureGameId: PLSFGBoxScoreFixtureGameId = PLSFGBoxScoreFixtureGameId.create(fixtureGameId);
     const pLSFGBoxScorePlayerUserId: PLSFGBoxScorePlayerUserId = PLSFGBoxScorePlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PLSFGBoxScoreId, IPlayerUserLeagueSeasonFixtureGameBoxScorePrimitives, PlayerUserLeagueSeasonFixtureGameBoxScore>(pLSFGBoxScoreId);
-    await this.#leagueSeasonFixtureGameValidationService.ensureLeagueSeasonFixtureGameExists(pLSFGBoxScoreFixtureGameId.value);
-    await this.#playerUserValidationService.ensurePlayerUserExists(pLSFGBoxScorePlayerUserId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<PLSFGBoxScoreId, IPlayerUserLeagueSeasonFixtureGameBoxScorePrimitives, PlayerUserLeagueSeasonFixtureGameBoxScore>(pLSFGBoxScoreId);
+    await this.#leagueSeasonFixtureGameValidationDomainService.ensureLeagueSeasonFixtureGameExists(pLSFGBoxScoreFixtureGameId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(pLSFGBoxScorePlayerUserId);
 
-    const pLSFGBoxScoreCreatedAt: PLSFGBoxScoreCreatedAt = this.#businessDateService.getCurrentDate();
-    const pLSFGBoxScoreUpdatedAt: PLSFGBoxScoreUpdatedAt = this.#businessDateService.getCurrentDate();
+    const pLSFGBoxScoreCreatedAt: PLSFGBoxScoreCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const pLSFGBoxScoreUpdatedAt: PLSFGBoxScoreUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const playerUserLeagueSeasonFixtureGameBoxScore: PlayerUserLeagueSeasonFixtureGameBoxScore = PlayerUserLeagueSeasonFixtureGameBoxScore.create(
       pLSFGBoxScoreId.value,
@@ -95,8 +95,8 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
       freeThrowsMade,
       fieldGoalsAttempted,
       fieldGoalsMade,
-      pLSFGBoxScoreFixtureGameId.fixtureGameIdAsString,
-      pLSFGBoxScorePlayerUserId.playerUserIdAsString,
+      pLSFGBoxScoreFixtureGameId.value,
+      pLSFGBoxScorePlayerUserId.value,
       pLSFGBoxScoreCreatedAt.value,
       pLSFGBoxScoreUpdatedAt.value,
     );

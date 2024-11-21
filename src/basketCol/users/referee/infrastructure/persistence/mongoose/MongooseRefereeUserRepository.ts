@@ -5,7 +5,7 @@ import {
   RefereeUser,
   RefereeUserEmail,
   RefereeUserId,
-  SecurePasswordCreationService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 import { Model } from 'mongoose';
 
@@ -15,13 +15,13 @@ import { MongooseClientFactory } from '../../../../../shared/infrastructure/pers
 import { mongooseRefereeUserSchema } from './mongoose-referee-user.schema';
 
 type Dependencies = {
-  readonly securePasswordCreationService: SecurePasswordCreationService;
+  readonly securePasswordCreationDomainService: SecurePasswordCreationDomainService;
 };
 
 export class MongooseRefereeUserRepository
   extends MongooseRepository<IRefereeUserPrimitives, RefereeUser>
   implements IRefereeUserRepository {
-  readonly #securePasswordCreationService: SecurePasswordCreationService;
+  readonly #securePasswordCreationDomainService: SecurePasswordCreationDomainService;
 
   protected collectionName(): string {
     return 'referee-user';
@@ -33,7 +33,7 @@ export class MongooseRefereeUserRepository
       mongooseSchema: mongooseRefereeUserSchema,
     });
 
-    this.#securePasswordCreationService = dependencies.securePasswordCreationService;
+    this.#securePasswordCreationDomainService = dependencies.securePasswordCreationDomainService;
   }
 
   public static create(dependencies: Dependencies): MongooseRefereeUserRepository {
@@ -42,50 +42,14 @@ export class MongooseRefereeUserRepository
 
   public async findById(refereeUserId: RefereeUserId): Promise<Nullable<RefereeUser>> {
     const MyModel = await this.model();
-
     const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findOne<IMongooseRefereeUserDocument>({ id: refereeUserId.value });
-
-    return document === null ? null : RefereeUser.fromPrimitives(
-      document.id.valueOf(),
-      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
-      document.biography.valueOf(),
-      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      document.password.valueOf(),
-      document.accountStatus.valueOf(),
-      document.subscriptionType.valueOf(),
-      {
-        url: document.profileImage.url.valueOf(),
-        uploadedAt: document.profileImage.uploadedAt.valueOf(),
-        alt: document.profileImage.alt.valueOf(),
-        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
-      },
-      document.createdAt.valueOf(),
-      document.updatedAt.valueOf(),
-    );
+    return document === null ? null : this.#mapDocumentToRefereeUser(document);
   }
 
   public async findByEmail(refereeUserEmail: RefereeUserEmail): Promise<Nullable<RefereeUser>> {
     const MyModel = await this.model();
-
     const document: Nullable<IMongooseRefereeUserDocument> = await MyModel.findOne<IMongooseRefereeUserDocument>({ 'email.value': refereeUserEmail.value.value });
-
-    return document === null ? null : RefereeUser.fromPrimitives(
-      document.id.valueOf(),
-      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
-      document.biography.valueOf(),
-      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
-      document.password.valueOf(),
-      document.accountStatus.valueOf(),
-      document.subscriptionType.valueOf(),
-      {
-        url: document.profileImage.url.valueOf(),
-        uploadedAt: document.profileImage.uploadedAt.valueOf(),
-        alt: document.profileImage.alt.valueOf(),
-        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
-      },
-      document.createdAt.valueOf(),
-      document.updatedAt.valueOf(),
-    );
+    return document === null ? null : this.#mapDocumentToRefereeUser(document);
   }
 
   public save(refereeUser: RefereeUser): Promise<void> {
@@ -94,7 +58,7 @@ export class MongooseRefereeUserRepository
 
   protected override async persist(aggregate: RefereeUser): Promise<void> {
     const MyModel:Model<{ [key: string]: any }> = await this.model();
-    const userHashedPassword = await this.#securePasswordCreationService.createFromPlainText(aggregate.password);
+    const userHashedPassword = await this.#securePasswordCreationDomainService.createFromPlainText(aggregate.password);
 
     const {
       id,
@@ -103,5 +67,26 @@ export class MongooseRefereeUserRepository
     } = aggregate.toPrimitives;
 
     await MyModel.updateOne({ id }, { password: userHashedPassword.value, ...props }, { upsert: true });
+  }
+
+  #mapDocumentToRefereeUser(document: IMongooseRefereeUserDocument): RefereeUser {
+    return RefereeUser.fromPrimitives(
+      document.id.valueOf(),
+      { firstName: document.name.firstName.valueOf(), lastName: document.name.lastName.valueOf() },
+      document.biography.valueOf(),
+      { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
+      document.password.valueOf(),
+      document.gender.valueOf(),
+      document.accountStatus.valueOf(),
+      document.subscriptionType.valueOf(),
+      {
+        url: document.profileImage.url.valueOf(),
+        uploadedAt: document.profileImage.uploadedAt.valueOf(),
+        alt: document.profileImage.alt.valueOf(),
+        dimensions: { width: document.profileImage.dimensions.width.valueOf(), height: document.profileImage.dimensions.height.valueOf() },
+      },
+      document.createdAt.valueOf(),
+      document.updatedAt.valueOf(),
+    );
   }
 }

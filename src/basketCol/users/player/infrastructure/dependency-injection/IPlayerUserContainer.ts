@@ -1,11 +1,11 @@
 import {
-  BusinessDateService,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IPlayerUserCareerStatsRepository,
   IPlayerUserRepository,
-  PlayerUserNicknameValidationService,
-  SecurePasswordCreationService,
+  PlayerUserValidationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -25,17 +25,17 @@ export interface IPlayerUserContainer {
   createPlayerUserPOSTController: IController;
   createPlayerUserUseCase: ICreatePlayerUserUseCase;
   playerUserRepository: IPlayerUserRepository;
-  playerUserNicknameValidationService: PlayerUserNicknameValidationService;
-  businessDateService: BusinessDateService;
+  businessDateDomainService: BusinessDateDomainService;
   playerUserRouteManager: IRouteManager;
   fileSystem: IFileSystem;
-  securePasswordCreationService: SecurePasswordCreationService;
-  passwordHashingService: IPasswordHashingService;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   profileImageUploader: IProfileImageUploader;
   searchAllPlayerUsersGETController: IController;
   searchAllPlayerUsersUseCase: ISearchAllPlayerUsersUseCase;
   createPlayerUserCareerStatsUseCase: ICreatePlayerUserCareerStatsUseCase;
   playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
   uuidGenerator: IUuidGenerator;
+  playerUserValidationDomainService: PlayerUserValidationDomainService
 }

@@ -1,39 +1,39 @@
 import {
-  BusinessDateService,
-  HostUserValidationService,
+  BusinessDateDomainService,
+  HostUserValidationDomainService,
   IGymRepository,
   IHostUserRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
-  SecurePasswordCreationService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IController } from '../../../../shared/infrastructure/server/controllers/IController';
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
-import { IFacilityBatchImageUploader } from '../../../shared/application/file-upload/images/ports/IFacilityBatchImageUploader';
-import { IFacilityMainImageUploader } from '../../../shared/application/file-upload/images/ports/IFacilityMainImageUploader';
 import { ICreateGymUseCase } from '../../application/use-cases/ports/ICreateGymUseCase';
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
 import { ISearchAllGymsUseCase } from '../../application/use-cases/ports/ISearchAllGymsUseCase';
+import { IBatchGalleryImagesUploader } from '../../../../shared/application/file-upload/images/ports/IBatchGalleryImagesUploader';
+import { IMainImageUploader } from '../../../../shared/application/file-upload/images/ports/IMainImageUploader';
 
 export interface IGymContainer {
   httpResponseHandler: IHttpResponseHandler;
   gymServerErrorHandler: IServerErrorHandler;
   createGymPOSTController: IController;
-  facilityMainImageUploader: IFacilityMainImageUploader;
-  facilityBatchImageUploader: IFacilityBatchImageUploader;
+  mainImageUploader: IMainImageUploader;
+  batchGalleryImagesUploader: IBatchGalleryImagesUploader;
   createGymUseCase: ICreateGymUseCase;
-  hostUserValidationService: HostUserValidationService;
+  hostUserValidationDomainService: HostUserValidationDomainService;
   hostUserRepository: IHostUserRepository;
-  businessDateService: BusinessDateService;
+  businessDateDomainService: BusinessDateDomainService;
   gymRepository: IGymRepository;
   gymRouteManager: IRouteManager;
   fileSystem: IFileSystem;
-  securePasswordCreationService: SecurePasswordCreationService;
-  passwordHashingService: IPasswordHashingService;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   searchAllGymsGETController: IController;
   searchAllGymsUseCase: ISearchAllGymsUseCase;
 }

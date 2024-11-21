@@ -1,11 +1,11 @@
 import {
-  IdUniquenessValidatorService,
-  PlayerUserValidationService,
-  BusinessDateService,
+  IdUniquenessValidatorDomainService,
+  PlayerUserValidationDomainService,
+  BusinessDateDomainService,
   IPlayerUserReboundingAttributesRepository,
   PlayerUserReboundingAttributes,
   PURAId,
-  PURAReferencedPlayerUserId,
+  PURAPlayerUserId,
   IPlayerUserReboundingAttributesPrimitives,
   PURACreatedAt,
   PURAUpdatedAt,
@@ -18,25 +18,25 @@ import { IUserContext } from '../../../../../../shared/application/context/ports
 import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  playerUserValidationService: PlayerUserValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   playerUserReboundingAttributesRepository: IPlayerUserReboundingAttributesRepository;
 };
 
 export class CreateReboundingAttributesUseCase implements ICreateReboundingAttributesUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #playerUserReboundingAttributesRepository: IPlayerUserReboundingAttributesRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#playerUserReboundingAttributesRepository = dependencies.playerUserReboundingAttributesRepository;
   }
 
@@ -57,19 +57,19 @@ export class CreateReboundingAttributesUseCase implements ICreateReboundingAttri
     } = dto;
 
     const playerUserReboundingAttributesId: PURAId = PURAId.create(id);
-    const pURAReferencedPlayerUserId: PURAReferencedPlayerUserId = PURAReferencedPlayerUserId.create(playerUserId);
+    const pURAPlayerUserId: PURAPlayerUserId = PURAPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PURAId, IPlayerUserReboundingAttributesPrimitives, PlayerUserReboundingAttributes>(playerUserReboundingAttributesId);
-    await this.#playerUserValidationService.ensurePlayerUserExists(pURAReferencedPlayerUserId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<PURAId, IPlayerUserReboundingAttributesPrimitives, PlayerUserReboundingAttributes>(playerUserReboundingAttributesId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(pURAPlayerUserId);
 
-    const pURACreatedAt: PURACreatedAt = this.#businessDateService.getCurrentDate();
-    const pURAUpdatedAt: PURAUpdatedAt = this.#businessDateService.getCurrentDate();
+    const pURACreatedAt: PURACreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const pURAUpdatedAt: PURAUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const playerUserReboundingAttributes: PlayerUserReboundingAttributes = PlayerUserReboundingAttributes.create(
       playerUserReboundingAttributesId.value,
       offensiveRebound,
       defensiveRebound,
-      pURAReferencedPlayerUserId.playerUserIdAsString,
+      pURAPlayerUserId.value,
       pURACreatedAt.value,
       pURAUpdatedAt.value,
     );

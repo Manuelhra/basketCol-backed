@@ -4,7 +4,7 @@ import {
   Nullable,
   PlayerUserFinishingAttributes,
   PUFAId,
-  PUFAReferencedPlayerUserId,
+  PUFAPlayerUserId,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -47,10 +47,10 @@ export class MongoosePlayerUserFinishingAttributesRepository
     );
   }
 
-  public async findByPlayerUserId(pUFAReferencedPlayerUserId: PUFAReferencedPlayerUserId): Promise<Nullable<PlayerUserFinishingAttributes>> {
+  public async findByPlayerUserId(pUFAPlayerUserId: PUFAPlayerUserId): Promise<Nullable<PlayerUserFinishingAttributes>> {
     const MyModel = await this.model();
 
-    const document: Nullable<IMongoosePlayerUserFinishingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserFinishingAttributesDocument>({ playerUserId: pUFAReferencedPlayerUserId.playerUserIdAsString });
+    const document: Nullable<IMongoosePlayerUserFinishingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserFinishingAttributesDocument>({ playerUserId: pUFAPlayerUserId.value });
 
     return document === null ? null : PlayerUserFinishingAttributes.fromPrimitives(
       document.id.valueOf(),

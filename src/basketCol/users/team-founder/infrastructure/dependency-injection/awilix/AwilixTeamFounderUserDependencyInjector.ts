@@ -1,14 +1,14 @@
 import {
-  BusinessDateService,
-  EmailUniquenessValidatorService,
-  IdUniquenessValidatorService,
-  IEmailUniquenessValidatorServiceRepository,
-  IIdUniquenessValidatorServiceRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  EmailUniquenessValidatorDomainService,
+  IdUniquenessValidatorDomainService,
+  IEmailUniquenessValidatorDomainServiceRepository,
+  IIdUniquenessValidatorDomainServiceRepository,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   ITeamFounderUserRepository,
-  PasswordValueObjectCreationService,
-  SecurePasswordCreationService,
+  PasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -44,20 +44,20 @@ export class AwilixTeamFounderUserDependencyInjector extends AwilixDependencyInj
       teamFounderUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressTeamFounderUserServerErrorHandler.create).singleton(),
       createTeamFounderUserPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreateTeamFounderUserPOSTController.create).singleton(),
       createTeamFounderUserUseCase: AwilixDependencyInjector.registerAsFunction<ICreateTeamFounderUserUseCase>((cradle: ITeamFounderUserContainer) => CreateTeamFounderUserUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.teamFounderUserRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.teamFounderUserRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        emailUniquenessValidatorService: EmailUniquenessValidatorService.create({
-          emailUniquenessValidatorServiceRepository: cradle.teamFounderUserRepository as IEmailUniquenessValidatorServiceRepository,
+        businessDateDomainService: cradle.businessDateDomainService,
+        emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService.create({
+          emailUniquenessValidatorDomainServiceRepository: cradle.teamFounderUserRepository as IEmailUniquenessValidatorDomainServiceRepository,
         }),
         teamFounderUserRepository: cradle.teamFounderUserRepository,
       })),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       teamFounderUserRepository: AwilixDependencyInjector.registerAsFunction<ITeamFounderUserRepository>(MongooseTeamFounderUserRepository.create).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
+      passwordHashingDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingDomainService>(BcryptPasswordHashingService.create).singleton(),
+      passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
+      securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
       profileImageUploader: AwilixDependencyInjector.registerAsFunction<IProfileImageUploader>(() => S3ProfileImageUploader.create({
         folderPath: 'teamFounder',
       })).singleton(),

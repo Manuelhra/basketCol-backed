@@ -1,8 +1,8 @@
 import {
-  BusinessDateService,
-  EmailUniquenessValidatorService,
+  BusinessDateDomainService,
+  EmailUniquenessValidatorDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IPlayerUserPrimitives,
   IPlayerUserRepository,
   PlayerUser,
@@ -10,8 +10,8 @@ import {
   PlayerUserEmail,
   PlayerUserId,
   PlayerUserNickname,
-  PlayerUserNicknameValidationService,
   PlayerUserUpdatedAt,
+  PlayerUserValidationDomainService,
   UserAccountState,
   UserSubscriptionType,
 } from '@basketcol/domain';
@@ -25,11 +25,11 @@ import { CreatePlayerUserCareerStatsDTO } from '../../career-stats/application/d
 import { IUuidGenerator } from '../../../../shared/application/uuid/ports/IUuidGenerator';
 
 type Dependencies = {
-  readonly playerUserNicknameValidationService: PlayerUserNicknameValidationService;
-  readonly emailUniquenessValidatorService: EmailUniquenessValidatorService;
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly playerUserValidationDomainService: PlayerUserValidationDomainService;
+  readonly emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
   readonly playerUserRepository: IPlayerUserRepository;
-  readonly businessDateService: BusinessDateService;
+  readonly businessDateDomainService: BusinessDateDomainService;
   readonly createPlayerUserCareerStatsUseCase: ICreatePlayerUserCareerStatsUseCase;
   readonly uuidGenerator: IUuidGenerator;
 };
@@ -44,8 +44,8 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
   public async execute(dto: CreatePlayerUserDTO, userContext: IUserContext): Promise<void> {
     this.#validateUserAccess(userContext);
     const playerUser: PlayerUser = await this.#createPlayerUser(dto);
-    await this.#createPlayerUserCareerStats(playerUser.toPrimitives.id, userContext);
-    return this.dependencies.playerUserRepository.save(playerUser);
+    await this.#savePlayerUser(playerUser);
+    return this.#createPlayerUserCareerStats(playerUser.toPrimitives.id, userContext);
   }
 
   #validateUserAccess(userContext: IUserContext): void {
@@ -59,6 +59,7 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
       id,
       name,
       biography,
+      gender,
       nickname,
       email,
       password,
@@ -73,8 +74,8 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;
-    const playerUserCreatedAt: PlayerUserCreatedAt = this.dependencies.businessDateService.getCurrentDate();
-    const playerUserUpdatedAt: PlayerUserUpdatedAt = this.dependencies.businessDateService.getCurrentDate();
+    const playerUserCreatedAt: PlayerUserCreatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
+    const playerUserUpdatedAt: PlayerUserUpdatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
 
     return PlayerUser.create(
       playerUserId.value,
@@ -83,6 +84,7 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
       nickname,
       playerUserEmail.value,
       password,
+      gender,
       accountState,
       subscriptionType,
       profileImage,
@@ -91,14 +93,18 @@ export class CreatePlayerUserUseCase implements ICreatePlayerUserUseCase {
     );
   }
 
+  async #savePlayerUser(playerUser: PlayerUser): Promise<void> {
+    await this.dependencies.playerUserRepository.save(playerUser);
+  }
+
   async #validatePlayerUserCreation(
     playerUserId: PlayerUserId,
     playerUserNickname: PlayerUserNickname,
     playerUserEmail: PlayerUserEmail,
   ): Promise<void> {
-    await this.dependencies.idUniquenessValidatorService.ensureUniqueId<PlayerUserId, IPlayerUserPrimitives, PlayerUser>(playerUserId);
-    await this.dependencies.playerUserNicknameValidationService.ensureNicknameIsUnique(playerUserNickname);
-    await this.dependencies.emailUniquenessValidatorService.ensureUniqueEmail<PlayerUserEmail, IPlayerUserPrimitives, PlayerUser>(playerUserEmail);
+    await this.dependencies.idUniquenessValidatorDomainService.ensureUniqueId<PlayerUserId, IPlayerUserPrimitives, PlayerUser>(playerUserId);
+    await this.dependencies.playerUserValidationDomainService.ensureNicknameIsUnique(playerUserNickname);
+    await this.dependencies.emailUniquenessValidatorDomainService.ensureUniqueEmail<PlayerUserEmail, IPlayerUserPrimitives, PlayerUser>(playerUserEmail);
   }
 
   async #createPlayerUserCareerStats(playerUserId: string, userContext: IUserContext): Promise<void> {

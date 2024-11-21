@@ -1,10 +1,10 @@
 import {
-  BusinessDateService,
-  EmailUniquenessValidatorService,
+  BusinessDateDomainService,
+  EmailUniquenessValidatorDomainService,
   ILeagueFounderUserRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
-  SecurePasswordCreationService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -20,12 +20,12 @@ export interface ILeagueFounderUserContainer {
   leagueFounderUserServerErrorHandler: IServerErrorHandler;
   createLeagueFounderUserPOSTController: IController;
   createLeagueFounderUserUseCase: ICreateLeagueFounderUserUseCase;
-  emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService;
   leagueFounderUserRepository: ILeagueFounderUserRepository;
-  businessDateService: BusinessDateService;
-  securePasswordCreationService: SecurePasswordCreationService;
-  passwordHashingService: IPasswordHashingService;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  businessDateDomainService: BusinessDateDomainService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   profileImageUploader: IProfileImageUploader;
   leagueFounderUserRouteManager: IRouteManager;
   fileSystem: IFileSystem;

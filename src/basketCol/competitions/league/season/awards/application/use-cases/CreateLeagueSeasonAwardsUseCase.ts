@@ -1,11 +1,11 @@
 import {
-  BusinessDateService,
-  IdUniquenessValidatorService,
+  BusinessDateDomainService,
+  IdUniquenessValidatorDomainService,
   ILeagueSeasonAwardsPrimitives,
   ILeagueSeasonAwardsRepository,
   LeagueSeasonAwards,
   LeagueSeasonAwardsId,
-  LeagueSeasonValidationService,
+  LeagueSeasonValidationDomainService,
   LSABestAssistProviderId,
   LSABestDefensiveRebounderId,
   LSABestFreeThrowShooterId,
@@ -14,43 +14,43 @@ import {
   LSABestTwoPointShooterId,
   LSAChampionTeamId,
   LSACreatedAt,
-  LSAReferencedLeagueSeasonId,
+  LSALeagueSeasonId,
   LSAUpdatedAt,
-  PlayerUserValidationService,
-  TeamValidationService,
+  PlayerUserValidationDomainService,
+  TeamValidationDomainService,
 } from '@basketcol/domain';
 
 import { CreateLeagueSeasonAwardsDTO } from '../dtos/CreateLeagueSeasonAwardsDTO';
 import { ICreateLeagueSeasonAwardsUseCase } from './ports/ICreateLeagueSeasonAwardsUseCase';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  playerUserValidationService: PlayerUserValidationService;
-  teamValidationService: TeamValidationService;
-  leagueSeasonValidationService: LeagueSeasonValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  teamValidationDomainService: TeamValidationDomainService;
+  leagueSeasonValidationDomainService: LeagueSeasonValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   leagueSeasonAwardsRepository: ILeagueSeasonAwardsRepository;
 };
 
 export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAwardsUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
-  readonly #teamValidationService: TeamValidationService;
+  readonly #teamValidationDomainService: TeamValidationDomainService;
 
-  readonly #leagueSeasonValidationService: LeagueSeasonValidationService;
+  readonly #leagueSeasonValidationDomainService: LeagueSeasonValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #leagueSeasonAwardsRepository: ILeagueSeasonAwardsRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
-    this.#teamValidationService = dependencies.teamValidationService;
-    this.#leagueSeasonValidationService = dependencies.leagueSeasonValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
+    this.#teamValidationDomainService = dependencies.teamValidationDomainService;
+    this.#leagueSeasonValidationDomainService = dependencies.leagueSeasonValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#leagueSeasonAwardsRepository = dependencies.leagueSeasonAwardsRepository;
   }
 
@@ -79,31 +79,31 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
     const lSABestOffensiveRebounderId: LSABestOffensiveRebounderId = LSABestOffensiveRebounderId.create(bestOffensiveRebounderId);
     const lSABestDefensiveRebounderId: LSABestDefensiveRebounderId = LSABestDefensiveRebounderId.create(bestDefensiveRebounderId);
     const lSAChampionTeamId: LSAChampionTeamId = LSAChampionTeamId.create(championTeamId);
-    const lSALeagueSeasonId: LSAReferencedLeagueSeasonId = LSAReferencedLeagueSeasonId.create(leagueSeasonId);
+    const lSALeagueSeasonId: LSALeagueSeasonId = LSALeagueSeasonId.create(leagueSeasonId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueSeasonAwardsId, ILeagueSeasonAwardsPrimitives, LeagueSeasonAwards>(leagueSeasonAwardsId);
-    await this.#playerUserValidationService.ensurePlayerUserExists(lSABestThreePointShooterId.value);
-    await this.#playerUserValidationService.ensurePlayerUserExists(lSABestTwoPointShooterId.value);
-    await this.#playerUserValidationService.ensurePlayerUserExists(lSABestFreeThrowShooterId.value);
-    await this.#playerUserValidationService.ensurePlayerUserExists(lSABestAssistProviderId.value);
-    await this.#playerUserValidationService.ensurePlayerUserExists(lSABestOffensiveRebounderId.value);
-    await this.#playerUserValidationService.ensurePlayerUserExists(lSABestDefensiveRebounderId.value);
-    await this.#teamValidationService.ensureTeamExists(lSAChampionTeamId.value);
-    await this.#leagueSeasonValidationService.ensureLeagueSeasonExists(lSALeagueSeasonId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<LeagueSeasonAwardsId, ILeagueSeasonAwardsPrimitives, LeagueSeasonAwards>(leagueSeasonAwardsId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(lSABestThreePointShooterId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(lSABestTwoPointShooterId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(lSABestFreeThrowShooterId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(lSABestAssistProviderId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(lSABestOffensiveRebounderId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(lSABestDefensiveRebounderId);
+    await this.#teamValidationDomainService.ensureTeamExists(lSAChampionTeamId);
+    await this.#leagueSeasonValidationDomainService.ensureLeagueSeasonExists(lSALeagueSeasonId);
 
-    const lSACreatedAt: LSACreatedAt = this.#businessDateService.getCurrentDate();
-    const lSAUpdatedAt: LSAUpdatedAt = this.#businessDateService.getCurrentDate();
+    const lSACreatedAt: LSACreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const lSAUpdatedAt: LSAUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const leagueSeasonAwards: LeagueSeasonAwards = LeagueSeasonAwards.create(
       leagueSeasonAwardsId.value,
-      lSABestThreePointShooterId.playerUserIdAsString,
-      lSABestTwoPointShooterId.playerUserIdAsString,
-      lSABestFreeThrowShooterId.playerUserIdAsString,
-      lSABestAssistProviderId.playerUserIdAsString,
-      lSABestOffensiveRebounderId.playerUserIdAsString,
-      lSABestDefensiveRebounderId.playerUserIdAsString,
-      lSAChampionTeamId.teamIdAsString,
-      lSALeagueSeasonId.leagueSeasonIdAsString,
+      lSABestThreePointShooterId.value,
+      lSABestTwoPointShooterId.value,
+      lSABestFreeThrowShooterId.value,
+      lSABestAssistProviderId.value,
+      lSABestOffensiveRebounderId.value,
+      lSABestDefensiveRebounderId.value,
+      lSAChampionTeamId.value,
+      lSALeagueSeasonId.value,
       lSACreatedAt.value,
       lSAUpdatedAt.value,
     );

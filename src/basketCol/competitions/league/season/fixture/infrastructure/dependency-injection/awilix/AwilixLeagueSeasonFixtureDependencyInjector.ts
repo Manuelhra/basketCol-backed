@@ -1,12 +1,11 @@
 import {
-  BusinessDateService,
-  IdUniquenessValidatorService,
-  IIdUniquenessValidatorServiceRepository,
+  BusinessDateDomainService,
+  IdUniquenessValidatorDomainService,
+  IIdUniquenessValidatorDomainServiceRepository,
   ILeagueSeasonFixtureRepository,
   ILeagueSeasonRepository,
-  LeagueSeasonFixtureDateValidatorService,
-  LeagueSeasonFixtureValidationService,
-  LeagueSeasonValidationService,
+  LeagueSeasonFixtureValidationDomainService,
+  LeagueSeasonValidationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -18,7 +17,7 @@ import { CreateLeagueSeasonFixtureUseCase } from '../../../application/use-cases
 import { ICreateLeagueSeasonFixtureUseCase } from '../../../application/use-cases/ports/ICreateLeagueSeasonFixtureUseCase';
 import { ExpressBulkCreateLeagueSeasonFixtureFromExcelPOSTController } from '../../server/express/controllers/ExpressBulkCreateLeagueSeasonFixtureFromExcelPOSTController';
 import { ExpressLeagueSeasonFixtureServerErrorHandler } from '../../server/express/ExpressLeagueSeasonFixtureServerErrorHandler';
-import { BulkCreateLeagueSeasonFixtureService } from '../../services/BulkCreateLeagueSeasonFixtureService';
+import { BulkCreateLeagueSeasonFixtureFromExcelService } from '../../services/BulkCreateLeagueSeasonFixtureFromExcelService';
 import { ILeagueSeasonFixtureContainer } from '../ILeagueSeasonFixtureContainer';
 import { MongooseLeagueSeasonFixtureRepository } from '../../persistence/mongoose/MongooseLeagueSeasonFixtureRepository';
 import { MongooseLeagueSeasonRepository } from '../../../../infrastructure/persistence/mongoose/MongooseLeagueSeasonRepository';
@@ -26,8 +25,10 @@ import { IRouteManager } from '../../../../../../../shared/infrastructure/server
 import { GlobFileSystem } from '../../../../../../../shared/infrastructure/file-system/GlobFileSystem';
 import { IFileSystem } from '../../../../../../../shared/infrastructure/file-system/IFileSystem';
 import { ExpressLeagueSeasonFixtureRouteManager } from '../../server/express/routes/ExpressLeagueSeasonFixtureRouteManager';
-import { IExcelManager } from '../../../../../../../shared/infrastructure/excel/ports/IExcelManager';
-import { XLSXManager } from '../../../../../../../shared/infrastructure/excel/xlsx/XLSXManager';
+import { IExcelManager } from '../../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
+import { XLSXManager } from '../../../../../../../shared/infrastructure/file-upload/excel/xlsx/XLSXManager';
+import { UuidV4Generator } from '../../../../../../../shared/infrastructure/uuid/UuidV4Generator';
+import { IUuidGenerator } from '../../../../../../../shared/application/uuid/ports/IUuidGenerator';
 
 export class AwilixLeagueSeasonFixtureDependencyInjector extends AwilixDependencyInjector<ILeagueSeasonFixtureContainer> {
   private constructor() {
@@ -42,24 +43,23 @@ export class AwilixLeagueSeasonFixtureDependencyInjector extends AwilixDependenc
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
       leagueSeasonFixtureServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressLeagueSeasonFixtureServerErrorHandler.create).singleton(),
       bulkCreateLeagueSeasonFixtureFromExcelPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressBulkCreateLeagueSeasonFixtureFromExcelPOSTController.create).singleton(),
-      bulkCreateLeagueSeasonFixtureService: AwilixDependencyInjector.registerAsFunction<BulkCreateLeagueSeasonFixtureService>(BulkCreateLeagueSeasonFixtureService.create).singleton(),
+      bulkCreateLeagueSeasonFixtureFromExcelService: AwilixDependencyInjector.registerAsFunction<BulkCreateLeagueSeasonFixtureFromExcelService>(BulkCreateLeagueSeasonFixtureFromExcelService.create).singleton(),
       excelManager: AwilixDependencyInjector.registerAsFunction<IExcelManager>(XLSXManager.create).singleton(),
       createLeagueSeasonFixtureUseCase: AwilixDependencyInjector.registerAsFunction<ICreateLeagueSeasonFixtureUseCase>((cradle: ILeagueSeasonFixtureContainer) => CreateLeagueSeasonFixtureUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.leagueSeasonFixtureRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.leagueSeasonFixtureRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        leagueSeasonFixtureDateValidatorService: cradle.leagueSeasonFixtureDateValidatorService,
-        leagueSeasonFixtureValidationService: cradle.leagueSeasonFixtureValidationService,
+        businessDateDomainService: cradle.businessDateDomainService,
+        leagueSeasonFixtureValidationDomainService: cradle.leagueSeasonFixtureValidationDomainService,
         leagueSeasonFixtureRepository: cradle.leagueSeasonFixtureRepository,
-        leagueSeasonValidationService: cradle.leagueSeasonValidationService,
+        leagueSeasonValidationDomainService: cradle.leagueSeasonValidationDomainService,
       })),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       leagueSeasonFixtureRepository: AwilixDependencyInjector.registerAsFunction<ILeagueSeasonFixtureRepository>(MongooseLeagueSeasonFixtureRepository.create).singleton(),
-      leagueSeasonFixtureDateValidatorService: AwilixDependencyInjector.registerAsFunction<LeagueSeasonFixtureDateValidatorService>(LeagueSeasonFixtureDateValidatorService.create).singleton(),
-      leagueSeasonFixtureValidationService: AwilixDependencyInjector.registerAsFunction<LeagueSeasonFixtureValidationService>(LeagueSeasonFixtureValidationService.create).singleton(),
-      leagueSeasonValidationService: AwilixDependencyInjector.registerAsFunction<LeagueSeasonValidationService>(LeagueSeasonValidationService.create).singleton(),
+      leagueSeasonFixtureValidationDomainService: AwilixDependencyInjector.registerAsFunction<LeagueSeasonFixtureValidationDomainService>(LeagueSeasonFixtureValidationDomainService.create).singleton(),
+      leagueSeasonValidationDomainService: AwilixDependencyInjector.registerAsFunction<LeagueSeasonValidationDomainService>(LeagueSeasonValidationDomainService.create).singleton(),
       leagueSeasonRepository: AwilixDependencyInjector.registerAsFunction<ILeagueSeasonRepository>(MongooseLeagueSeasonRepository.create).singleton(),
+      uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
     });
   }
 

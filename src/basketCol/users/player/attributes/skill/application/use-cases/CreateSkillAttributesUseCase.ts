@@ -1,14 +1,14 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IPlayerUserSkillAttributesPrimitives,
   IPlayerUserSkillAttributesRepository,
   PlayerUserSkillAttributes,
-  PlayerUserValidationService,
+  PlayerUserValidationDomainService,
   PUSASkillAttributesCreatedAt,
   PUSASkillAttributesId,
-  PUSASkillAttributesReferencedPlayerUserId,
+  PUSASkillAttributesPlayerUserId,
   PUSASkillAttributesUpdatedAt,
 } from '@basketcol/domain';
 
@@ -18,25 +18,25 @@ import { IUserContext } from '../../../../../../shared/application/context/ports
 import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  playerUserValidationService: PlayerUserValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   playerUserSkillAttributesRepository: IPlayerUserSkillAttributesRepository;
 };
 
 export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #playerUserSkillAttributesRepository: IPlayerUserSkillAttributesRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#playerUserSkillAttributesRepository = dependencies.playerUserSkillAttributesRepository;
   }
 
@@ -58,20 +58,20 @@ export class CreateSkillAttributesUseCase implements ICreateSkillAttributesUseCa
     } = dto;
 
     const pUSASkillAttributesId: PUSASkillAttributesId = PUSASkillAttributesId.create(id);
-    const pUSASkillAttributesReferencedPlayerUserId: PUSASkillAttributesReferencedPlayerUserId = PUSASkillAttributesReferencedPlayerUserId.create(playerUserId);
+    const pUSASkillAttributesPlayerUserId: PUSASkillAttributesPlayerUserId = PUSASkillAttributesPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUSASkillAttributesId, IPlayerUserSkillAttributesPrimitives, PlayerUserSkillAttributes>(pUSASkillAttributesId);
-    await this.#playerUserValidationService.ensurePlayerUserExists(pUSASkillAttributesReferencedPlayerUserId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<PUSASkillAttributesId, IPlayerUserSkillAttributesPrimitives, PlayerUserSkillAttributes>(pUSASkillAttributesId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(pUSASkillAttributesPlayerUserId);
 
-    const pUSASkillAttributesCreatedAt: PUSASkillAttributesCreatedAt = this.#businessDateService.getCurrentDate();
-    const pUSASkillAttributesUpdatedAt: PUSASkillAttributesUpdatedAt = this.#businessDateService.getCurrentDate();
+    const pUSASkillAttributesCreatedAt: PUSASkillAttributesCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const pUSASkillAttributesUpdatedAt: PUSASkillAttributesUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const playerUserSkillAttributes: PlayerUserSkillAttributes = PlayerUserSkillAttributes.create(
       pUSASkillAttributesId.value,
       passAccuracy,
       ballHandle,
       speedWithBall,
-      pUSASkillAttributesReferencedPlayerUserId.playerUserIdAsString,
+      pUSASkillAttributesPlayerUserId.value,
       pUSASkillAttributesCreatedAt.value,
       pUSASkillAttributesUpdatedAt.value,
     );

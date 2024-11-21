@@ -7,4 +7,6 @@ if (awilixTeamContainer === null) {
   throw DependencyContainerNotInitializedError.create();
 }
 
+export const teamRouteManager = awilixTeamContainer.resolve('teamRouteManager');
+export const createTeamPOSTController = awilixTeamContainer.resolve('createTeamPOSTController');
 export const teamServerErrorHandler = awilixTeamContainer.resolve('teamServerErrorHandler');

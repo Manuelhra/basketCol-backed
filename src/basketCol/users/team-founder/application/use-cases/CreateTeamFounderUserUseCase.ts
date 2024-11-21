@@ -1,7 +1,7 @@
 import {
-  BusinessDateService,
-  EmailUniquenessValidatorService,
-  IdUniquenessValidatorService,
+  BusinessDateDomainService,
+  EmailUniquenessValidatorDomainService,
+  IdUniquenessValidatorDomainService,
   ITeamFounderUserPrimitives,
   ITeamFounderUserRepository,
   TeamFounderUser,
@@ -20,25 +20,25 @@ import { IUserContext } from '../../../../shared/application/context/ports/IUser
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
-  readonly emailUniquenessValidatorService: EmailUniquenessValidatorService;
-  readonly businessDateService: BusinessDateService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
   readonly teamFounderUserRepository: ITeamFounderUserRepository;
 };
 
 export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  readonly #emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #teamFounderUserRepository: ITeamFounderUserRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#emailUniquenessValidatorDomainService = dependencies.emailUniquenessValidatorDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#teamFounderUserRepository = dependencies.teamFounderUserRepository;
   }
 
@@ -55,6 +55,7 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
       id,
       name,
       biography,
+      gender,
       email,
       password,
       profileImage,
@@ -63,13 +64,13 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
     const teamFounderUserId: TeamFounderUserId = TeamFounderUserId.create(id);
     const teamFounderUserEmail: TeamFounderUserEmail = TeamFounderUserEmail.create({ value: email.value, verified: false });
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<TeamFounderUserId, ITeamFounderUserPrimitives, TeamFounderUser>(teamFounderUserId);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<TeamFounderUserEmail, ITeamFounderUserPrimitives, TeamFounderUser>(teamFounderUserEmail);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<TeamFounderUserId, ITeamFounderUserPrimitives, TeamFounderUser>(teamFounderUserId);
+    await this.#emailUniquenessValidatorDomainService.ensureUniqueEmail<TeamFounderUserEmail, ITeamFounderUserPrimitives, TeamFounderUser>(teamFounderUserEmail);
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;
-    const teamFounderUserCreatedAt: TeamFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
-    const teamFounderUserUpdatedAt: TeamFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
+    const teamFounderUserCreatedAt: TeamFounderUserCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const teamFounderUserUpdatedAt: TeamFounderUserUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const teamFounderUser: TeamFounderUser = TeamFounderUser.create(
       teamFounderUserId.value,
@@ -77,6 +78,7 @@ export class CreateTeamFounderUserUseCase implements ICreateTeamFounderUserUseCa
       biography,
       teamFounderUserEmail.value,
       password,
+      gender,
       accountState,
       subscriptionType,
       profileImage,

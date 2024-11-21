@@ -1,8 +1,8 @@
 import {
-  BusinessDateService,
-  EmailUniquenessValidatorService,
+  BusinessDateDomainService,
+  EmailUniquenessValidatorDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IRefereeUserPrimitives,
   IRefereeUserRepository,
   RefereeUser,
@@ -20,25 +20,25 @@ import { IUserContext } from '../../../../shared/application/context/ports/IUser
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
-  readonly emailUniquenessValidatorService: EmailUniquenessValidatorService;
-  readonly businessDateService: BusinessDateService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
   readonly refereeUserRepository: IRefereeUserRepository;
 };
 
 export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  readonly #emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #refereeUserRepository: IRefereeUserRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#emailUniquenessValidatorDomainService = dependencies.emailUniquenessValidatorDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#refereeUserRepository = dependencies.refereeUserRepository;
   }
 
@@ -55,6 +55,7 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
       id,
       name,
       biography,
+      gender,
       email,
       password,
       profileImage,
@@ -63,13 +64,13 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
     const refereeUserId: RefereeUserId = RefereeUserId.create(id);
     const refereeUserEmail: RefereeUserEmail = RefereeUserEmail.create({ value: email.value, verified: false });
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<RefereeUserId, IRefereeUserPrimitives, RefereeUser>(refereeUserId);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<RefereeUserEmail, IRefereeUserPrimitives, RefereeUser>(refereeUserEmail);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<RefereeUserId, IRefereeUserPrimitives, RefereeUser>(refereeUserId);
+    await this.#emailUniquenessValidatorDomainService.ensureUniqueEmail<RefereeUserEmail, IRefereeUserPrimitives, RefereeUser>(refereeUserEmail);
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;
-    const refereeUserCreatedAt: RefereeUserCreatedAt = this.#businessDateService.getCurrentDate();
-    const refereeUserUpdatedAt: RefereeUserUpdatedAt = this.#businessDateService.getCurrentDate();
+    const refereeUserCreatedAt: RefereeUserCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const refereeUserUpdatedAt: RefereeUserUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const refereeUser: RefereeUser = RefereeUser.create(
       refereeUserId.value,
@@ -77,6 +78,7 @@ export class CreateRefereeUserUseCase implements ICreateRefereeUserUseCase {
       biography,
       refereeUserEmail.value,
       password,
+      gender,
       accountState,
       subscriptionType,
       profileImage,

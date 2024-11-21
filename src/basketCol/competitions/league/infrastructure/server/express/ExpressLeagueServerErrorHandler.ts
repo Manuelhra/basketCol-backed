@@ -1,4 +1,8 @@
-import { DuplicateLeagueNameError, HttpStatus, LeagueNotFoundError } from '@basketcol/domain';
+import {
+  DuplicateLeagueNameError,
+  HttpStatus,
+  LeagueNotFoundError,
+} from '@basketcol/domain';
 import { Response } from 'express';
 
 import { IErrorApiResponse } from '../../../../../shared/application/http/ports/IErrorApiResponse';
@@ -6,15 +10,11 @@ import { IHttpResponseHandler } from '../../../../../shared/application/http/por
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
 
 type Dependencies = {
-  httpResponseHandler: IHttpResponseHandler;
+  readonly httpResponseHandler: IHttpResponseHandler;
 };
 
 export class ExpressLeagueServerErrorHandler implements IServerErrorHandler {
-  protected readonly httpResponseHandler: IHttpResponseHandler;
-
-  private constructor(dependencies: Dependencies) {
-    this.httpResponseHandler = dependencies.httpResponseHandler;
-  }
+  private constructor(private readonly dependencies: Dependencies) {}
 
   public static create(dependencies: Dependencies): ExpressLeagueServerErrorHandler {
     return new ExpressLeagueServerErrorHandler(dependencies);
@@ -27,7 +27,7 @@ export class ExpressLeagueServerErrorHandler implements IServerErrorHandler {
 
     switch (true) {
       case error instanceof DuplicateLeagueNameError:
-        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
+        errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
           error: { name: error.name, details: error.message },
@@ -37,7 +37,7 @@ export class ExpressLeagueServerErrorHandler implements IServerErrorHandler {
         break;
 
       case error instanceof LeagueNotFoundError:
-        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
+        errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },

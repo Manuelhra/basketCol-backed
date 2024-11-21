@@ -1,14 +1,14 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IPlayerUserPhysicalAttributesPrimitives,
   IPlayerUserPhysicalAttributesRepository,
   PlayerUserPhysicalAttributes,
-  PlayerUserValidationService,
+  PlayerUserValidationDomainService,
   PUPACreatedAt,
   PUPAId,
-  PUPAReferencedPlayerUserId,
+  PUPAPlayerUserId,
   PUPAUpdatedAt,
 } from '@basketcol/domain';
 
@@ -18,25 +18,25 @@ import { IUserContext } from '../../../../../../shared/application/context/ports
 import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  playerUserValidationService: PlayerUserValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   playerUserPhysicalAttributesRepository: IPlayerUserPhysicalAttributesRepository;
 };
 
 export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttributesUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #playerUserPhysicalAttributesRepository: IPlayerUserPhysicalAttributesRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#playerUserPhysicalAttributesRepository = dependencies.playerUserPhysicalAttributesRepository;
   }
 
@@ -60,13 +60,13 @@ export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttribute
     } = dto;
 
     const physicalAttributesId: PUPAId = PUPAId.create(id);
-    const pUPAReferencedPlayerUserId: PUPAReferencedPlayerUserId = PUPAReferencedPlayerUserId.create(playerUserId);
+    const pUPAPlayerUserId: PUPAPlayerUserId = PUPAPlayerUserId.create(playerUserId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<PUPAId, IPlayerUserPhysicalAttributesPrimitives, PlayerUserPhysicalAttributes>(physicalAttributesId);
-    await this.#playerUserValidationService.ensurePlayerUserExists(pUPAReferencedPlayerUserId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<PUPAId, IPlayerUserPhysicalAttributesPrimitives, PlayerUserPhysicalAttributes>(physicalAttributesId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(pUPAPlayerUserId);
 
-    const pUPACreatedAt: PUPACreatedAt = this.#businessDateService.getCurrentDate();
-    const pUPAUpdatedAt: PUPAUpdatedAt = this.#businessDateService.getCurrentDate();
+    const pUPACreatedAt: PUPACreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const pUPAUpdatedAt: PUPAUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const playerUserPhysicalAttributes: PlayerUserPhysicalAttributes = PlayerUserPhysicalAttributes.create(
       physicalAttributesId.value,
@@ -75,7 +75,7 @@ export class CreatePhysicalAttributesUseCase implements ICreatePhysicalAttribute
       strength,
       vertical,
       stamina,
-      pUPAReferencedPlayerUserId.playerUserIdAsString,
+      pUPAPlayerUserId.value,
       pUPACreatedAt.value,
       pUPAUpdatedAt.value,
     );

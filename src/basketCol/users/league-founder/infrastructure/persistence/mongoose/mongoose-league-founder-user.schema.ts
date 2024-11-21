@@ -30,6 +30,10 @@ export const mongooseLeagueFounderUserSchema = new Schema<IMongooseLeagueFounder
     type: String,
     required: [true, "The league founder user's password is required"],
   },
+  gender: {
+    type: String,
+    required: [true, "The league founder user's gender is required"],
+  },
   biography: {
     type: String,
     required: [true, "The league founder user's biography is required"],

@@ -6,7 +6,7 @@ import {
   IGymRepository,
   IPaginatedResponse,
   Nullable,
-  ReferencedGymIdList,
+  IdListValueObject,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -38,9 +38,9 @@ export class MongooseGymRepository
     return document === null ? null : this.#mapDocumentToGym(document);
   }
 
-  public async findByIdList(gymIdList: ReferencedGymIdList): Promise<Gym[]> {
+  public async findByIdList(gymIdList: IdListValueObject): Promise<Gym[]> {
     const MyModel = await this.model();
-    const documents: IMongooseGymDocument[] = await MyModel.find<IMongooseGymDocument>({ id: { $in: gymIdList.value.map((id) => id.value) } });
+    const documents: IMongooseGymDocument[] = await MyModel.find<IMongooseGymDocument>({ id: { $in: gymIdList.value.map((id) => id) } });
     return documents.map(this.#mapDocumentToGym);
   }
 
@@ -94,9 +94,9 @@ export class MongooseGymRepository
     };
   }
 
-  public async findAllByIdList(gymIdList: ReferencedGymIdList): Promise<Gym[]> {
+  public async findAllByIdList(gymIdList: IdListValueObject): Promise<Gym[]> {
     const MyModel = await this.model();
-    const documents: IMongooseGymDocument[] = await MyModel.find<IMongooseGymDocument>({ id: { $in: gymIdList.value.map((id) => id.value) } });
+    const documents: IMongooseGymDocument[] = await MyModel.find<IMongooseGymDocument>({ id: { $in: gymIdList.value.map((id) => id) } });
     return documents.map(this.#mapDocumentToGym);
   }
 

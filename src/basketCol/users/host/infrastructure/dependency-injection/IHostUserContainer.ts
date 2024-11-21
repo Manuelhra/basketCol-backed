@@ -1,9 +1,9 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   IHostUserRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
-  SecurePasswordCreationService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
@@ -16,17 +16,17 @@ import { IHostUserConfigFactory } from '../../application/ports/IHostUserConfigF
 import { IProfileImageUploader } from '../../../shared/application/file-upload/images/ports/IProfileImageUploader';
 
 export interface IHostUserContainer {
-  businessDateService: BusinessDateService;
+  businessDateDomainService: BusinessDateDomainService;
   createHostUserUseCase: ICreateHostUserUseCase;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   fileSystem: IFileSystem;
   hostUserConfigFactory: IHostUserConfigFactory;
   createHostUserPOSTController: IController;
   hostUserRepository: IHostUserRepository;
   hostUserRouteManager: IRouteManager;
   httpResponseHandler: IHttpResponseHandler;
-  passwordHashingService: IPasswordHashingService;
-  securePasswordCreationService: SecurePasswordCreationService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
   hostUserServerErrorHandler: IServerErrorHandler;
   profileImageUploader: IProfileImageUploader;
 }

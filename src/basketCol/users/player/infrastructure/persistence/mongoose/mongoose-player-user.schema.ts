@@ -34,6 +34,10 @@ export const mongoosePlayerUserSchema = new Schema<IMongoosePlayerUserDocument>(
     type: String,
     required: [true, "The player user's password is required"],
   },
+  gender: {
+    type: String,
+    required: [true, "The player user's gender is required"],
+  },
   biography: {
     type: String,
     required: [true, "The player user's biography is required"],

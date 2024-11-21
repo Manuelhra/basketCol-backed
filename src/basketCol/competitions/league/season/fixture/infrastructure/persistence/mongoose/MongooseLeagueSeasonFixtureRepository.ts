@@ -35,19 +35,19 @@ export class MongooseLeagueSeasonFixtureRepository
   public async findById(leagueSeasonFixtureId: LSFixtureId): Promise<Nullable<LeagueSeasonFixture>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseLeagueSeasonFixtureDocument> = await MyModel.findOne<IMongooseLeagueSeasonFixtureDocument>({ id: leagueSeasonFixtureId.value });
-    return document === null ? null : this.#mapDocumentToLeagueSeason(document);
+    return document === null ? null : this.#mapDocumentToLeagueSeasonFixture(document);
   }
 
   public async findByLeagueSeasonIdAndDate(leagueSeasonId: LSFixtureLeagueSeasonId, date: LSFixtureDate): Promise<Nullable<LeagueSeasonFixture>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseLeagueSeasonFixtureDocument> = await MyModel.findOne<IMongooseLeagueSeasonFixtureDocument>({ leagueSeasonId: leagueSeasonId.value, date: date.value });
-    return document === null ? null : this.#mapDocumentToLeagueSeason(document);
+    return document === null ? null : this.#mapDocumentToLeagueSeasonFixture(document);
   }
 
   public async findAllByLeagueSeasonId(leagueSeasonId: LSFixtureLeagueSeasonId): Promise<LeagueSeasonFixture[]> {
     const MyModel = await this.model();
     const documents: IMongooseLeagueSeasonFixtureDocument[] = await MyModel.find<IMongooseLeagueSeasonFixtureDocument>({ leagueSeasonId: leagueSeasonId.value });
-    return documents.map((document) => this.#mapDocumentToLeagueSeason(document));
+    return documents.map((document) => this.#mapDocumentToLeagueSeasonFixture(document));
   }
 
   public async searchAll(params: { query?: string; page: number; perPage: number; }): Promise<IPaginatedResponse<LeagueSeasonFixture>> {
@@ -73,7 +73,7 @@ export class MongooseLeagueSeasonFixtureRepository
     ]);
 
     const totalPages = Math.ceil(total / perPage);
-    const leagueSeasonFixtures = documents.map(this.#mapDocumentToLeagueSeason);
+    const leagueSeasonFixtures = documents.map(this.#mapDocumentToLeagueSeasonFixture);
 
     return {
       data: leagueSeasonFixtures,
@@ -96,7 +96,7 @@ export class MongooseLeagueSeasonFixtureRepository
     return this.persist(leagueSeasonFixture);
   }
 
-  #mapDocumentToLeagueSeason(document: IMongooseLeagueSeasonFixtureDocument): LeagueSeasonFixture {
+  #mapDocumentToLeagueSeasonFixture(document: IMongooseLeagueSeasonFixtureDocument): LeagueSeasonFixture {
     return LeagueSeasonFixture.fromPrimitives(
       document.id.valueOf(),
       document.date.valueOf(),

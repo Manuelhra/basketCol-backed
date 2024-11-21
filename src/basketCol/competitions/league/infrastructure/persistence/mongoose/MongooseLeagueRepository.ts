@@ -112,6 +112,7 @@ export class MongooseLeagueRepository
         short: document.description.short.valueOf(),
         complete: document.description.complete.valueOf(),
       },
+      document.gender.valueOf(),
       document.rules.valueOf(),
       document.level.valueOf(),
       {

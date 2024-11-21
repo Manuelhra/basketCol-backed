@@ -1,13 +1,13 @@
 import {
-  BusinessDateService,
-  IdUniquenessValidatorService,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  IdUniquenessValidatorDomainService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IPlayerUserCareerStatsRepository,
   IPlayerUserRepository,
-  PasswordValueObjectCreationService,
-  PlayerUserValidationService,
-  SecurePasswordCreationService,
+  PasswordValueObjectCreationDomainService,
+  PlayerUserValidationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { AwilixDependencyInjector } from '../../../../../../shared/infrastructure/dependency-injection/awilix/AwilixDependencyInjector';
@@ -33,15 +33,15 @@ export class AwilixPlayerUserCareerStatsDependencyInjector
     this.registerDependencies({
       createPlayerUserCareerStatsPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreatePlayerUserCareerStatsPOSTController.create).singleton(),
       createPlayerUserCareerStatsUseCase: AwilixDependencyInjector.registerAsFunction<ICreatePlayerUserCareerStatsUseCase>(CreatePlayerUserCareerStatsUseCase.create),
-      idUniquenessValidatorService: AwilixDependencyInjector.registerAsFunction<IdUniquenessValidatorService>(IdUniquenessValidatorService.create).singleton(),
-      idUniquenessValidatorServiceRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserCareerStatsRepository>(MongoosePlayerUserCareerStatsRepository.create).singleton(),
-      playerUserValidationService: AwilixDependencyInjector.registerAsFunction<PlayerUserValidationService>(PlayerUserValidationService.create).singleton(),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      idUniquenessValidatorDomainService: AwilixDependencyInjector.registerAsFunction<IdUniquenessValidatorDomainService>(IdUniquenessValidatorDomainService.create).singleton(),
+      idUniquenessValidatorDomainServiceRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserCareerStatsRepository>(MongoosePlayerUserCareerStatsRepository.create).singleton(),
+      playerUserValidationDomainService: AwilixDependencyInjector.registerAsFunction<PlayerUserValidationDomainService>(PlayerUserValidationDomainService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       playerUserCareerStatsRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserCareerStatsRepository>(MongoosePlayerUserCareerStatsRepository.create).singleton(),
       playerUserRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserRepository>(MongoosePlayerUserRepository.create).singleton(),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
+      passwordHashingDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingDomainService>(BcryptPasswordHashingService.create).singleton(),
+      passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       playerUserCareerStatsRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressPlayerUserCareerStatsRouteManager.create).singleton(),
       fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
         basePath: __dirname,

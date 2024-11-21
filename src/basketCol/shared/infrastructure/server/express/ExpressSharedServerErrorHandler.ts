@@ -15,6 +15,7 @@ import {
   InvalidDomainIdError,
   InvalidEnumValueError,
   InvalidFacilityIdInstanceError,
+  InvalidGenderError,
   InvalidGymIdListElementError,
   InvalidHostUserIdInstanceError,
   InvalidLeagueFounderUserIdInstanceError,
@@ -123,6 +124,7 @@ export class ExpressSharedServerErrorHandler implements IServerErrorHandler {
         break;
       }
 
+      case error instanceof InvalidGenderError:
       case error instanceof MulterError:
       case error instanceof InvalidEnumValueError:
       case error instanceof UndefinedValueError:

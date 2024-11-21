@@ -1,4 +1,5 @@
 import { Schema } from 'mongoose';
+
 import { IMongooseLeagueSeasonFixtureDocument } from './IMongooseLeagueSeasonFixtureDocument';
 
 export const mongooseLeagueSeasonFixtureSchema = new Schema<IMongooseLeagueSeasonFixtureDocument>({

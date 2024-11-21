@@ -1,7 +1,7 @@
 import {
-  BusinessDateService,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IPlayerUserDefensiveAttributesRepository,
   IPlayerUserFinishingAttributesRepository,
   IPlayerUserPhysicalAttributesRepository,
@@ -9,12 +9,11 @@ import {
   IPlayerUserRepository,
   IPlayerUserShootingAttributesRepository,
   IPlayerUserSkillAttributesRepository,
-  PlayerUserValidationService,
-  SecurePasswordCreationService,
+  PlayerUserValidationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
-import { IExcelManager } from '../../../../../../shared/infrastructure/excel/ports/IExcelManager';
 import { IFileSystem } from '../../../../../../shared/infrastructure/file-system/IFileSystem';
 import { IController } from '../../../../../../shared/infrastructure/server/controllers/IController';
 import { IRouteManager } from '../../../../../../shared/infrastructure/server/routes/IRouteManager';
@@ -24,8 +23,9 @@ import { ICreatePhysicalAttributesUseCase } from '../../../physical/application/
 import { ICreateReboundingAttributesUseCase } from '../../../rebounding/application/use-cases/ports/ICreateReboundingAttributesUseCase';
 import { ICreateShootingAttributesUseCase } from '../../../shooting/application/use-cases/ports/ICreateShootingAttributesUseCase';
 import { ICreateSkillAttributesUseCase } from '../../../skill/application/use-cases/ports/ICreateSkillAttributesUseCase';
-import { BulkCreatePlayerUserAttributeCategoriesService } from '../services/BulkCreatePlayerUserAttributeCategoriesService';
+import { BulkCreatePlayerUserAttributeCategoriesFromExcelService } from '../services/BulkCreatePlayerUserAttributeCategoriesFromExcelService';
 import { IGetPlayerUserAttributeCategoriesUseCase } from '../../application/use-cases/ports/IGetPlayerUserAttributeCategoriesUseCase';
+import { IExcelManager } from '../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
 
 export interface IPlayerUserAttributesContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -33,7 +33,7 @@ export interface IPlayerUserAttributesContainer {
   bulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController: IController;
   playerUserAttributesRouteManager: IRouteManager;
   fileSystem: IFileSystem;
-  bulkCreatePlayerUserAttributeCategoriesService: BulkCreatePlayerUserAttributeCategoriesService;
+  bulkCreatePlayerUserAttributeCategoriesFromExcelService: BulkCreatePlayerUserAttributeCategoriesFromExcelService;
   createDefensiveAttributesUseCase: ICreateDefensiveAttributesUseCase;
   playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
   createFinishingAttributesUseCase: ICreateFinishingAttributesUseCase;
@@ -46,12 +46,12 @@ export interface IPlayerUserAttributesContainer {
   playerUserShootingAttributesRepository: IPlayerUserShootingAttributesRepository;
   createSkillAttributesUseCase: ICreateSkillAttributesUseCase;
   playerUserSkillAttributesRepository: IPlayerUserSkillAttributesRepository;
-  businessDateService: BusinessDateService;
-  playerUserValidationService: PlayerUserValidationService;
+  businessDateDomainService: BusinessDateDomainService;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
   playerUserRepository: IPlayerUserRepository;
-  securePasswordCreationService: SecurePasswordCreationService;
-  passwordHashingService: IPasswordHashingService;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService
   getPlayerUserAttributeCategoriesGETController: IController;
   getPlayerUserAttributeCategoriesUseCase: IGetPlayerUserAttributeCategoriesUseCase;
 }

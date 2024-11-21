@@ -1,5 +1,5 @@
 import { ImageFile, UploadedImageResult, UploadImageOptions } from '../../../../../../shared/application/file-upload/images/ports/IImageUploader';
-import { S3ImageUploader } from '../../../../../../shared/infrastructure/file-upload/images/S3ImageUploader';
+import { S3ImageUploader } from '../../../../../../shared/infrastructure/file-upload/aws/S3ImageUploader';
 import { IProfileImageUploader } from '../../../../application/file-upload/images/ports/IProfileImageUploader';
 import { S3ProfileImageUploaderConfigFactory } from './S3ProfileImageUploaderConfigFactory';
 

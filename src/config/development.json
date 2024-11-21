@@ -18,8 +18,8 @@
       "secretAccessKey": "0Xh5ljCtxyxhPP8VK4Weilxhd4/ubLZSqhBRuNgF",
       "bucketName": {
         "userProfileImage": "basketcol-dev-profile-image",
-        "facilityMainImage": "basketcol-dev-facility-main-image",
-        "facilityGalleryImages": "basketcol-dev-facility-gallery-images"
+        "mainImage": "basketcol-dev-main-image",
+        "galleryImages": "basketcol-dev-gallery-images"
       }
     }
   }

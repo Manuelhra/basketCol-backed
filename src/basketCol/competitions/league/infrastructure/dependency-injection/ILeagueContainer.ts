@@ -1,12 +1,12 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   ILeagueFounderUserRepository,
   ILeagueRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
-  LeagueFounderUserValidationService,
-  LeagueValidationNameService,
-  SecurePasswordCreationService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  LeagueFounderUserValidationDomainService,
+  LeagueValidationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -22,16 +22,16 @@ export interface ILeagueContainer {
   leagueServerErrorHandler: IServerErrorHandler;
   createLeaguePOSTController: IController;
   createLeagueUseCase: ICreateLeagueUseCase;
-  businessDateService: BusinessDateService;
-  leagueValidationNameService: LeagueValidationNameService;
+  businessDateDomainService: BusinessDateDomainService;
   leagueRepository: ILeagueRepository;
-  leagueFounderUserValidationService: LeagueFounderUserValidationService;
+  leagueFounderUserValidationDomainService: LeagueFounderUserValidationDomainService;
   leagueFounderUserRepository: ILeagueFounderUserRepository;
   leagueRouteManager: IRouteManager;
   fileSystem: IFileSystem;
-  securePasswordCreationService: SecurePasswordCreationService;
-  passwordHashingService: IPasswordHashingService;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   searchAllLeaguesGETController: IController;
   searchAllLeaguesUseCase: ISearchAllLeaguesUseCase;
+  leagueValidationDomainService: LeagueValidationDomainService;
 }

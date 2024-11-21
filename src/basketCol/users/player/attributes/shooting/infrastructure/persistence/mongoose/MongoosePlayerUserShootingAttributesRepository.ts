@@ -4,7 +4,7 @@ import {
   Nullable,
   PlayerUserShootingAttributes,
   PUShootingAttributesId,
-  PUShootingAttributesReferencedPlayerUserId,
+  PUShootingAttributesPlayerUserId,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -47,10 +47,10 @@ export class MongoosePlayerUserShootingAttributesRepository
     );
   }
 
-  public async findByPlayerUserId(pUSAReferencedPlayerUserId: PUShootingAttributesReferencedPlayerUserId): Promise<Nullable<PlayerUserShootingAttributes>> {
+  public async findByPlayerUserId(pUSAPlayerUserId: PUShootingAttributesPlayerUserId): Promise<Nullable<PlayerUserShootingAttributes>> {
     const MyModel = await this.model();
 
-    const document: Nullable<IMongoosePlayerUserShootingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserShootingAttributesDocument>({ playerUserId: pUSAReferencedPlayerUserId.playerUserIdAsString });
+    const document: Nullable<IMongoosePlayerUserShootingAttributesDocument> = await MyModel.findOne<IMongoosePlayerUserShootingAttributesDocument>({ playerUserId: pUSAPlayerUserId.value });
 
     return document === null ? null : PlayerUserShootingAttributes.fromPrimitives(
       document.id.valueOf(),

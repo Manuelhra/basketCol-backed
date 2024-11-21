@@ -1,10 +1,10 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   IHostUserRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
-  PasswordValueObjectCreationService,
-  SecurePasswordCreationService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  PasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { AwilixDependencyInjector } from '../../../../../shared/infrastructure/dependency-injection/awilix/AwilixDependencyInjector';
@@ -33,9 +33,9 @@ export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<I
 
     this.createContainer();
     this.registerDependencies({
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       createHostUserUseCase: AwilixDependencyInjector.registerAsFunction<CreateHostUserUseCase>(CreateHostUserUseCase.create).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
         basePath: __dirname,
       })).singleton(),
@@ -45,8 +45,8 @@ export class AwilixHostUserDependencyInjector extends AwilixDependencyInjector<I
       hostUserRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressHostUserRouteManager.create).singleton(),
       hostUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressHostUserServerErrorHandler.create).singleton(),
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
+      passwordHashingDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingDomainService>(BcryptPasswordHashingService.create).singleton(),
+      securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
       profileImageUploader: AwilixDependencyInjector.registerAsFunction<IProfileImageUploader>(() => S3ProfileImageUploader.create({
         folderPath: 'host',
       })).singleton(),

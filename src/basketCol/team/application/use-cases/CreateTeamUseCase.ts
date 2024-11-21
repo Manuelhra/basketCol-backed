@@ -1,12 +1,12 @@
 import {
-  BusinessDateService,
-  IdUniquenessValidatorService,
+  BusinessDateDomainService,
+  IdUniquenessValidatorDomainService,
   ITeamPrimitives,
   ITeamRepository,
   Team,
   TeamId,
-  TeamFounderUserValidationService,
-  TReferencedTeamFounderUserId,
+  TeamFounderUserValidationDomainService,
+  TeamTeamFounderUserId,
   HostUserType,
 } from '@basketcol/domain';
 
@@ -19,9 +19,9 @@ import { UnauthorizedAccessError } from '../../../shared/application/exceptions/
 import { CreateTeamAllTimeStatsDTO } from '../../all-time-stats/application/dtos/CreateTeamAllTimeStatsDTO';
 
 interface Dependencies {
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
-  readonly teamFounderUserValidationService: TeamFounderUserValidationService;
-  readonly businessDateService: BusinessDateService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly teamFounderUserValidationDomainService: TeamFounderUserValidationDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
   readonly teamRepository: ITeamRepository;
   readonly createTeamAllTimeStatsUseCase: ICreateTeamAllTimeStatsUseCase;
   readonly uuidGenerator: IUuidGenerator;
@@ -37,8 +37,8 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
   public async execute(dto: CreateTeamDTO, userContext: IUserContext): Promise<void> {
     this.#validateUserAccess(userContext);
     const team: Team = await this.#createTeam(dto);
-    await this.#createTeamStats(team.toPrimitives.id, userContext);
-    return this.dependencies.teamRepository.save(team);
+    await this.#saveTeam(team);
+    return this.#createTeamStats(team.toPrimitives.id, userContext);
   }
 
   #validateUserAccess(userContext: IUserContext): void {
@@ -48,34 +48,48 @@ export class CreateTeamUseCase implements ICreateTeamUseCase {
   }
 
   async #createTeam(dto: CreateTeamDTO): Promise<Team> {
-    const { id, officialName, teamFounderUserId } = dto;
+    const {
+      id,
+      officialName,
+      gender,
+      mainImage,
+      gallery,
+      teamFounderUserId,
+    } = dto;
 
     const teamId = TeamId.create(id);
-    const teamFounderId = TReferencedTeamFounderUserId.create(teamFounderUserId);
+    const teamFounderId = TeamTeamFounderUserId.create(teamFounderUserId);
 
     await this.#validateTeamCreation(teamId, teamFounderId);
 
-    const createdAt = this.dependencies.businessDateService.getCurrentDate();
-    const updatedAt = this.dependencies.businessDateService.getCurrentDate();
+    const createdAt = this.dependencies.businessDateDomainService.getCurrentDate();
+    const updatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
 
     return Team.create(
       teamId.value,
       officialName,
-      teamFounderId.teamFounderUserIdAsString,
+      gender,
+      mainImage,
+      gallery,
+      teamFounderId.value,
       createdAt.value,
       updatedAt.value,
     );
   }
 
+  async #saveTeam(team: Team): Promise<void> {
+    await this.dependencies.teamRepository.save(team);
+  }
+
   async #validateTeamCreation(
     teamId: TeamId,
-    teamFounderId: TReferencedTeamFounderUserId,
+    teamFounderId: TeamTeamFounderUserId,
   ): Promise<void> {
-    await this.dependencies.idUniquenessValidatorService
+    await this.dependencies.idUniquenessValidatorDomainService
       .ensureUniqueId<TeamId, ITeamPrimitives, Team>(teamId);
 
-    await this.dependencies.teamFounderUserValidationService
-      .ensureTeamFounderUserExists(teamFounderId.value);
+    await this.dependencies.teamFounderUserValidationDomainService
+      .ensureTeamFounderUserExists(teamFounderId);
   }
 
   async #createTeamStats(teamId: string, userContext: IUserContext): Promise<void> {

@@ -6,13 +6,13 @@ import {
   IPlayerUserShootingAttributesRepository,
   IPlayerUserSkillAttributesRepository,
   PlayerUserId,
-  PlayerUserValidationService,
-  PUDAReferencedPlayerUserId,
-  PUFAReferencedPlayerUserId,
-  PUPAReferencedPlayerUserId,
-  PURAReferencedPlayerUserId,
-  PUShootingAttributesReferencedPlayerUserId,
-  PUSASkillAttributesReferencedPlayerUserId,
+  PlayerUserValidationDomainService,
+  PUDAPlayerUserId,
+  PUFAPlayerUserId,
+  PUPAPlayerUserId,
+  PURAPlayerUserId,
+  PUShootingAttributesPlayerUserId,
+  PUSASkillAttributesPlayerUserId,
 } from '@basketcol/domain';
 
 import { GetPlayerUserAttributeCategoriesDTO } from '../dtos/GetPlayerUserAttributeCategoriesDTO';
@@ -22,7 +22,7 @@ import {
 } from './ports/IGetPlayerUserAttributeCategoriesUseCase';
 
 type Dependencies = {
-  readonly playerUserValidationService: PlayerUserValidationService;
+  readonly playerUserValidationDomainService: PlayerUserValidationDomainService;
   readonly playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
   readonly playerUserFinishingAttributesRepository: IPlayerUserFinishingAttributesRepository;
   readonly playerUserPhysicalAttributesRepository: IPlayerUserPhysicalAttributesRepository;
@@ -32,7 +32,7 @@ type Dependencies = {
 };
 
 export class GetPlayerUserAttributeCategoriesUseCase implements IGetPlayerUserAttributeCategoriesUseCase {
-  readonly #playerUserValidationService: PlayerUserValidationService;
+  readonly #playerUserValidationDomainService: PlayerUserValidationDomainService;
 
   readonly #playerUserDefensiveAttributesRepository: IPlayerUserDefensiveAttributesRepository;
 
@@ -47,7 +47,7 @@ export class GetPlayerUserAttributeCategoriesUseCase implements IGetPlayerUserAt
   readonly #playerUserSkillAttributesRepository: IPlayerUserSkillAttributesRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#playerUserValidationService = dependencies.playerUserValidationService;
+    this.#playerUserValidationDomainService = dependencies.playerUserValidationDomainService;
     this.#playerUserDefensiveAttributesRepository = dependencies.playerUserDefensiveAttributesRepository;
     this.#playerUserFinishingAttributesRepository = dependencies.playerUserFinishingAttributesRepository;
     this.#playerUserPhysicalAttributesRepository = dependencies.playerUserPhysicalAttributesRepository;
@@ -69,17 +69,17 @@ export class GetPlayerUserAttributeCategoriesUseCase implements IGetPlayerUserAt
 
   async #validateAndGetPlayerId(id: string): Promise<void> {
     const playerUserId = PlayerUserId.create(id);
-    await this.#playerUserValidationService.ensurePlayerUserExists(playerUserId);
+    await this.#playerUserValidationDomainService.ensurePlayerUserExists(playerUserId);
   }
 
   private createReferencedIds(playerId: string) {
     return {
-      defensive: PUDAReferencedPlayerUserId.create(playerId),
-      finishing: PUFAReferencedPlayerUserId.create(playerId),
-      physical: PUPAReferencedPlayerUserId.create(playerId),
-      rebounding: PURAReferencedPlayerUserId.create(playerId),
-      shooting: PUShootingAttributesReferencedPlayerUserId.create(playerId),
-      skill: PUSASkillAttributesReferencedPlayerUserId.create(playerId),
+      defensive: PUDAPlayerUserId.create(playerId),
+      finishing: PUFAPlayerUserId.create(playerId),
+      physical: PUPAPlayerUserId.create(playerId),
+      rebounding: PURAPlayerUserId.create(playerId),
+      shooting: PUShootingAttributesPlayerUserId.create(playerId),
+      skill: PUSASkillAttributesPlayerUserId.create(playerId),
     };
   }
 

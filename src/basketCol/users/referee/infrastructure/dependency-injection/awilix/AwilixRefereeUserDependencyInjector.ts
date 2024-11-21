@@ -1,14 +1,14 @@
 import {
-  BusinessDateService,
-  EmailUniquenessValidatorService,
-  IdUniquenessValidatorService,
-  IEmailUniquenessValidatorServiceRepository,
-  IIdUniquenessValidatorServiceRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  EmailUniquenessValidatorDomainService,
+  IdUniquenessValidatorDomainService,
+  IEmailUniquenessValidatorDomainServiceRepository,
+  IIdUniquenessValidatorDomainServiceRepository,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IRefereeUserRepository,
-  PasswordValueObjectCreationService,
-  SecurePasswordCreationService,
+  PasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -44,20 +44,20 @@ export class AwilixRefereeUserDependencyInjector extends AwilixDependencyInjecto
       refereeUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressRefereeUserServerErrorHandler.create).singleton(),
       createRefereeUserPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreateRefereeUserPOSTController.create).singleton(),
       createRefereeUserUseCase: AwilixDependencyInjector.registerAsFunction<ICreateRefereeUserUseCase>((cradle: IRefereeUserContainer) => CreateRefereeUserUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.refereeUserRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.refereeUserRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        emailUniquenessValidatorService: EmailUniquenessValidatorService.create({
-          emailUniquenessValidatorServiceRepository: cradle.refereeUserRepository as IEmailUniquenessValidatorServiceRepository,
+        businessDateDomainService: cradle.businessDateDomainService,
+        emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService.create({
+          emailUniquenessValidatorDomainServiceRepository: cradle.refereeUserRepository as IEmailUniquenessValidatorDomainServiceRepository,
         }),
         refereeUserRepository: cradle.refereeUserRepository,
       })),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       refereeUserRepository: AwilixDependencyInjector.registerAsFunction<IRefereeUserRepository>(MongooseRefereeUserRepository.create).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
+      passwordHashingDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingDomainService>(BcryptPasswordHashingService.create).singleton(),
+      passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
+      securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
       profileImageUploader: AwilixDependencyInjector.registerAsFunction<IProfileImageUploader>(() => S3ProfileImageUploader.create({
         folderPath: 'referee',
       })).singleton(),

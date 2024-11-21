@@ -1,9 +1,9 @@
 import {
-  BusinessDateService,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IRefereeUserRepository,
-  SecurePasswordCreationService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -19,12 +19,12 @@ export interface IRefereeUserContainer {
   refereeUserServerErrorHandler: IServerErrorHandler;
   createRefereeUserPOSTController: IController;
   createRefereeUserUseCase: ICreateRefereeUserUseCase;
-  businessDateService: BusinessDateService;
+  businessDateDomainService: BusinessDateDomainService;
   refereeUserRepository: IRefereeUserRepository;
   refereeUserRouteManager: IRouteManager;
   fileSystem: IFileSystem;
-  securePasswordCreationService: SecurePasswordCreationService;
-  passwordHashingService: IPasswordHashingService;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   profileImageUploader: IProfileImageUploader;
 }

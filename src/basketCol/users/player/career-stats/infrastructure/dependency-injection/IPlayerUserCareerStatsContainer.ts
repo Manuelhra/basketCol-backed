@@ -1,12 +1,12 @@
 import {
-  BusinessDateService,
-  IdUniquenessValidatorService,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  IdUniquenessValidatorDomainService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IPlayerUserCareerStatsRepository,
   IPlayerUserRepository,
-  PlayerUserValidationService,
-  SecurePasswordCreationService,
+  PlayerUserValidationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IController } from '../../../../../shared/infrastructure/server/controllers/IController';
@@ -17,15 +17,15 @@ import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IF
 export interface IPlayerUserCareerStatsContainer {
   createPlayerUserCareerStatsPOSTController: IController;
   createPlayerUserCareerStatsUseCase: ICreatePlayerUserCareerStatsUseCase;
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  idUniquenessValidatorServiceRepository: IPlayerUserCareerStatsRepository;
-  playerUserValidationService: PlayerUserValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  idUniquenessValidatorDomainServiceRepository: IPlayerUserCareerStatsRepository;
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
   playerUserRepository: IPlayerUserRepository;
-  securePasswordCreationService: SecurePasswordCreationService;
-  passwordHashingService: IPasswordHashingService;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   playerUserCareerStatsRouteManager: IRouteManager;
   fileSystem: IFileSystem;
 }

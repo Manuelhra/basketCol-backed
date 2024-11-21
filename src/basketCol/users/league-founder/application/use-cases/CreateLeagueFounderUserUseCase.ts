@@ -1,8 +1,8 @@
 import {
-  BusinessDateService,
-  EmailUniquenessValidatorService,
+  BusinessDateDomainService,
+  EmailUniquenessValidatorDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   ILeagueFounderUserPrimitives,
   ILeagueFounderUserRepository,
   LeagueFounderUser,
@@ -20,26 +20,26 @@ import { IUserContext } from '../../../../shared/application/context/ports/IUser
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  emailUniquenessValidatorService: EmailUniquenessValidatorService
-  idUniquenessValidatorService: IdUniquenessValidatorService;
+  emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
   leagueFounderUserRepository: ILeagueFounderUserRepository;
-  businessDateService: BusinessDateService;
+  businessDateDomainService: BusinessDateDomainService;
 };
 
 export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserUseCase {
-  readonly #emailUniquenessValidatorService: EmailUniquenessValidatorService;
+  readonly #emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService;
 
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
   readonly #leagueFounderUserRepository: ILeagueFounderUserRepository;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   private constructor(dependencies: Dependencies) {
-    this.#emailUniquenessValidatorService = dependencies.emailUniquenessValidatorService;
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
+    this.#emailUniquenessValidatorDomainService = dependencies.emailUniquenessValidatorDomainService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
     this.#leagueFounderUserRepository = dependencies.leagueFounderUserRepository;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
   }
 
   public static create(dependencies: Dependencies): CreateLeagueFounderUserUseCase {
@@ -56,6 +56,7 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
       email,
       name,
       biography,
+      gender,
       password,
       profileImage,
     } = dto;
@@ -63,13 +64,13 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
     const leagueFounderUserId: LeagueFounderUserId = LeagueFounderUserId.create(id);
     const leagueFounderUserEmail: LeagueFounderUserEmail = LeagueFounderUserEmail.create({ value: email.value, verified: false });
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueFounderUserId, ILeagueFounderUserPrimitives, LeagueFounderUser>(leagueFounderUserId);
-    await this.#emailUniquenessValidatorService.ensureUniqueEmail<LeagueFounderUserEmail, ILeagueFounderUserPrimitives, LeagueFounderUser>(leagueFounderUserEmail);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<LeagueFounderUserId, ILeagueFounderUserPrimitives, LeagueFounderUser>(leagueFounderUserId);
+    await this.#emailUniquenessValidatorDomainService.ensureUniqueEmail<LeagueFounderUserEmail, ILeagueFounderUserPrimitives, LeagueFounderUser>(leagueFounderUserEmail);
 
     const accountState: string = UserAccountState.active;
     const subscriptionType: string = UserSubscriptionType.free;
-    const leagueFounderUserCreatedAt: LeagueFounderUserCreatedAt = this.#businessDateService.getCurrentDate();
-    const leagueFounderUserUpdatedAt: LeagueFounderUserUpdatedAt = this.#businessDateService.getCurrentDate();
+    const leagueFounderUserCreatedAt: LeagueFounderUserCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const leagueFounderUserUpdatedAt: LeagueFounderUserUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const leagueFounderUser: LeagueFounderUser = LeagueFounderUser.create(
       leagueFounderUserId.value,
@@ -77,6 +78,7 @@ export class CreateLeagueFounderUserUseCase implements ICreateLeagueFounderUserU
       biography,
       leagueFounderUserEmail.value,
       password,
+      gender,
       accountState,
       subscriptionType,
       profileImage,

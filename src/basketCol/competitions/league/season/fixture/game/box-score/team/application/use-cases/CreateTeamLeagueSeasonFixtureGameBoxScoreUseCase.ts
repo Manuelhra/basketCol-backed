@@ -1,11 +1,11 @@
 import {
-  BusinessDateService,
-  IdUniquenessValidatorService,
+  BusinessDateDomainService,
+  IdUniquenessValidatorDomainService,
   ITeamLeagueSeasonFixtureGameBoxScorePrimitives,
   ITeamLeagueSeasonFixtureGameBoxScoreRepository,
-  LeagueSeasonFixtureGameValidationService,
+  LeagueSeasonFixtureGameValidationDomainService,
   TeamLeagueSeasonFixtureGameBoxScore,
-  TeamValidationService,
+  TeamValidationDomainService,
   TLSFGBoxScoreCreatedAt,
   TLSFGBoxScoreFixtureGameId,
   TLSFGBoxScoreId,
@@ -17,29 +17,29 @@ import { CreateTeamLeagueSeasonFixtureGameBoxScoreDTO } from '../dtos/CreateTeam
 import { ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase } from './ports/ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  leagueSeasonFixtureGameValidationService: LeagueSeasonFixtureGameValidationService;
-  teamValidationService: TeamValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  leagueSeasonFixtureGameValidationDomainService: LeagueSeasonFixtureGameValidationDomainService;
+  teamValidationDomainService: TeamValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   teamLeagueSeasonFixtureGameBoxScoreRepository: ITeamLeagueSeasonFixtureGameBoxScoreRepository;
 };
 
 export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #leagueSeasonFixtureGameValidationService: LeagueSeasonFixtureGameValidationService;
+  readonly #leagueSeasonFixtureGameValidationDomainService: LeagueSeasonFixtureGameValidationDomainService;
 
-  readonly #teamValidationService: TeamValidationService;
+  readonly #teamValidationDomainService: TeamValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #teamLeagueSeasonFixtureGameBoxScoreRepository: ITeamLeagueSeasonFixtureGameBoxScoreRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#leagueSeasonFixtureGameValidationService = dependencies.leagueSeasonFixtureGameValidationService;
-    this.#teamValidationService = dependencies.teamValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#leagueSeasonFixtureGameValidationDomainService = dependencies.leagueSeasonFixtureGameValidationDomainService;
+    this.#teamValidationDomainService = dependencies.teamValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#teamLeagueSeasonFixtureGameBoxScoreRepository = dependencies.teamLeagueSeasonFixtureGameBoxScoreRepository;
   }
 
@@ -72,12 +72,12 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
     const tLSFGBoxScoreFixtureGameId: TLSFGBoxScoreFixtureGameId = TLSFGBoxScoreFixtureGameId.create(fixtureGameId);
     const tLSFGBoxScoreTeamId: TLSFGBoxScoreTeamId = TLSFGBoxScoreTeamId.create(teamId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<TLSFGBoxScoreId, ITeamLeagueSeasonFixtureGameBoxScorePrimitives, TeamLeagueSeasonFixtureGameBoxScore>(tLSFGBoxScoreId);
-    await this.#leagueSeasonFixtureGameValidationService.ensureLeagueSeasonFixtureGameExists(tLSFGBoxScoreFixtureGameId.value);
-    await this.#teamValidationService.ensureTeamExists(tLSFGBoxScoreTeamId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<TLSFGBoxScoreId, ITeamLeagueSeasonFixtureGameBoxScorePrimitives, TeamLeagueSeasonFixtureGameBoxScore>(tLSFGBoxScoreId);
+    await this.#leagueSeasonFixtureGameValidationDomainService.ensureLeagueSeasonFixtureGameExists(tLSFGBoxScoreFixtureGameId);
+    await this.#teamValidationDomainService.ensureTeamExists(tLSFGBoxScoreTeamId);
 
-    const tLSFGBoxScoreCreatedAt: TLSFGBoxScoreCreatedAt = this.#businessDateService.getCurrentDate();
-    const tLSFGBoxScoreUpdatedAt: TLSFGBoxScoreUpdatedAt = this.#businessDateService.getCurrentDate();
+    const tLSFGBoxScoreCreatedAt: TLSFGBoxScoreCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const tLSFGBoxScoreUpdatedAt: TLSFGBoxScoreUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const teamLeagueSeasonFixtureGameBoxScore: TeamLeagueSeasonFixtureGameBoxScore = TeamLeagueSeasonFixtureGameBoxScore.create(
       id,
@@ -95,8 +95,8 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
       freeThrowsMade,
       fieldGoalsAttempted,
       fieldGoalsMade,
-      tLSFGBoxScoreFixtureGameId.fixtureGameIdAsString,
-      tLSFGBoxScoreTeamId.teamIdAsString,
+      tLSFGBoxScoreFixtureGameId.value,
+      tLSFGBoxScoreTeamId.value,
       tLSFGBoxScoreCreatedAt.value,
       tLSFGBoxScoreUpdatedAt.value,
     );

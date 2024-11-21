@@ -5,7 +5,7 @@ import {
   IHostUserPrimitives,
   IHostUserRepository,
   Nullable,
-  SecurePasswordCreationService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 import { Model } from 'mongoose';
 
@@ -15,13 +15,13 @@ import { MongooseClientFactory } from '../../../../../shared/infrastructure/pers
 import { mongooseHostUserSchema } from './mongoose-host-user.schema';
 
 type Dependencies = {
-  securePasswordCreationService: SecurePasswordCreationService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
 };
 
 export class MongooseHostUserRepository
   extends MongooseRepository<IHostUserPrimitives, HostUser>
   implements IHostUserRepository {
-  readonly #securePasswordCreationService: SecurePasswordCreationService;
+  readonly #securePasswordCreationDomainService: SecurePasswordCreationDomainService;
 
   protected collectionName(): string {
     return 'host_user';
@@ -33,7 +33,7 @@ export class MongooseHostUserRepository
       mongooseSchema: mongooseHostUserSchema,
     });
 
-    this.#securePasswordCreationService = dependencies.securePasswordCreationService;
+    this.#securePasswordCreationDomainService = dependencies.securePasswordCreationDomainService;
   }
 
   public static create(dependencies: Dependencies): MongooseHostUserRepository {
@@ -66,7 +66,7 @@ export class MongooseHostUserRepository
 
   protected override async persist(aggregate: HostUser): Promise<void> {
     const MyModel:Model<{ [key: string]: any }> = await this.model();
-    const userHashedPassword = await this.#securePasswordCreationService.createFromPlainText(aggregate.password);
+    const userHashedPassword = await this.#securePasswordCreationDomainService.createFromPlainText(aggregate.password);
 
     const {
       id,
@@ -84,6 +84,7 @@ export class MongooseHostUserRepository
       document.biography.valueOf(),
       { value: document.email.value.valueOf(), verified: document.email.verified.valueOf() },
       document.password.valueOf(),
+      document.gender.valueOf(),
       document.accountStatus.valueOf(),
       document.subscriptionType.valueOf(),
       {

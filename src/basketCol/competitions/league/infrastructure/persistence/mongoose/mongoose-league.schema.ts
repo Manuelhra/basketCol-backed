@@ -28,6 +28,10 @@ export const mongooseLeagueSchema = new Schema<IMongooseLeagueDocument>({
       required: [true, "The league's complete description is required"],
     },
   },
+  gender: {
+    type: String,
+    required: [true, "The league's gender is required"],
+  },
   rules: {
     type: String,
     required: [true, "The league's rules are required"],

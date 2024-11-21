@@ -1,19 +1,19 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   DateValueObject,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   ILeaguePrimitives,
   ILeagueRepository,
   League,
   LeagueCreatedAt,
   LeagueEstablishmentDate,
-  LeagueFounderUserValidationService,
+  LeagueFounderUserValidationDomainService,
   LeagueId,
   LeagueName,
   LeagueUpdatedAt,
-  LeagueValidationNameService,
-  LReferencedLeagueFounderUserId,
+  LeagueLeagueFounderUserId,
+  LeagueValidationDomainService,
 } from '@basketcol/domain';
 
 import { CreateLeagueDTO } from '../dtos/CreateLeagueDTO';
@@ -22,31 +22,15 @@ import { IUserContext } from '../../../../shared/application/context/ports/IUser
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  businessDateService: BusinessDateService;
-  leagueValidationNameService: LeagueValidationNameService;
-  leagueRepository: ILeagueRepository;
-  leagueFounderUserValidationService: LeagueFounderUserValidationService;
-  idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly businessDateDomainService: BusinessDateDomainService;
+  readonly leagueRepository: ILeagueRepository;
+  readonly leagueFounderUserValidationDomainService: LeagueFounderUserValidationDomainService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly leagueValidationDomainService: LeagueValidationDomainService;
 };
 
 export class CreateLeagueUseCase implements ICreateLeagueUseCase {
-  readonly #businessDateService: BusinessDateService;
-
-  readonly #leagueValidationNameService: LeagueValidationNameService;
-
-  readonly #leagueRepository: ILeagueRepository;
-
-  readonly #leagueFounderUserValidationService: LeagueFounderUserValidationService;
-
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
-
-  private constructor(dependencies: Dependencies) {
-    this.#businessDateService = dependencies.businessDateService;
-    this.#leagueValidationNameService = dependencies.leagueValidationNameService;
-    this.#leagueRepository = dependencies.leagueRepository;
-    this.#leagueFounderUserValidationService = dependencies.leagueFounderUserValidationService;
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-  }
+  private constructor(private readonly dependencies: Dependencies) {}
 
   public static create(dependencies: Dependencies): CreateLeagueUseCase {
     return new CreateLeagueUseCase(dependencies);
@@ -61,6 +45,7 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
       id,
       name,
       description,
+      gender,
       level,
       rules,
       location,
@@ -70,35 +55,36 @@ export class CreateLeagueUseCase implements ICreateLeagueUseCase {
 
     const leagueId: LeagueId = LeagueId.create(id);
     const leagueName: LeagueName = LeagueName.create(name);
-    const lReferencedLeagueFounderUserId: LReferencedLeagueFounderUserId = LReferencedLeagueFounderUserId.create(leagueFounderUserId);
+    const leagueLeagueFounderUserId: LeagueLeagueFounderUserId = LeagueLeagueFounderUserId.create(leagueFounderUserId);
     const leagueEstablishmentDate: LeagueEstablishmentDate = LeagueEstablishmentDate.create(establishmentDate);
-    const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
+    const currentDate: DateValueObject = this.dependencies.businessDateDomainService.getCurrentDate();
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<LeagueId, ILeaguePrimitives, League>(leagueId);
-    await this.#leagueValidationNameService.validateUniqueShortName(leagueName);
-    await this.#leagueValidationNameService.validateUniqueOfficialName(leagueName);
+    await this.dependencies.idUniquenessValidatorDomainService.ensureUniqueId<LeagueId, ILeaguePrimitives, League>(leagueId);
+    await this.dependencies.leagueValidationDomainService.validateUniqueShortName(leagueName);
+    await this.dependencies.leagueValidationDomainService.validateUniqueOfficialName(leagueName);
 
-    await this.#leagueFounderUserValidationService.ensureFounderUserExists(lReferencedLeagueFounderUserId.value);
-    this.#businessDateService.ensureNotGreaterThan<LeagueEstablishmentDate, DateValueObject>(leagueEstablishmentDate, currentDate);
+    await this.dependencies.leagueFounderUserValidationDomainService.ensureFounderUserExists(leagueLeagueFounderUserId);
+    this.dependencies.businessDateDomainService.ensureNotGreaterThan<LeagueEstablishmentDate, DateValueObject>(leagueEstablishmentDate, currentDate);
 
     const isActive: boolean = true;
-    const leagueCreatedAt: LeagueCreatedAt = this.#businessDateService.getCurrentDate();
-    const leagueUpdatedAt: LeagueUpdatedAt = this.#businessDateService.getCurrentDate();
+    const leagueCreatedAt: LeagueCreatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
+    const leagueUpdatedAt: LeagueUpdatedAt = this.dependencies.businessDateDomainService.getCurrentDate();
 
     const league: League = League.create(
       leagueId.value,
       name,
       description,
+      gender,
       rules,
       level,
       location,
-      lReferencedLeagueFounderUserId.leagueFounderUserIdAsString,
+      leagueLeagueFounderUserId.value,
       leagueEstablishmentDate.value,
       isActive,
       leagueCreatedAt.value,
       leagueUpdatedAt.value,
     );
 
-    return this.#leagueRepository.save(league);
+    return this.dependencies.leagueRepository.save(league);
   }
 }

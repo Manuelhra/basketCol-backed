@@ -1,14 +1,14 @@
 import {
-  BusinessDateService,
-  HostUserValidationService,
-  IdUniquenessValidatorService,
+  BusinessDateDomainService,
+  HostUserValidationDomainService,
+  IdUniquenessValidatorDomainService,
   IGymRepository,
   IHostUserRepository,
-  IIdUniquenessValidatorServiceRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
-  PasswordValueObjectCreationService,
-  SecurePasswordCreationService,
+  IIdUniquenessValidatorDomainServiceRepository,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  PasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -27,14 +27,14 @@ import { ICreateGymUseCase } from '../../../application/use-cases/ports/ICreateG
 import { CreateGymUseCase } from '../../../application/use-cases/CreateGymUseCase';
 import { MongooseGymRepository } from '../../persistence/mongoose/MongooseGymRepository';
 import { MongooseHostUserRepository } from '../../../../../users/host/infrastructure/persistence/mongoose/MongooseHostUserRepository';
-import { IFacilityMainImageUploader } from '../../../../shared/application/file-upload/images/ports/IFacilityMainImageUploader';
-import { S3FacilityMainImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3FacilityMainImageUploader';
-import { IFacilityBatchImageUploader } from '../../../../shared/application/file-upload/images/ports/IFacilityBatchImageUploader';
-import { S3FacilityBatchImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3FacilityBatchImageUploader';
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
 import { ExpressSearchAllGymsGETController } from '../../server/express/controllers/ExpressSearchAllGymsGETController';
 import { ISearchAllGymsUseCase } from '../../../application/use-cases/ports/ISearchAllGymsUseCase';
 import { SearchAllGymsUseCase } from '../../../application/use-cases/SearchAllGymsUseCase';
+import { IBatchGalleryImagesUploader } from '../../../../../shared/application/file-upload/images/ports/IBatchGalleryImagesUploader';
+import { IMainImageUploader } from '../../../../../shared/application/file-upload/images/ports/IMainImageUploader';
+import { S3BatchGalleryImagesUploader } from '../../../../../shared/infrastructure/file-upload/aws/S3BatchGalleryImagesUploader';
+import { S3MainImageUploader } from '../../../../../shared/infrastructure/file-upload/aws/S3MainImageUploader';
 
 export class AwilixGymDependencyInjector extends AwilixDependencyInjector<IGymContainer> {
   private constructor() {
@@ -49,27 +49,27 @@ export class AwilixGymDependencyInjector extends AwilixDependencyInjector<IGymCo
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
       gymServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressGymServerErrorHandler.create).singleton(),
       createGymPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreateGymPOSTController.create).singleton(),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       createGymUseCase: AwilixDependencyInjector.registerAsFunction<ICreateGymUseCase>((cradle: IGymContainer) => CreateGymUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.gymRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.gymRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
+        businessDateDomainService: cradle.businessDateDomainService,
         gymRepository: cradle.gymRepository,
-        hostUserValidationService: cradle.hostUserValidationService,
+        hostUserValidationDomainService: cradle.hostUserValidationDomainService,
       })),
       gymRepository: AwilixDependencyInjector.registerAsFunction<IGymRepository>(MongooseGymRepository.create).singleton(),
-      hostUserValidationService: AwilixDependencyInjector.registerAsFunction<HostUserValidationService>(HostUserValidationService.create).singleton(),
+      hostUserValidationDomainService: AwilixDependencyInjector.registerAsFunction<HostUserValidationDomainService>(HostUserValidationDomainService.create).singleton(),
       hostUserRepository: AwilixDependencyInjector.registerAsFunction<IHostUserRepository>(MongooseHostUserRepository.create).singleton(),
-      facilityMainImageUploader: AwilixDependencyInjector.registerAsFunction<IFacilityMainImageUploader>(() => S3FacilityMainImageUploader.create({
+      mainImageUploader: AwilixDependencyInjector.registerAsFunction<IMainImageUploader>(() => S3MainImageUploader.create({
         folderPath: 'gym',
       })),
-      facilityBatchImageUploader: AwilixDependencyInjector.registerAsFunction<IFacilityBatchImageUploader>(() => S3FacilityBatchImageUploader.create({
+      batchGalleryImagesUploader: AwilixDependencyInjector.registerAsFunction<IBatchGalleryImagesUploader>(() => S3BatchGalleryImagesUploader.create({
         folderPath: 'gym',
       })),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
+      passwordHashingDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingDomainService>(BcryptPasswordHashingService.create).singleton(),
+      passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       searchAllGymsGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchAllGymsGETController.create).singleton(),
       searchAllGymsUseCase: AwilixDependencyInjector.registerAsFunction<ISearchAllGymsUseCase>(SearchAllGymsUseCase.create).singleton(),
     });

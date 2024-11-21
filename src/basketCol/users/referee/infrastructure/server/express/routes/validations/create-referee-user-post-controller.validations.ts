@@ -26,6 +26,12 @@ export const createRefereeUserPOSTControllerValidations: ValidationChain[] = [
     .isString()
     .withMessage('Biography must be a string'),
 
+  body('gender')
+    .notEmpty()
+    .withMessage('Gender is required')
+    .isString()
+    .withMessage('Gender must be a string'),
+
   body('email.value')
     .notEmpty()
     .withMessage('Email is required')

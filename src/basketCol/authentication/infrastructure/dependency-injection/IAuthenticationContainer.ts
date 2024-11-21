@@ -1,12 +1,12 @@
 import {
   IHostUserRepository,
   ILeagueFounderUserRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IPlayerUserRepository,
   IRefereeUserRepository,
   ITeamFounderUserRepository,
-  SecurePasswordCreationService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IAuthenticateUserUseCase } from '../../application/use-cases/ports/IAuthenticateUserUseCase';
@@ -28,16 +28,16 @@ export interface IAuthenticationContainer {
   authenticateUserUseCase: IAuthenticateUserUseCase;
   getAuthenticatedUserUseCase: IGetAuthenticatedUserUseCase;
   authenticationRouteManager: IRouteManager;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   fileSystem: IFileSystem;
   hostUserRepository: IHostUserRepository;
   httpResponseHandler: IHttpResponseHandler;
   leagueFounderUserRepository: ILeagueFounderUserRepository;
-  passwordHashingService: IPasswordHashingService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
   passwordValidationService: PasswordValidationService;
   playerUserRepository: IPlayerUserRepository;
   refereeUserRepository: IRefereeUserRepository;
-  securePasswordCreationService: SecurePasswordCreationService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
   teamFounderUserRepository: ITeamFounderUserRepository;
   tokenGeneratorService: ITokenGeneratorService;
   validateAndRefreshAuthenticationTokenPOSTController: IController;

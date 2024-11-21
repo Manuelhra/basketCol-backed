@@ -1,7 +1,7 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   HostUserType,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   ITeamAllTimeStatsPrimitives,
   ITeamAllTimeStatsRepository,
   TATStatsCreatedAt,
@@ -9,7 +9,7 @@ import {
   TATStatsTeamId,
   TATStatsUpdatedAt,
   TeamAllTimeStats,
-  TeamValidationService,
+  TeamValidationDomainService,
 } from '@basketcol/domain';
 
 import { CreateTeamAllTimeStatsDTO } from '../dtos/CreateTeamAllTimeStatsDTO';
@@ -18,25 +18,25 @@ import { IUserContext } from '../../../../shared/application/context/ports/IUser
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  teamValidationService: TeamValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  teamValidationDomainService: TeamValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   teamAllTimeStatsRepository: ITeamAllTimeStatsRepository;
 };
 
 export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #teamValidationService: TeamValidationService;
+  readonly #teamValidationDomainService: TeamValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #teamAllTimeStatsRepository: ITeamAllTimeStatsRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#teamValidationService = dependencies.teamValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#teamValidationDomainService = dependencies.teamValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#teamAllTimeStatsRepository = dependencies.teamAllTimeStatsRepository;
   }
 
@@ -75,11 +75,11 @@ export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUse
     const tATStatsId: TATStatsId = TATStatsId.create(id);
     const tATStatsTeamId: TATStatsTeamId = TATStatsTeamId.create(teamId);
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<TATStatsId, ITeamAllTimeStatsPrimitives, TeamAllTimeStats>(tATStatsId);
-    await this.#teamValidationService.ensureTeamExists(tATStatsTeamId.value);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<TATStatsId, ITeamAllTimeStatsPrimitives, TeamAllTimeStats>(tATStatsId);
+    await this.#teamValidationDomainService.ensureTeamExists(tATStatsTeamId);
 
-    const tATStatsCreatedAt: TATStatsCreatedAt = this.#businessDateService.getCurrentDate();
-    const tATStatsUpdatedAt: TATStatsUpdatedAt = this.#businessDateService.getCurrentDate();
+    const tATStatsCreatedAt: TATStatsCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const tATStatsUpdatedAt: TATStatsUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const teamAllTimeStats: TeamAllTimeStats = TeamAllTimeStats.create(
       tATStatsId.value,
@@ -101,7 +101,7 @@ export class CreateTeamAllTimeStatsUseCase implements ICreateTeamAllTimeStatsUse
       totalFreeThrowsMade,
       totalFieldGoalsAttempted,
       totalFieldGoalsMade,
-      tATStatsTeamId.teamIdAsString,
+      tATStatsTeamId.value,
       tATStatsCreatedAt.value,
       tATStatsUpdatedAt.value,
     );

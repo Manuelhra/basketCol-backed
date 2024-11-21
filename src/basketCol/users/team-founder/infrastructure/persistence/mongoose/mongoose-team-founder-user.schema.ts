@@ -30,6 +30,10 @@ export const mongooseTeamFounderUserSchema = new Schema<IMongooseTeamFounderUser
     type: String,
     required: [true, "The team founder user's password is required"],
   },
+  gender: {
+    type: String,
+    required: [true, "The team founder user's gender is required"],
+  },
   biography: {
     type: String,
     required: [true, "The team founder user's biography is required"],
@@ -45,6 +49,15 @@ export const mongooseTeamFounderUserSchema = new Schema<IMongooseTeamFounderUser
   subscriptionType: {
     type: String,
     required: [true, "The team founder user's subscriptionType status is required"],
+  },
+  profileImage: {
+    url: { type: String, required: [true, "The team founder user's profile image url is required"] },
+    uploadedAt: { type: String, required: [true, "The team founder user's profile image uploaded date is required"] },
+    alt: { type: String, required: [true, "The team founder user's profile image alt is required"] },
+    dimensions: {
+      width: { type: Number, required: [true, "The team founder user's profile image width is required"] },
+      height: { type: Number, required: [true, "The team founder user's profile image height is required"] },
+    },
   },
   createdAt: {
     type: String,

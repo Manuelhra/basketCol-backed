@@ -30,6 +30,10 @@ export const mongooseHostUserSchema = new Schema<IMongooseHostUserDocument>({
     type: String,
     required: [true, "The host user's password is required"],
   },
+  gender: {
+    type: String,
+    required: [true, "The host user's gender is required"],
+  },
   biography: {
     type: String,
     required: [true, "The host user's biography is required"],

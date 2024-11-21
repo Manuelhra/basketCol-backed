@@ -1,9 +1,9 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   ITeamFounderUserRepository,
-  SecurePasswordCreationService,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  SecurePasswordCreationDomainService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -19,12 +19,12 @@ export interface ITeamFounderUserContainer {
   teamFounderUserServerErrorHandler: IServerErrorHandler;
   createTeamFounderUserPOSTController: IController;
   createTeamFounderUserUseCase: ICreateTeamFounderUserUseCase;
-  businessDateService: BusinessDateService;
+  businessDateDomainService: BusinessDateDomainService;
   teamFounderUserRepository: ITeamFounderUserRepository;
   teamFounderUserRouteManager: IRouteManager;
   fileSystem: IFileSystem;
-  securePasswordCreationService: SecurePasswordCreationService;
-  passwordHashingService: IPasswordHashingService;
-  passwordValueObjectCreationService: IPasswordValueObjectCreationService;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   profileImageUploader: IProfileImageUploader;
 }

@@ -1,7 +1,7 @@
-import { IPasswordHashingService } from '@basketcol/domain';
+import { IPasswordHashingDomainService } from '@basketcol/domain';
 import bcrypt from 'bcrypt';
 
-export class BcryptPasswordHashingService implements IPasswordHashingService {
+export class BcryptPasswordHashingService implements IPasswordHashingDomainService {
   public static create(): BcryptPasswordHashingService {
     return new BcryptPasswordHashingService();
   }

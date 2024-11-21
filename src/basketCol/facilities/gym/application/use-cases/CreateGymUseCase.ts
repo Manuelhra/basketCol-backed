@@ -1,5 +1,5 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   DateValueObject,
   Gym,
   GymCreatedAt,
@@ -8,8 +8,8 @@ import {
   GymRegisteredById,
   GymUpdatedAt,
   HostUserType,
-  HostUserValidationService,
-  IdUniquenessValidatorService,
+  HostUserValidationDomainService,
+  IdUniquenessValidatorDomainService,
   IGymPrimitives,
   IGymRepository,
 } from '@basketcol/domain';
@@ -20,25 +20,25 @@ import { IUserContext } from '../../../../shared/application/context/ports/IUser
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorService: IdUniquenessValidatorService;
-  hostUserValidationService: HostUserValidationService;
-  businessDateService: BusinessDateService;
+  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  hostUserValidationDomainService: HostUserValidationDomainService;
+  businessDateDomainService: BusinessDateDomainService;
   gymRepository: IGymRepository;
 };
 
 export class CreateGymUseCase implements ICreateGymUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #hostUserValidationService: HostUserValidationService;
+  readonly #hostUserValidationDomainService: HostUserValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #gymRepository: IGymRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#hostUserValidationService = dependencies.hostUserValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#hostUserValidationDomainService = dependencies.hostUserValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#gymRepository = dependencies.gymRepository;
   }
 
@@ -63,21 +63,21 @@ export class CreateGymUseCase implements ICreateGymUseCase {
     const gymId: GymId = GymId.create(id);
     const gymRegisteredById: GymRegisteredById = GymRegisteredById.create(userContext.userId);
     const gymEstablishmentDate: GymEstablishmentDate = GymEstablishmentDate.create(establishmentDate);
-    const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
+    const currentDate: DateValueObject = this.#businessDateDomainService.getCurrentDate();
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<GymId, IGymPrimitives, Gym>(gymId);
-    await this.#hostUserValidationService.ensureHostUserExists(gymRegisteredById.value);
-    this.#businessDateService.ensureNotGreaterThan<GymEstablishmentDate, DateValueObject>(gymEstablishmentDate, currentDate);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<GymId, IGymPrimitives, Gym>(gymId);
+    await this.#hostUserValidationDomainService.ensureHostUserExists(gymRegisteredById);
+    this.#businessDateDomainService.ensureNotGreaterThan<GymEstablishmentDate, DateValueObject>(gymEstablishmentDate, currentDate);
 
-    const gymCreatedAt: GymCreatedAt = this.#businessDateService.getCurrentDate();
-    const gymUpdatedAt: GymUpdatedAt = this.#businessDateService.getCurrentDate();
+    const gymCreatedAt: GymCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const gymUpdatedAt: GymUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
     const gym: Gym = Gym.create(
       gymId.value,
       officialName,
       location,
       gymEstablishmentDate.value,
-      gymRegisteredById.hostUserIdAsString,
+      gymRegisteredById.value,
       mainImage,
       gallery,
       gymCreatedAt.value,

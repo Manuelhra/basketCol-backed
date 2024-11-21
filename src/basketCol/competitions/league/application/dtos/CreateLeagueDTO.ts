@@ -10,6 +10,7 @@ export interface CreateLeagueDTO {
     short: string;
     complete: string;
   };
+  gender: string,
   rules: string;
   level: string;
   location: ILocationValueObjectProps;

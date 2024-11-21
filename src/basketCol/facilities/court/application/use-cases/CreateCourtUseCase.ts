@@ -1,19 +1,20 @@
 import {
-  BusinessDateService,
+  BusinessDateDomainService,
   Court,
   CourtCreatedAt,
   CourtEstablishmentDate,
   CourtId,
-  CourtNullableReferencedFacilityId,
+  CourtFacilityId,
   CourtRegisteredById,
   CourtUpdatedAt,
   DateValueObject,
-  GymValidationService,
+  GymValidationDomainService,
   HostUserType,
-  HostUserValidationService,
+  HostUserValidationDomainService,
   ICourtPrimitives,
   ICourtRepository,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
+  GymId,
 } from '@basketcol/domain';
 
 import { CreateCourtDTO } from '../dtos/CreateCourtDTO';
@@ -22,29 +23,29 @@ import { IUserContext } from '../../../../shared/application/context/ports/IUser
 import { UnauthorizedAccessError } from '../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  readonly idUniquenessValidatorService: IdUniquenessValidatorService;
-  readonly hostUserValidationService: HostUserValidationService;
-  readonly gymValidationService: GymValidationService;
-  readonly businessDateService: BusinessDateService;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly hostUserValidationDomainService: HostUserValidationDomainService;
+  readonly gymValidationDomainService: GymValidationDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
   readonly courtRepository: ICourtRepository;
 };
 
 export class CreateCourtUseCase implements ICreateCourtUseCase {
-  readonly #idUniquenessValidatorService: IdUniquenessValidatorService;
+  readonly #idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
 
-  readonly #hostUserValidationService: HostUserValidationService;
+  readonly #hostUserValidationDomainService: HostUserValidationDomainService;
 
-  readonly #gymValidationService: GymValidationService;
+  readonly #gymValidationDomainService: GymValidationDomainService;
 
-  readonly #businessDateService: BusinessDateService;
+  readonly #businessDateDomainService: BusinessDateDomainService;
 
   readonly #courtRepository: ICourtRepository;
 
   private constructor(dependencies: Dependencies) {
-    this.#idUniquenessValidatorService = dependencies.idUniquenessValidatorService;
-    this.#hostUserValidationService = dependencies.hostUserValidationService;
-    this.#gymValidationService = dependencies.gymValidationService;
-    this.#businessDateService = dependencies.businessDateService;
+    this.#idUniquenessValidatorDomainService = dependencies.idUniquenessValidatorDomainService;
+    this.#hostUserValidationDomainService = dependencies.hostUserValidationDomainService;
+    this.#gymValidationDomainService = dependencies.gymValidationDomainService;
+    this.#businessDateDomainService = dependencies.businessDateDomainService;
     this.#courtRepository = dependencies.courtRepository;
   }
 
@@ -72,20 +73,20 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
     const courtId: CourtId = CourtId.create(id);
     const courtRegisteredById: CourtRegisteredById = CourtRegisteredById.create(userContext.userId);
     const courtEstablishmentDate: CourtEstablishmentDate = CourtEstablishmentDate.create(establishmentDate);
-    const currentDate: DateValueObject = this.#businessDateService.getCurrentDate();
+    const currentDate: DateValueObject = this.#businessDateDomainService.getCurrentDate();
 
-    await this.#idUniquenessValidatorService.ensureUniqueId<CourtId, ICourtPrimitives, Court>(courtId);
-    await this.#hostUserValidationService.ensureHostUserExists(courtRegisteredById.value);
-    this.#businessDateService.ensureNotGreaterThan<CourtEstablishmentDate, DateValueObject>(courtEstablishmentDate, currentDate);
+    await this.#idUniquenessValidatorDomainService.ensureUniqueId<CourtId, ICourtPrimitives, Court>(courtId);
+    await this.#hostUserValidationDomainService.ensureHostUserExists(courtRegisteredById);
+    this.#businessDateDomainService.ensureNotGreaterThan<CourtEstablishmentDate, DateValueObject>(courtEstablishmentDate, currentDate);
 
-    const courtCreatedAt: CourtCreatedAt = this.#businessDateService.getCurrentDate();
-    const courtUpdatedAt: CourtUpdatedAt = this.#businessDateService.getCurrentDate();
+    const courtCreatedAt: CourtCreatedAt = this.#businessDateDomainService.getCurrentDate();
+    const courtUpdatedAt: CourtUpdatedAt = this.#businessDateDomainService.getCurrentDate();
 
-    const courtNullableFacilityId: CourtNullableReferencedFacilityId = CourtNullableReferencedFacilityId.create(facilityId);
+    const courtNullableFacilityId: CourtFacilityId = CourtFacilityId.create(facilityId);
 
     if (courtNullableFacilityId.value !== null) {
       // TODO: Crear un servicio de dominio que valida si existe una instalación con ese ID.
-      await this.#gymValidationService.ensureGymExists(courtNullableFacilityId.value);
+      await this.#gymValidationDomainService.ensureGymExists(GymId.create(courtNullableFacilityId.value));
     }
 
     const court: Court = Court.create(
@@ -94,11 +95,11 @@ export class CreateCourtUseCase implements ICreateCourtUseCase {
       courtEstablishmentDate.value,
       surface,
       hoopHeight,
-      courtRegisteredById.hostUserIdAsString,
+      courtRegisteredById.value,
       location,
       mainImage,
       gallery,
-      courtNullableFacilityId.facilityIdAsStringOrNull,
+      courtNullableFacilityId.value,
       courtCreatedAt.value,
       courtUpdatedAt.value,
     );

@@ -1,9 +1,9 @@
 import {
-  BusinessDateService,
-  IdUniquenessValidatorService,
-  IIdUniquenessValidatorServiceRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  IdUniquenessValidatorDomainService,
+  IIdUniquenessValidatorDomainServiceRepository,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IPlayerUserDefensiveAttributesRepository,
   IPlayerUserFinishingAttributesRepository,
   IPlayerUserPhysicalAttributesRepository,
@@ -11,15 +11,13 @@ import {
   IPlayerUserRepository,
   IPlayerUserShootingAttributesRepository,
   IPlayerUserSkillAttributesRepository,
-  PasswordValueObjectCreationService,
-  PlayerUserValidationService,
-  SecurePasswordCreationService,
+  PasswordValueObjectCreationDomainService,
+  PlayerUserValidationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { AwilixDependencyInjector } from '../../../../../../../shared/infrastructure/dependency-injection/awilix/AwilixDependencyInjector';
-import { IExcelManager } from '../../../../../../../shared/infrastructure/excel/ports/IExcelManager';
-import { XLSXManager } from '../../../../../../../shared/infrastructure/excel/xlsx/XLSXManager';
 import { GlobFileSystem } from '../../../../../../../shared/infrastructure/file-system/GlobFileSystem';
 import { IFileSystem } from '../../../../../../../shared/infrastructure/file-system/IFileSystem';
 import { HttpResponseHandler } from '../../../../../../../shared/infrastructure/http/HttpResponseHandler';
@@ -29,7 +27,7 @@ import { CreateDefensiveAttributesUseCase } from '../../../../defensive/applicat
 import { ICreateDefensiveAttributesUseCase } from '../../../../defensive/application/use-cases/ports/ICreateDefensiveAttributesUseCase';
 import { ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController } from '../../server/express/controllers/ExpressBulkCreatePlayerUserAttributeCategoriesFromExcelPOSTController';
 import { ExpressPlayerUserAttributesRouteManager } from '../../server/express/routes/ExpressPlayerUserAttributesRouteManager';
-import { BulkCreatePlayerUserAttributeCategoriesService } from '../../services/BulkCreatePlayerUserAttributeCategoriesService';
+import { BulkCreatePlayerUserAttributeCategoriesFromExcelService } from '../../services/BulkCreatePlayerUserAttributeCategoriesFromExcelService';
 import { IPlayerUserAttributesContainer } from '../IPlayerUserAttributesContainer';
 import { MongoosePlayerUserDefensiveAttributesRepository } from '../../../../defensive/infrastructure/persistence/mongoose/MongoosePlayerUserDefensiveAttributesRepository';
 import { ICreateFinishingAttributesUseCase } from '../../../../finishing/application/use-cases/ports/ICreateFinishingAttributesUseCase';
@@ -52,6 +50,8 @@ import { BcryptPasswordHashingService } from '../../../../../../../shared/infras
 import { ExpressGetPlayerUserAttributeCategoriesGETController } from '../../server/express/controllers/ExpressGetPlayerUserAttributeCategoriesGETController';
 import { IGetPlayerUserAttributeCategoriesUseCase } from '../../../application/use-cases/ports/IGetPlayerUserAttributeCategoriesUseCase';
 import { GetPlayerUserAttributeCategoriesUseCase } from '../../../application/use-cases/GetPlayerUserAttributeCategoriesUseCase';
+import { IExcelManager } from '../../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
+import { XLSXManager } from '../../../../../../../shared/infrastructure/file-upload/excel/xlsx/XLSXManager';
 
 export class AwilixPlayerUserAttributesDependencyInjector
   extends AwilixDependencyInjector<IPlayerUserAttributesContainer> {
@@ -67,67 +67,67 @@ export class AwilixPlayerUserAttributesDependencyInjector
       fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
         basePath: __dirname,
       })).singleton(),
-      bulkCreatePlayerUserAttributeCategoriesService: AwilixDependencyInjector.registerAsFunction<BulkCreatePlayerUserAttributeCategoriesService>(BulkCreatePlayerUserAttributeCategoriesService.create).singleton(),
+      bulkCreatePlayerUserAttributeCategoriesFromExcelService: AwilixDependencyInjector.registerAsFunction<BulkCreatePlayerUserAttributeCategoriesFromExcelService>(BulkCreatePlayerUserAttributeCategoriesFromExcelService.create).singleton(),
       createDefensiveAttributesUseCase: AwilixDependencyInjector.registerAsFunction<ICreateDefensiveAttributesUseCase>((cradle: IPlayerUserAttributesContainer) => CreateDefensiveAttributesUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.playerUserDefensiveAttributesRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.playerUserDefensiveAttributesRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        playerUserValidationService: cradle.playerUserValidationService,
+        businessDateDomainService: cradle.businessDateDomainService,
+        playerUserValidationDomainService: cradle.playerUserValidationDomainService,
         playerUserDefensiveAttributesRepository: cradle.playerUserDefensiveAttributesRepository,
       })),
       playerUserDefensiveAttributesRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserDefensiveAttributesRepository>(MongoosePlayerUserDefensiveAttributesRepository.create).singleton(),
       createFinishingAttributesUseCase: AwilixDependencyInjector.registerAsFunction<ICreateFinishingAttributesUseCase>((cradle: IPlayerUserAttributesContainer) => CreateFinishingAttributesUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.playerUserFinishingAttributesRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.playerUserFinishingAttributesRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        playerUserValidationService: cradle.playerUserValidationService,
+        businessDateDomainService: cradle.businessDateDomainService,
+        playerUserValidationDomainService: cradle.playerUserValidationDomainService,
         playerUserFinishingAttributesRepository: cradle.playerUserFinishingAttributesRepository,
       })),
       playerUserFinishingAttributesRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserFinishingAttributesRepository>(MongoosePlayerUserFinishingAttributesRepository.create).singleton(),
       createPhysicalAttributesUseCase: AwilixDependencyInjector.registerAsFunction<ICreatePhysicalAttributesUseCase>((cradle: IPlayerUserAttributesContainer) => CreatePhysicalAttributesUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.playerUserPhysicalAttributesRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.playerUserPhysicalAttributesRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        playerUserValidationService: cradle.playerUserValidationService,
+        businessDateDomainService: cradle.businessDateDomainService,
+        playerUserValidationDomainService: cradle.playerUserValidationDomainService,
         playerUserPhysicalAttributesRepository: cradle.playerUserPhysicalAttributesRepository,
       })),
       playerUserPhysicalAttributesRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserPhysicalAttributesRepository>(MongoosePlayerUserPhysicalAttributesRepository.create).singleton(),
       createReboundingAttributesUseCase: AwilixDependencyInjector.registerAsFunction<ICreateReboundingAttributesUseCase>((cradle: IPlayerUserAttributesContainer) => CreateReboundingAttributesUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.playerUserReboundingAttributesRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.playerUserReboundingAttributesRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        playerUserValidationService: cradle.playerUserValidationService,
+        businessDateDomainService: cradle.businessDateDomainService,
+        playerUserValidationDomainService: cradle.playerUserValidationDomainService,
         playerUserReboundingAttributesRepository: cradle.playerUserReboundingAttributesRepository,
       })),
       playerUserReboundingAttributesRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserReboundingAttributesRepository>(MongoosePlayerUserReboundingAttributesRepository.create).singleton(),
       createShootingAttributesUseCase: AwilixDependencyInjector.registerAsFunction<ICreateShootingAttributesUseCase>((cradle: IPlayerUserAttributesContainer) => CreateShootingAttributesUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.playerUserShootingAttributesRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.playerUserShootingAttributesRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        playerUserValidationService: cradle.playerUserValidationService,
+        businessDateDomainService: cradle.businessDateDomainService,
+        playerUserValidationDomainService: cradle.playerUserValidationDomainService,
         playerUserShootingAttributesRepository: cradle.playerUserShootingAttributesRepository,
       })),
       playerUserShootingAttributesRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserShootingAttributesRepository>(MongoosePlayerUserShootingAttributesRepository.create).singleton(),
       createSkillAttributesUseCase: AwilixDependencyInjector.registerAsFunction<ICreateSkillAttributesUseCase>((cradle: IPlayerUserAttributesContainer) => CreateSkillAttributesUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.playerUserSkillAttributesRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.playerUserSkillAttributesRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        playerUserValidationService: cradle.playerUserValidationService,
+        businessDateDomainService: cradle.businessDateDomainService,
+        playerUserValidationDomainService: cradle.playerUserValidationDomainService,
         playerUserSkillAttributesRepository: cradle.playerUserSkillAttributesRepository,
       })),
       playerUserSkillAttributesRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserSkillAttributesRepository>(MongoosePlayerUserSkillAttributesRepository.create).singleton(),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
-      playerUserValidationService: AwilixDependencyInjector.registerAsFunction<PlayerUserValidationService>(PlayerUserValidationService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
+      playerUserValidationDomainService: AwilixDependencyInjector.registerAsFunction<PlayerUserValidationDomainService>(PlayerUserValidationDomainService.create).singleton(),
       playerUserRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserRepository>(MongoosePlayerUserRepository.create).singleton(),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
+      passwordHashingDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingDomainService>(BcryptPasswordHashingService.create).singleton(),
+      passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       getPlayerUserAttributeCategoriesGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressGetPlayerUserAttributeCategoriesGETController.create).singleton(),
       getPlayerUserAttributeCategoriesUseCase: AwilixDependencyInjector.registerAsFunction<IGetPlayerUserAttributeCategoriesUseCase>(GetPlayerUserAttributeCategoriesUseCase.create).singleton(),
     });

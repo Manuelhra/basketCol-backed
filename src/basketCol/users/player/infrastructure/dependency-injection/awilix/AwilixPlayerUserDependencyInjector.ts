@@ -1,17 +1,16 @@
 import {
-  BusinessDateService,
-  EmailUniquenessValidatorService,
-  IdUniquenessValidatorService,
-  IEmailUniquenessValidatorServiceRepository,
-  IIdUniquenessValidatorServiceRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
+  BusinessDateDomainService,
+  EmailUniquenessValidatorDomainService,
+  IdUniquenessValidatorDomainService,
+  IEmailUniquenessValidatorDomainServiceRepository,
+  IIdUniquenessValidatorDomainServiceRepository,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
   IPlayerUserCareerStatsRepository,
   IPlayerUserRepository,
-  PasswordValueObjectCreationService,
-  PlayerUserNicknameValidationService,
-  PlayerUserValidationService,
-  SecurePasswordCreationService,
+  PasswordValueObjectCreationDomainService,
+  PlayerUserValidationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -55,37 +54,37 @@ export class AwilixPlayerUserDependencyInjector
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
       playerUserServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressPlayerUserServerErrorHandler.create).singleton(),
       createPlayerUserPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreatePlayerUserPOSTController.create).singleton(),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       createPlayerUserUseCase: AwilixDependencyInjector.registerAsFunction<ICreatePlayerUserUseCase>((cradle: IPlayerUserContainer) => CreatePlayerUserUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.playerUserRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.playerUserRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
-        emailUniquenessValidatorService: EmailUniquenessValidatorService.create({
-          emailUniquenessValidatorServiceRepository: cradle.playerUserRepository as IEmailUniquenessValidatorServiceRepository,
+        businessDateDomainService: cradle.businessDateDomainService,
+        emailUniquenessValidatorDomainService: EmailUniquenessValidatorDomainService.create({
+          emailUniquenessValidatorDomainServiceRepository: cradle.playerUserRepository as IEmailUniquenessValidatorDomainServiceRepository,
         }),
-        playerUserNicknameValidationService: cradle.playerUserNicknameValidationService,
         createPlayerUserCareerStatsUseCase: cradle.createPlayerUserCareerStatsUseCase,
         playerUserRepository: cradle.playerUserRepository,
         uuidGenerator: cradle.uuidGenerator,
+        playerUserValidationDomainService: cradle.playerUserValidationDomainService,
       })).singleton(),
-      playerUserNicknameValidationService: AwilixDependencyInjector.registerAsFunction<PlayerUserNicknameValidationService>(PlayerUserNicknameValidationService.create).singleton(),
+      playerUserValidationDomainService: AwilixDependencyInjector.registerAsFunction<PlayerUserValidationDomainService>(PlayerUserValidationDomainService.create).singleton(),
       playerUserRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserRepository>(MongoosePlayerUserRepository.create).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
+      passwordHashingDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingDomainService>(BcryptPasswordHashingService.create).singleton(),
+      passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
+      securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
       profileImageUploader: AwilixDependencyInjector.registerAsFunction<IProfileImageUploader>(() => S3ProfileImageUploader.create({
         folderPath: 'player',
       })).singleton(),
       searchAllPlayerUsersGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchAllPlayerUsersGETController.create).singleton(),
       searchAllPlayerUsersUseCase: AwilixDependencyInjector.registerAsFunction<ISearchAllPlayerUsersUseCase>(SearchAllPlayerUsersUseCase.create).singleton(),
       createPlayerUserCareerStatsUseCase: AwilixDependencyInjector.registerAsFunction<ICreatePlayerUserCareerStatsUseCase>((cradle: IPlayerUserContainer) => CreatePlayerUserCareerStatsUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.playerUserCareerStatsRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.playerUserCareerStatsRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
+        businessDateDomainService: cradle.businessDateDomainService,
         playerUserCareerStatsRepository: cradle.playerUserCareerStatsRepository,
-        playerUserValidationService: PlayerUserValidationService.create({
+        playerUserValidationDomainService: PlayerUserValidationDomainService.create({
           playerUserRepository: cradle.playerUserRepository,
         }),
       })),

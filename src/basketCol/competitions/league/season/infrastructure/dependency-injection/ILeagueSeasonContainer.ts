@@ -1,10 +1,10 @@
 import {
-  BusinessDateService,
-  CourtValidationService,
+  BusinessDateDomainService,
+  CourtValidationDomainService,
   ICourtRepository,
   ILeagueRepository,
   ILeagueSeasonRepository,
-  LeagueValidationService,
+  LeagueValidationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -20,10 +20,10 @@ export interface ILeagueSeasonContainer {
   createLeagueSeasonPOSTController: IController;
   createLeagueSeasonUseCase: ICreateLeagueSeasonUseCase;
   leagueSeasonRepository: ILeagueSeasonRepository;
-  leagueValidationService: LeagueValidationService;
+  leagueValidationDomainService: LeagueValidationDomainService;
   leagueRepository: ILeagueRepository;
-  businessDateService: BusinessDateService;
-  courtValidationService: CourtValidationService;
+  businessDateDomainService: BusinessDateDomainService;
+  courtValidationDomainService: CourtValidationDomainService;
   courtRepository: ICourtRepository;
   leagueSeasonRouteManager: IRouteManager;
   fileSystem: IFileSystem;

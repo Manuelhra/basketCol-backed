@@ -4,30 +4,22 @@ import { WorkBook } from 'xlsx';
 import { HttpStatus } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../../../shared/application/http/ports/IHttpResponseHandler';
-import { IExcelManager } from '../../../../../../../../shared/infrastructure/excel/ports/IExcelManager';
 import { ExpressBaseController } from '../../../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
-import { BulkCreateLeagueSeasonFixtureService } from '../../../services/BulkCreateLeagueSeasonFixtureService';
+import { BulkCreateLeagueSeasonFixtureFromExcelService } from '../../../services/BulkCreateLeagueSeasonFixtureFromExcelService';
 import { MulterError } from '../../../../../../../../shared/infrastructure/exceptions/MulterError';
+import { IExcelManager } from '../../../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
 
 type Dependencies = {
   readonly httpResponseHandler: IHttpResponseHandler;
   readonly excelManager: IExcelManager;
-  readonly bulkCreateLeagueSeasonFixtureService: BulkCreateLeagueSeasonFixtureService; };
+  readonly bulkCreateLeagueSeasonFixtureFromExcelService: BulkCreateLeagueSeasonFixtureFromExcelService;
+};
 
 export class ExpressBulkCreateLeagueSeasonFixtureFromExcelPOSTController
 implements ExpressBaseController {
   readonly #excelFileUploadMiddleware: multer.Multer;
 
-  readonly #httpResponseHandler: IHttpResponseHandler;
-
-  readonly #excelManager: IExcelManager;
-
-  readonly #bulkCreateLeagueSeasonFixtureService: BulkCreateLeagueSeasonFixtureService;
-
-  private constructor(dependencies: Dependencies) {
-    this.#httpResponseHandler = dependencies.httpResponseHandler;
-    this.#excelManager = dependencies.excelManager;
-    this.#bulkCreateLeagueSeasonFixtureService = dependencies.bulkCreateLeagueSeasonFixtureService;
+  private constructor(private readonly dependencies: Dependencies) {
     this.#excelFileUploadMiddleware = multer({
       storage: multer.memoryStorage(),
       limits: {
@@ -51,7 +43,7 @@ implements ExpressBaseController {
 
   public async run(request: Request, response: Response): Promise<void> {
     if (request.file === undefined) {
-      const errorResponse = this.#httpResponseHandler.handleSingleErrorResponse({
+      const errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
         code: HttpStatus.BAD_REQUEST,
         message: 'No file found to upload data',
         error: { name: 'NoFileError', details: 'No file found to upload league season fixtures' },
@@ -62,7 +54,7 @@ implements ExpressBaseController {
     }
 
     if (request.userContext === undefined) {
-      const errorResponse = this.#httpResponseHandler.handleSingleErrorResponse({
+      const errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
         code: HttpStatus.UNAUTHORIZED,
         message: 'Unauthorized request',
         error: { name: 'UnauthorizedError', details: 'No user context found in request' },
@@ -72,8 +64,8 @@ implements ExpressBaseController {
       return;
     }
 
-    const workBook: WorkBook = await this.#excelManager.readExcelFileFromBuffer(request.file.buffer);
-    await this.#bulkCreateLeagueSeasonFixtureService.execute(workBook, request.userContext);
+    const workBook: WorkBook = await this.dependencies.excelManager.readExcelFileFromBuffer(request.file.buffer);
+    await this.dependencies.bulkCreateLeagueSeasonFixtureFromExcelService.execute(workBook, request.userContext);
     response.status(HttpStatus.CREATED).send();
   }
 

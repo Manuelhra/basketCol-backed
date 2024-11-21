@@ -1,16 +1,16 @@
 import {
-  BusinessDateService,
-  GymValidationService,
-  HostUserValidationService,
+  BusinessDateDomainService,
+  GymValidationDomainService,
+  HostUserValidationDomainService,
   ICourtRepository,
-  IdUniquenessValidatorService,
+  IdUniquenessValidatorDomainService,
   IGymRepository,
   IHostUserRepository,
-  IIdUniquenessValidatorServiceRepository,
-  IPasswordHashingService,
-  IPasswordValueObjectCreationService,
-  PasswordValueObjectCreationService,
-  SecurePasswordCreationService,
+  IIdUniquenessValidatorDomainServiceRepository,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  PasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -26,10 +26,6 @@ import { CreateCourtUseCase } from '../../../application/use-cases/CreateCourtUs
 import { MongooseGymRepository } from '../../../../gym/infrastructure/persistence/mongoose/MongooseGymRepository';
 import { MongooseCourtRepository } from '../../persistence/mongoose/MongooseCourtRepository';
 import { MongooseHostUserRepository } from '../../../../../users/host/infrastructure/persistence/mongoose/MongooseHostUserRepository';
-import { IFacilityMainImageUploader } from '../../../../shared/application/file-upload/images/ports/IFacilityMainImageUploader';
-import { S3FacilityMainImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3FacilityMainImageUploader';
-import { IFacilityBatchImageUploader } from '../../../../shared/application/file-upload/images/ports/IFacilityBatchImageUploader';
-import { S3FacilityBatchImageUploader } from '../../../../shared/infrastructure/file-upload/images/aws/S3FacilityBatchImageUploader';
 import { IRouteManager } from '../../../../../shared/infrastructure/server/routes/IRouteManager';
 import { ExpressCourtRouteManager } from '../../server/express/routes/ExpressCourtRouteManager';
 import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IFileSystem';
@@ -38,6 +34,10 @@ import { BcryptPasswordHashingService } from '../../../../../shared/infrastructu
 import { ExpressSearchAllCourtsGETController } from '../../server/express/controllers/ExpressSearchAllCourtsGETController';
 import { ISearchAllCourtsUseCase } from '../../../application/use-cases/ports/ISearchAllCourtsUseCase';
 import { SearchAllCourtsUseCase } from '../../../application/use-cases/SearchAllCourtsUseCase';
+import { IMainImageUploader } from '../../../../../shared/application/file-upload/images/ports/IMainImageUploader';
+import { IBatchGalleryImagesUploader } from '../../../../../shared/application/file-upload/images/ports/IBatchGalleryImagesUploader';
+import { S3MainImageUploader } from '../../../../../shared/infrastructure/file-upload/aws/S3MainImageUploader';
+import { S3BatchGalleryImagesUploader } from '../../../../../shared/infrastructure/file-upload/aws/S3BatchGalleryImagesUploader';
 
 export class AwilixCourtDependencyInjector extends AwilixDependencyInjector<ICourtContainer> {
   private constructor() {
@@ -52,30 +52,30 @@ export class AwilixCourtDependencyInjector extends AwilixDependencyInjector<ICou
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
       courtServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressCourtServerErrorHandler.create).singleton(),
       createCourtPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressCreateCourtPOSTController.create).singleton(),
-      businessDateService: AwilixDependencyInjector.registerAsFunction<BusinessDateService>(BusinessDateService.create).singleton(),
+      businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       createCourtUseCase: AwilixDependencyInjector.registerAsFunction<ICreateCourtUseCase>((cradle: ICourtContainer) => CreateCourtUseCase.create({
-        idUniquenessValidatorService: IdUniquenessValidatorService.create({
-          idUniquenessValidatorServiceRepository: cradle.courtRepository as IIdUniquenessValidatorServiceRepository,
+        idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService.create({
+          idUniquenessValidatorDomainServiceRepository: cradle.courtRepository as IIdUniquenessValidatorDomainServiceRepository,
         }),
-        businessDateService: cradle.businessDateService,
+        businessDateDomainService: cradle.businessDateDomainService,
         courtRepository: cradle.courtRepository,
-        gymValidationService: cradle.gymValidationService,
-        hostUserValidationService: cradle.hostUserValidationService,
-      })),
+        gymValidationDomainService: cradle.gymValidationDomainService,
+        hostUserValidationDomainService: cradle.hostUserValidationDomainService,
+      })).singleton(),
       courtRepository: AwilixDependencyInjector.registerAsFunction<ICourtRepository>(MongooseCourtRepository.create).singleton(),
-      gymValidationService: AwilixDependencyInjector.registerAsFunction<GymValidationService>(GymValidationService.create).singleton(),
+      gymValidationDomainService: AwilixDependencyInjector.registerAsFunction<GymValidationDomainService>(GymValidationDomainService.create).singleton(),
       gymRepository: AwilixDependencyInjector.registerAsFunction<IGymRepository>(MongooseGymRepository.create).singleton(),
-      hostUserValidationService: AwilixDependencyInjector.registerAsFunction<HostUserValidationService>(HostUserValidationService.create).singleton(),
+      hostUserValidationDomainService: AwilixDependencyInjector.registerAsFunction<HostUserValidationDomainService>(HostUserValidationDomainService.create).singleton(),
       hostUserRepository: AwilixDependencyInjector.registerAsFunction<IHostUserRepository>(MongooseHostUserRepository.create).singleton(),
-      facilityMainImageUploader: AwilixDependencyInjector.registerAsFunction<IFacilityMainImageUploader>(() => S3FacilityMainImageUploader.create({
+      mainImageUploader: AwilixDependencyInjector.registerAsFunction<IMainImageUploader>(() => S3MainImageUploader.create({
         folderPath: 'court',
       })),
-      facilityBatchImageUploader: AwilixDependencyInjector.registerAsFunction<IFacilityBatchImageUploader>(() => S3FacilityBatchImageUploader.create({
+      batchGalleryImagesUploader: AwilixDependencyInjector.registerAsFunction<IBatchGalleryImagesUploader>(() => S3BatchGalleryImagesUploader.create({
         folderPath: 'court',
       })),
-      securePasswordCreationService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationService>(SecurePasswordCreationService.create).singleton(),
-      passwordHashingService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingService>(BcryptPasswordHashingService.create).singleton(),
-      passwordValueObjectCreationService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationService>(PasswordValueObjectCreationService.create).singleton(),
+      securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
+      passwordHashingDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordHashingDomainService>(BcryptPasswordHashingService.create).singleton(),
+      passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       searchAllCourtsGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchAllCourtsGETController.create).singleton(),
       searchAllCourtsUseCase: AwilixDependencyInjector.registerAsFunction<ISearchAllCourtsUseCase>(SearchAllCourtsUseCase.create).singleton(),
     });
