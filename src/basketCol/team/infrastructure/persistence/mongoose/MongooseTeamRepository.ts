@@ -87,6 +87,12 @@ export class MongooseTeamRepository
       document.officialName.valueOf(),
       document.gender.valueOf(),
       {
+        url: document.logo.url.valueOf(),
+        alt: document.logo.alt.valueOf(),
+        uploadedAt: document.logo.uploadedAt.valueOf(),
+        dimensions: { width: document.logo.dimensions.width.valueOf(), height: document.logo.dimensions.height.valueOf() },
+      },
+      {
         url: document.mainImage.url.valueOf(),
         alt: document.mainImage.alt.valueOf(),
         uploadedAt: document.mainImage.uploadedAt.valueOf(),

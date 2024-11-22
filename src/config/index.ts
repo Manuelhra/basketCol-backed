@@ -92,6 +92,12 @@ export const convictConfig = convict<IConvictProps>({
           env: 'AWS_S3_BUCKET_NAME_USER_PROFILE_IMAGE',
           default: null,
         },
+        logo: {
+          doc: 'The bucket name for the logo',
+          format: String,
+          env: 'AWS_S3_BUCKET_NAME_LOGO',
+          default: null,
+        },
         mainImage: {
           doc: 'The bucket name for the main image',
           format: String,

@@ -9,8 +9,10 @@ import { ICreateTeamUseCase } from '../../../../application/use-cases/ports/ICre
 import { MulterError } from '../../../../../shared/infrastructure/exceptions/MulterError';
 import { IBatchGalleryImagesUploader } from '../../../../../shared/application/file-upload/images/ports/IBatchGalleryImagesUploader';
 import { IMainImageUploader } from '../../../../../shared/application/file-upload/images/ports/IMainImageUploader';
+import { ILogoUploader } from '../../../../../shared/application/file-upload/images/ports/ILogoUploader';
 
 type Dependencies = {
+  readonly logoUploader: ILogoUploader;
   readonly mainImageUploader: IMainImageUploader;
   readonly batchGalleryImagesUploader: IBatchGalleryImagesUploader;
   readonly createTeamUseCase: ICreateTeamUseCase;
@@ -19,16 +21,7 @@ type Dependencies = {
 export class ExpressCreateTeamPOSTController implements ExpressBaseController {
   readonly #imageUploadMiddleware: multer.Multer;
 
-  readonly #mainImageUploader: IMainImageUploader;
-
-  readonly #batchGalleryImagesUploader: IBatchGalleryImagesUploader;
-
-  readonly #createTeamUseCase: ICreateTeamUseCase;
-
-  private constructor(dependencies: Dependencies) {
-    this.#mainImageUploader = dependencies.mainImageUploader;
-    this.#batchGalleryImagesUploader = dependencies.batchGalleryImagesUploader;
-    this.#createTeamUseCase = dependencies.createTeamUseCase;
+  private constructor(private readonly dependencies: Dependencies) {
     this.#imageUploadMiddleware = multer({
       storage: multer.memoryStorage(),
       limits: {
@@ -53,6 +46,10 @@ export class ExpressCreateTeamPOSTController implements ExpressBaseController {
   public async run(request: Request, response: Response): Promise<void> {
     const createTeamDTO: CreateTeamDTO = request.body;
 
+    if (request.files && 'logo' in request.files) {
+      createTeamDTO.logo = await this.#uploadLogo((request.files as { logo: Express.Multer.File[] }).logo[0]);
+    }
+
     if (request.files && 'mainImage' in request.files) {
       createTeamDTO.mainImage = await this.#uploadMainImage((request.files as { mainImage: Express.Multer.File[] }).mainImage[0]);
     }
@@ -63,12 +60,13 @@ export class ExpressCreateTeamPOSTController implements ExpressBaseController {
       };
     }
 
-    await this.#createTeamUseCase.execute(createTeamDTO, request.userContext);
+    await this.dependencies.createTeamUseCase.execute(createTeamDTO, request.userContext);
     response.status(HttpStatus.CREATED).send();
   }
 
   public getImagesUploadMiddleware(): RequestHandler {
     return this.#imageUploadMiddleware.fields([
+      { name: 'logo', maxCount: 1 },
       { name: 'mainImage', maxCount: 1 },
       { name: 'gallery', maxCount: 10 },
     ]);
@@ -76,7 +74,7 @@ export class ExpressCreateTeamPOSTController implements ExpressBaseController {
 
   async #uploadMainImage(file: Express.Multer.File) {
     const imageFile: ImageFile = this.#createImageFile(file);
-    const mainImage = await this.#mainImageUploader.uploadMainImage(imageFile);
+    const mainImage = await this.dependencies.mainImageUploader.uploadMainImage(imageFile);
     const formattedDate = DateValueObject.getCurrentDate().dateAsString;
 
     return {
@@ -90,11 +88,27 @@ export class ExpressCreateTeamPOSTController implements ExpressBaseController {
     };
   }
 
+  async #uploadLogo(file: Express.Multer.File) {
+    const imageFile: ImageFile = this.#createImageFile(file);
+    const logo = await this.dependencies.logoUploader.uploadLogo(imageFile);
+    const formattedDate = DateValueObject.getCurrentDate().dateAsString;
+
+    return {
+      url: logo.url,
+      uploadedAt: formattedDate,
+      alt: imageFile.originalName,
+      dimensions: {
+        width: logo.metadata.width,
+        height: logo.metadata.height,
+      },
+    };
+  }
+
   async #uploadGalleryImages(files: Express.Multer.File[]) {
     if (files.length === 0) return [];
 
     const galleryImages = files.map(this.#createImageFile);
-    const gallery = await this.#batchGalleryImagesUploader.uploadGalleryImages(galleryImages);
+    const gallery = await this.dependencies.batchGalleryImagesUploader.uploadGalleryImages(galleryImages);
     const formattedDate = DateValueObject.getCurrentDate().dateAsString;
 
     return gallery.successful.map((image, idx) => ({

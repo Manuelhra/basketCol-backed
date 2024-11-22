@@ -20,11 +20,13 @@ import { IUuidGenerator } from '../../../shared/application/uuid/ports/IUuidGene
 import { ICreateTeamAllTimeStatsUseCase } from '../../all-time-stats/application/use-cases/ports/ICreateTeamAllTimeStatsUseCase';
 import { IBatchGalleryImagesUploader } from '../../../shared/application/file-upload/images/ports/IBatchGalleryImagesUploader';
 import { IMainImageUploader } from '../../../shared/application/file-upload/images/ports/IMainImageUploader';
+import { ILogoUploader } from '../../../shared/application/file-upload/images/ports/ILogoUploader';
 
 export interface ITeamContainer {
   httpResponseHandler: IHttpResponseHandler;
   teamServerErrorHandler: IServerErrorHandler;
   createTeamPOSTController: IController;
+  logoUploader: ILogoUploader;
   mainImageUploader: IMainImageUploader;
   batchGalleryImagesUploader: IBatchGalleryImagesUploader;
   createTeamUseCase: ICreateTeamUseCase;
