@@ -39,6 +39,9 @@ import { CreatePlayerUserCareerStatsUseCase } from '../../../career-stats/applic
 import { MongoosePlayerUserCareerStatsRepository } from '../../../career-stats/infrastructure/persistence/mongoose/MongoosePlayerUserCareerStatsRepository';
 import { IUuidGenerator } from '../../../../../shared/application/uuid/ports/IUuidGenerator';
 import { UuidV4Generator } from '../../../../../shared/infrastructure/uuid/UuidV4Generator';
+import { ExpressFindPlayerUserByIdGETController } from '../../server/express/controllers/ExpressFindPlayerUserByIdGETController';
+import { IFindPlayerUserByIdUseCase } from '../../../application/use-cases/ports/IFindPlayerUserByIdUseCase';
+import { FindPlayerUserByIdUseCase } from '../../../application/use-cases/FindPlayerUserByIdUseCase';
 
 export class AwilixPlayerUserDependencyInjector
   extends AwilixDependencyInjector<IPlayerUserContainer> {
@@ -90,6 +93,8 @@ export class AwilixPlayerUserDependencyInjector
       })),
       playerUserCareerStatsRepository: AwilixDependencyInjector.registerAsFunction<IPlayerUserCareerStatsRepository>(MongoosePlayerUserCareerStatsRepository.create).singleton(),
       uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
+      findPlayerUserByIdGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindPlayerUserByIdGETController.create).singleton(),
+      findPlayerUserByIdUseCase: AwilixDependencyInjector.registerAsFunction<IFindPlayerUserByIdUseCase>(FindPlayerUserByIdUseCase.create).singleton(),
     });
   }
 

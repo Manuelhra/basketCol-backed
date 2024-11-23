@@ -38,6 +38,16 @@ export class MongooseTeamPlayerRepository
     return document === null ? null : this.#mapDocumentToTeamPlayer(document);
   }
 
+  public async findAllActivePlayersByTeamId(teamId: TeamPlayerTeamId): Promise<TeamPlayer[]> {
+    const MyModel = await this.model();
+    const documents: IMongooseTeamPlayerDocument[] = await MyModel.find<IMongooseTeamPlayerDocument>({
+      teamId: teamId.value,
+      status: TeamPlayerStatus.active,
+    });
+
+    return documents.map((document) => this.#mapDocumentToTeamPlayer(document));
+  }
+
   public async findByTeamIdAndPlayerUserId(teamId: TeamPlayerTeamId, playerUserId: TeamPlayerPlayerUserId): Promise<Nullable<TeamPlayer>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseTeamPlayerDocument> = await MyModel.findOne<IMongooseTeamPlayerDocument>({

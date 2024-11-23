@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 import { HttpStatus } from '@basketcol/domain';
 
-import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
-import { ISearchAllPlayerUsersUseCase } from '../../../../application/use-cases/ports/ISearchAllPlayerUsersUseCase';
-import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
+import { ExpressBaseController } from '../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
+import { ISearchAllTeamsUseCase } from '../../../../application/use-cases/ports/ISearchAllTeamsUseCase';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 
 type Dependencies = {
-  readonly searchAllPlayerUsersUseCase: ISearchAllPlayerUsersUseCase;
+  readonly searchAllTeamsUseCase: ISearchAllTeamsUseCase;
   readonly httpResponseHandler: IHttpResponseHandler;
 };
 
-export class ExpressSearchAllPlayerUsersGETController implements ExpressBaseController {
+export class ExpressSearchAllTeamsGETController implements ExpressBaseController {
   private constructor(private readonly dependencies: Dependencies) {}
 
-  public static create(dependencies: Dependencies): ExpressSearchAllPlayerUsersGETController {
-    return new ExpressSearchAllPlayerUsersGETController(dependencies);
+  public static create(dependencies: Dependencies): ExpressSearchAllTeamsGETController {
+    return new ExpressSearchAllTeamsGETController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {
@@ -26,13 +26,13 @@ export class ExpressSearchAllPlayerUsersGETController implements ExpressBaseCont
       perPage: this.#parseNumber(perPage, 10),
     };
 
-    const { data, pagination } = await this.dependencies.searchAllPlayerUsersUseCase.execute(dto);
+    const { data, pagination } = await this.dependencies.searchAllTeamsUseCase.execute(dto);
 
     const successResult = this.dependencies.httpResponseHandler.handleSuccessResponse({
       code: HttpStatus.OK,
       message: HttpStatus.getMessage(HttpStatus.OK),
       data: {
-        playerUsers: data.map((playerUser) => playerUser.toPrimitives),
+        teams: data.map((team) => team.toPrimitives),
       },
       paginationParams: pagination,
     });

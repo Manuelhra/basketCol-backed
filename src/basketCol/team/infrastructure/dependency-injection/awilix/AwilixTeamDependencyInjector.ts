@@ -41,6 +41,12 @@ import { MongooseTeamFounderUserRepository } from '../../../../users/team-founde
 import { BcryptPasswordHashingService } from '../../../../shared/infrastructure/services/BcryptPasswordHashingService';
 import { ILogoUploader } from '../../../../shared/application/file-upload/images/ports/ILogoUploader';
 import { S3LogoUploader } from '../../../../shared/infrastructure/file-upload/aws/S3LogoUploader';
+import { ExpressFindTeamByIdGETController } from '../../server/express/controllers/ExpressFindTeamByIdGETController';
+import { IFindTeamByIdUseCase } from '../../../application/use-cases/ports/IFindTeamByIdUseCase';
+import { FindTeamByIdUseCase } from '../../../application/use-cases/FindTeamByIdUseCase';
+import { ExpressSearchAllTeamsGETController } from '../../server/express/controllers/ExpressSearchAllTeamsGETController';
+import { ISearchAllTeamsUseCase } from '../../../application/use-cases/ports/ISearchAllTeamsUseCase';
+import { SearchAllTeamsUseCase } from '../../../application/use-cases/SearchAllTeamsUseCase';
 
 export class AwilixTeamDependencyInjector extends AwilixDependencyInjector<ITeamContainer> {
   private constructor() {
@@ -92,6 +98,10 @@ export class AwilixTeamDependencyInjector extends AwilixDependencyInjector<ITeam
       passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
       uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
+      findTeamByIdGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindTeamByIdGETController.create).singleton(),
+      findTeamByIdUseCase: AwilixDependencyInjector.registerAsFunction<IFindTeamByIdUseCase>(FindTeamByIdUseCase.create).singleton(),
+      searchAllTeamsGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchAllTeamsGETController.create).singleton(),
+      searchAllTeamsUseCase: AwilixDependencyInjector.registerAsFunction<ISearchAllTeamsUseCase>(SearchAllTeamsUseCase.create).singleton(),
     });
   }
 

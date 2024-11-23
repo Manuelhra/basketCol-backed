@@ -21,6 +21,8 @@ import { ICreateTeamAllTimeStatsUseCase } from '../../all-time-stats/application
 import { IBatchGalleryImagesUploader } from '../../../shared/application/file-upload/images/ports/IBatchGalleryImagesUploader';
 import { IMainImageUploader } from '../../../shared/application/file-upload/images/ports/IMainImageUploader';
 import { ILogoUploader } from '../../../shared/application/file-upload/images/ports/ILogoUploader';
+import { IFindTeamByIdUseCase } from '../../application/use-cases/ports/IFindTeamByIdUseCase';
+import { ISearchAllTeamsUseCase } from '../../application/use-cases/ports/ISearchAllTeamsUseCase';
 
 export interface ITeamContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -43,4 +45,8 @@ export interface ITeamContainer {
   securePasswordCreationDomainService: SecurePasswordCreationDomainService;
   passwordHashingDomainService: IPasswordHashingDomainService;
   passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
+  findTeamByIdGETController: IController;
+  findTeamByIdUseCase: IFindTeamByIdUseCase;
+  searchAllTeamsGETController: IController;
+  searchAllTeamsUseCase: ISearchAllTeamsUseCase;
 }

@@ -23,6 +23,11 @@ import { IRouteManager } from '../../../../../../shared/infrastructure/server/ro
 import { ExpressPlayerUserCareerStatsRouteManager } from '../../server/express/routes/ExpressPlayerUserCareerStatsRouteManager';
 import { IFileSystem } from '../../../../../../shared/infrastructure/file-system/IFileSystem';
 import { GlobFileSystem } from '../../../../../../shared/infrastructure/file-system/GlobFileSystem';
+import { ExpressFindCareerStatsByPlayerUserIdGETController } from '../../server/express/controllers/ExpressFindCareerStatsByPlayerUserIdGETController';
+import { IFindCareerStatsByPlayerUserIdUseCase } from '../../../application/use-cases/ports/IFindCareerStatsByPlayerUserIdUseCase';
+import { FindCareerStatsByPlayerUserIdUseCase } from '../../../application/use-cases/FindCareerStatsByPlayerUserIdUseCase';
+import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
+import { HttpResponseHandler } from '../../../../../../shared/infrastructure/http/HttpResponseHandler';
 
 export class AwilixPlayerUserCareerStatsDependencyInjector
   extends AwilixDependencyInjector<IPlayerUserCareerStatsContainer> {
@@ -46,6 +51,9 @@ export class AwilixPlayerUserCareerStatsDependencyInjector
       fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
         basePath: __dirname,
       })).singleton(),
+      findCareerStatsByPlayerUserIdGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindCareerStatsByPlayerUserIdGETController.create).singleton(),
+      findCareerStatsByPlayerUserIdUseCase: AwilixDependencyInjector.registerAsFunction<IFindCareerStatsByPlayerUserIdUseCase>(FindCareerStatsByPlayerUserIdUseCase.create).singleton(),
+      httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
     });
   }
 

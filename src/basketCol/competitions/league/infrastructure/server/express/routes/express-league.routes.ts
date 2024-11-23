@@ -5,8 +5,12 @@ import { httpResponseHandler, tokenValidatorService } from '../../../../../../sh
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
 import { createLeaguePOSTControllerValidations } from './validations/create-league-post-controller.validations';
 import { expressInputValidationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
-import { createLeaguePOSTController, searchAllLeaguesGETController } from '../../../dependency-injection';
 import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
+import {
+  createLeaguePOSTController,
+  findLeagueByIdGETController,
+  searchAllLeaguesGETController,
+} from '../../../dependency-injection';
 
 const register = (router: Router) => {
   const pathPrefix: string = '/competitions';
@@ -34,6 +38,17 @@ const register = (router: Router) => {
     }, httpResponseHandler),
     expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
     searchAllLeaguesGETController.run.bind(searchAllLeaguesGETController),
+  );
+
+  // Endpoint - Find league by ID
+  router.get(
+    `${pathPrefix}/leagues/:leagueId`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Find league by ID',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    findLeagueByIdGETController.run.bind(findLeagueByIdGETController),
   );
 };
 

@@ -32,6 +32,9 @@ import { BcryptPasswordHashingService } from '../../../../../shared/infrastructu
 import { ExpressSearchAllLeaguesGETController } from '../../server/express/controllers/ExpressSearchAllLeaguesGETController';
 import { ISearchAllLeaguesUseCase } from '../../../application/use-cases/ports/ISearchAllLeaguesUseCase';
 import { SearchAllLeaguesUseCase } from '../../../application/use-cases/SearchAllLeaguesUseCase';
+import { ExpressFindLeagueByIdGETController } from '../../server/express/controllers/ExpressFindLeagueByIdGETController';
+import { IFindLeagueByIdUseCase } from '../../../application/use-cases/ports/IFindLeagueByIdUseCase';
+import { FindLeagueByIdUseCase } from '../../../application/use-cases/FindLeagueByIdUseCase';
 
 export class AwilixLeagueDependencyInjector extends AwilixDependencyInjector<ILeagueContainer> {
   private constructor() {
@@ -65,6 +68,8 @@ export class AwilixLeagueDependencyInjector extends AwilixDependencyInjector<ILe
       passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       searchAllLeaguesGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressSearchAllLeaguesGETController.create).singleton(),
       searchAllLeaguesUseCase: AwilixDependencyInjector.registerAsFunction<ISearchAllLeaguesUseCase>(SearchAllLeaguesUseCase.create).singleton(),
+      findLeagueByIdGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindLeagueByIdGETController.create).singleton(),
+      findLeagueByIdUseCase: AwilixDependencyInjector.registerAsFunction<IFindLeagueByIdUseCase>(FindLeagueByIdUseCase.create).singleton(),
     });
   }
 

@@ -11,3 +11,4 @@ export const leagueRouteManager = awilixLeagueContainer.resolve('leagueRouteMana
 export const createLeaguePOSTController = awilixLeagueContainer.resolve('createLeaguePOSTController');
 export const leagueServerErrorHandler = awilixLeagueContainer.resolve('leagueServerErrorHandler');
 export const searchAllLeaguesGETController = awilixLeagueContainer.resolve('searchAllLeaguesGETController');
+export const findLeagueByIdGETController = awilixLeagueContainer.resolve('findLeagueByIdGETController');
