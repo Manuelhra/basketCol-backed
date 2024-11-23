@@ -24,6 +24,7 @@ export interface IConvictProps {
       secretAccessKey: string;
       bucketName: {
         userProfileImage: string;
+        logo: string;
         mainImage: string;
         galleryImages: string;
       };

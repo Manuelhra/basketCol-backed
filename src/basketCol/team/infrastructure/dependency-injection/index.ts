@@ -10,3 +10,5 @@ if (awilixTeamContainer === null) {
 export const teamRouteManager = awilixTeamContainer.resolve('teamRouteManager');
 export const createTeamPOSTController = awilixTeamContainer.resolve('createTeamPOSTController');
 export const teamServerErrorHandler = awilixTeamContainer.resolve('teamServerErrorHandler');
+export const findTeamByIdGETController = awilixTeamContainer.resolve('findTeamByIdGETController');
+export const searchAllTeamsGETController = awilixTeamContainer.resolve('searchAllTeamsGETController');

@@ -4,6 +4,7 @@ import {
   Nullable,
   PlayerUserCareerStats,
   PUCStatsId,
+  PUCStatsPlayerUserId,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -29,12 +30,24 @@ export class MongoosePlayerUserCareerStatsRepository
     return new MongoosePlayerUserCareerStatsRepository();
   }
 
+  public async findByPlayerUserId(playerUserId: PUCStatsPlayerUserId): Promise<Nullable<PlayerUserCareerStats>> {
+    const MyModel = await this.model();
+    const document: Nullable<IMongoosePlayerUserCareerStatsDocument> = await MyModel.findOne<IMongoosePlayerUserCareerStatsDocument>({ playerUserId: playerUserId.value });
+    return document === null ? null : this.#mapDocumentToPlayerUserCareerStats(document);
+  }
+
   public async findById(pUCStatsId: PUCStatsId): Promise<Nullable<PlayerUserCareerStats>> {
     const MyModel = await this.model();
-
     const document: Nullable<IMongoosePlayerUserCareerStatsDocument> = await MyModel.findOne<IMongoosePlayerUserCareerStatsDocument>({ id: pUCStatsId.value });
+    return document === null ? null : this.#mapDocumentToPlayerUserCareerStats(document);
+  }
 
-    return document === null ? null : PlayerUserCareerStats.fromPrimitives(
+  public save(playerUserCareerStats: PlayerUserCareerStats): Promise<void> {
+    return this.persist(playerUserCareerStats);
+  }
+
+  #mapDocumentToPlayerUserCareerStats(document: IMongoosePlayerUserCareerStatsDocument): PlayerUserCareerStats {
+    return PlayerUserCareerStats.fromPrimitives(
       document.id.valueOf(),
       document.totalGamesPlayed.valueOf(),
       document.totalGamesWon.valueOf(),
@@ -58,9 +71,5 @@ export class MongoosePlayerUserCareerStatsRepository
       document.createdAt.valueOf(),
       document.updatedAt.valueOf(),
     );
-  }
-
-  public save(playerUserCareerStats: PlayerUserCareerStats): Promise<void> {
-    return this.persist(playerUserCareerStats);
   }
 }

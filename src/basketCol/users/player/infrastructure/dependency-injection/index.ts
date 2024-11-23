@@ -11,3 +11,4 @@ export const createPlayerUserPOSTController = awilixPlayerUserContainer.resolve(
 export const playerUserRouteManager = awilixPlayerUserContainer.resolve('playerUserRouteManager');
 export const playerUserServerErrorHandler = awilixPlayerUserContainer.resolve('playerUserServerErrorHandler');
 export const searchAllPlayerUsersGETController = awilixPlayerUserContainer.resolve('searchAllPlayerUsersGETController');
+export const findPlayerUserByIdGETController = awilixPlayerUserContainer.resolve('findPlayerUserByIdGETController');

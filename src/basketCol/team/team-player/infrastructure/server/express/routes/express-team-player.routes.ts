@@ -4,7 +4,7 @@ import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/i
 import { httpResponseHandler, tokenValidatorService } from '../../../../../../shared/infrastructure/dependency-injection';
 import { expressAuthenticationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-authentication.middleware';
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
-import { bulkCreateTeamPlayerFromExcelPOSTController } from '../../../dependency-injection';
+import { bulkCreateTeamPlayerFromExcelPOSTController, findAllTeamActivePlayersGETController } from '../../../dependency-injection';
 import { ExpressBulkCreateTeamPlayerFromExcelPOSTController } from '../controllers/ExpressBulkCreateTeamPlayerFromExcelPOSTController';
 
 const register = (router: Router) => {
@@ -21,6 +21,17 @@ const register = (router: Router) => {
     expressUserTypeAuthorizationMiddleware(['HOST_USER'], httpResponseHandler),
     (bulkCreateTeamPlayerFromExcelPOSTController as ExpressBulkCreateTeamPlayerFromExcelPOSTController).getExcelFileUploadMiddleware(),
     bulkCreateTeamPlayerFromExcelPOSTController.run.bind(bulkCreateTeamPlayerFromExcelPOSTController),
+  );
+
+  // Endpoint - Find all team active players
+  router.get(
+    `${pathPrefix}/:teamId/players/active`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Find all team active players',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    findAllTeamActivePlayersGETController.run.bind(findAllTeamActivePlayersGETController),
   );
 };
 

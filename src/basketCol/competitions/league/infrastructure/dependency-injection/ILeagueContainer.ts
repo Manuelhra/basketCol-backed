@@ -16,6 +16,7 @@ import { IController } from '../../../../shared/infrastructure/server/controller
 import { IRouteManager } from '../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../shared/infrastructure/file-system/IFileSystem';
 import { ISearchAllLeaguesUseCase } from '../../application/use-cases/ports/ISearchAllLeaguesUseCase';
+import { IFindLeagueByIdUseCase } from '../../application/use-cases/ports/IFindLeagueByIdUseCase';
 
 export interface ILeagueContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -34,4 +35,6 @@ export interface ILeagueContainer {
   searchAllLeaguesGETController: IController;
   searchAllLeaguesUseCase: ISearchAllLeaguesUseCase;
   leagueValidationDomainService: LeagueValidationDomainService;
+  findLeagueByIdGETController: IController;
+  findLeagueByIdUseCase: IFindLeagueByIdUseCase;
 }

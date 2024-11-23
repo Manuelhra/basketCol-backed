@@ -37,6 +37,9 @@ import { XLSXManager } from '../../../../../shared/infrastructure/file-upload/ex
 import { BcryptPasswordHashingService } from '../../../../../shared/infrastructure/services/BcryptPasswordHashingService';
 import { IUuidGenerator } from '../../../../../shared/application/uuid/ports/IUuidGenerator';
 import { UuidV4Generator } from '../../../../../shared/infrastructure/uuid/UuidV4Generator';
+import { ExpressFindAllTeamActivePlayersGETController } from '../../server/express/controllers/ExpressFindAllTeamActivePlayersGETController';
+import { IFindAllTeamActivePlayersUseCase } from '../../../application/use-cases/ports/IFindAllTeamActivePlayersUseCase';
+import { FindAllTeamActivePlayersUseCase } from '../../../application/use-cases/FindAllTeamActivePlayersUseCase';
 
 export class AwilixTeamPlayerDependencyInjector extends AwilixDependencyInjector<ITeamPlayerContainer> {
   private constructor() {
@@ -74,6 +77,8 @@ export class AwilixTeamPlayerDependencyInjector extends AwilixDependencyInjector
       passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       securePasswordCreationDomainService: AwilixDependencyInjector.registerAsFunction<SecurePasswordCreationDomainService>(SecurePasswordCreationDomainService.create).singleton(),
       uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
+      findAllTeamActivePlayersGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindAllTeamActivePlayersGETController.create).singleton(),
+      findAllTeamActivePlayersUseCase: AwilixDependencyInjector.registerAsFunction<IFindAllTeamActivePlayersUseCase>(FindAllTeamActivePlayersUseCase.create).singleton(),
     });
   }
 

@@ -9,3 +9,4 @@ if (awilixPlayerUserCareerStatsContainer === null) {
 
 export const createPlayerUserCareerStatsPOSTController = awilixPlayerUserCareerStatsContainer.resolve('createPlayerUserCareerStatsPOSTController');
 export const playerUserCareerStatsRouteManager = awilixPlayerUserCareerStatsContainer.resolve('playerUserCareerStatsRouteManager');
+export const findCareerStatsByPlayerUserIdGETController = awilixPlayerUserCareerStatsContainer.resolve('findCareerStatsByPlayerUserIdGETController');

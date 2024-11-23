@@ -18,6 +18,7 @@ import { IProfileImageUploader } from '../../../shared/application/file-upload/i
 import { ISearchAllPlayerUsersUseCase } from '../../application/use-cases/ports/ISearchAllPlayerUsersUseCase';
 import { ICreatePlayerUserCareerStatsUseCase } from '../../career-stats/application/use-cases/ports/ICreatePlayerUserCareerStatsUseCase';
 import { IUuidGenerator } from '../../../../shared/application/uuid/ports/IUuidGenerator';
+import { IFindPlayerUserByIdUseCase } from '../../application/use-cases/ports/IFindPlayerUserByIdUseCase';
 
 export interface IPlayerUserContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -37,5 +38,7 @@ export interface IPlayerUserContainer {
   createPlayerUserCareerStatsUseCase: ICreatePlayerUserCareerStatsUseCase;
   playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
   uuidGenerator: IUuidGenerator;
-  playerUserValidationDomainService: PlayerUserValidationDomainService
+  playerUserValidationDomainService: PlayerUserValidationDomainService;
+  findPlayerUserByIdGETController: IController;
+  findPlayerUserByIdUseCase: IFindPlayerUserByIdUseCase;
 }

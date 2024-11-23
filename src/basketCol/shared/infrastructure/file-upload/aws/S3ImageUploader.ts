@@ -16,7 +16,7 @@ import {
   UploadImageOptions,
 } from '../../../application/file-upload/images/ports/IImageUploader';
 import { ImageUploadError } from '../../../../users/shared/infrastructure/exceptions/ImageUploadError';
-import { S3ClientFactory } from '../aws/S3ClientFactory';
+import { S3ClientFactory } from './S3ClientFactory';
 
 type Dependencies = {
   folderPath: string;

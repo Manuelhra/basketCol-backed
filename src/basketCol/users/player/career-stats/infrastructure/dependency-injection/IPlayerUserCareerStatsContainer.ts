@@ -13,6 +13,8 @@ import { IController } from '../../../../../shared/infrastructure/server/control
 import { ICreatePlayerUserCareerStatsUseCase } from '../../application/use-cases/ports/ICreatePlayerUserCareerStatsUseCase';
 import { IRouteManager } from '../../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IFileSystem';
+import { IFindCareerStatsByPlayerUserIdUseCase } from '../../application/use-cases/ports/IFindCareerStatsByPlayerUserIdUseCase';
+import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 
 export interface IPlayerUserCareerStatsContainer {
   createPlayerUserCareerStatsPOSTController: IController;
@@ -28,4 +30,7 @@ export interface IPlayerUserCareerStatsContainer {
   passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   playerUserCareerStatsRouteManager: IRouteManager;
   fileSystem: IFileSystem;
+  findCareerStatsByPlayerUserIdGETController: IController;
+  findCareerStatsByPlayerUserIdUseCase: IFindCareerStatsByPlayerUserIdUseCase;
+  httpResponseHandler: IHttpResponseHandler;
 }

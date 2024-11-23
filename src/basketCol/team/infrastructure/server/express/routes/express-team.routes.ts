@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import { expressServiceAvailabilityMiddleware } from '../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 import { httpResponseHandler, tokenValidatorService } from '../../../../../shared/infrastructure/dependency-injection';
-import { createTeamPOSTController } from '../../../dependency-injection';
+import { createTeamPOSTController, findTeamByIdGETController, searchAllTeamsGETController } from '../../../dependency-injection';
 import { ExpressCreateTeamPOSTController } from '../controllers/ExpressCreateTeamPOSTController';
 import { expressAuthenticationMiddleware } from '../../../../../shared/infrastructure/server/express/routes/middlewares/express-authentication.middleware';
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
@@ -15,7 +15,7 @@ const register = (router: Router) => {
 
   // Endpoint - Create team
   router.post(
-    `${pathPrefix}`,
+    pathPrefix,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create team',
@@ -27,6 +27,28 @@ const register = (router: Router) => {
     createTeamPOSTControllerValidations,
     expressInputValidationMiddleware,
     createTeamPOSTController.run.bind(createTeamPOSTController),
+  );
+
+  // Endpoint - Find team by ID
+  router.get(
+    `${pathPrefix}/:teamId`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Find team by ID',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    findTeamByIdGETController.run.bind(findTeamByIdGETController),
+  );
+
+  // Endpoint - Search all teams
+  router.get(
+    pathPrefix,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Search all teams',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    searchAllTeamsGETController.run.bind(searchAllTeamsGETController),
   );
 };
 

@@ -10,3 +10,4 @@ if (awilixTeamPlayerContainer === null) {
 export const teamPlayerRouteManager = awilixTeamPlayerContainer.resolve('teamPlayerRouteManager');
 export const bulkCreateTeamPlayerFromExcelPOSTController = awilixTeamPlayerContainer.resolve('bulkCreateTeamPlayerFromExcelPOSTController');
 export const teamPlayerServerErrorHandler = awilixTeamPlayerContainer.resolve('teamPlayerServerErrorHandler');
+export const findAllTeamActivePlayersGETController = awilixTeamPlayerContainer.resolve('findAllTeamActivePlayersGETController');

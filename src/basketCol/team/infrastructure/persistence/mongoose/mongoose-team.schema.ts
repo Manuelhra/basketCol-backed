@@ -16,6 +16,15 @@ export const mongooseTeamSchema = new Schema<IMongooseTeamDocument>({
     type: String,
     required: [true, "The team's gender is required"],
   },
+  logo: {
+    url: { type: String, required: [true, "The team's logo url is required"] },
+    uploadedAt: { type: String, required: [true, "The team's logo uploaded date is required"] },
+    alt: { type: String, required: [true, "The team's logo alt is required"] },
+    dimensions: {
+      width: { type: Number, required: [true, "The team's logo width is required"] },
+      height: { type: Number, required: [true, "The team's logo height is required"] },
+    },
+  },
   mainImage: {
     url: { type: String, required: [true, "The team's main image url is required"] },
     uploadedAt: { type: String, required: [true, "The team's main image uploaded date is required"] },

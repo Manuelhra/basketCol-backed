@@ -5,7 +5,7 @@ import { expressAuthenticationMiddleware } from '../../../../../../../shared/inf
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
 import { createPlayerUserCareerStatsPOSTControllerValidations } from './validations/create-player-user-career-stats-post-controller.validations';
 import { expressInputValidationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
-import { createPlayerUserCareerStatsPOSTController } from '../../../dependency-injection';
+import { createPlayerUserCareerStatsPOSTController, findCareerStatsByPlayerUserIdGETController } from '../../../dependency-injection';
 import { expressServiceAvailabilityMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router): void => {
@@ -25,6 +25,17 @@ const register = (router: Router): void => {
     createPlayerUserCareerStatsPOSTControllerValidations,
     expressInputValidationMiddleware,
     createPlayerUserCareerStatsPOSTController.run.bind(createPlayerUserCareerStatsPOSTController),
+  );
+
+  // Endpoint - Find career stats by player user ID
+  router.get(
+    careerStatsPath,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Find career stats by player user ID',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    findCareerStatsByPlayerUserIdGETController.run.bind(findCareerStatsByPlayerUserIdGETController),
   );
 };
 

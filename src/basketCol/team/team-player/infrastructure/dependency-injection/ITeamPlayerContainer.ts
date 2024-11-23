@@ -20,6 +20,7 @@ import { ICreateTeamPlayerUseCase } from '../../application/use-cases/ports/ICre
 import { BulkCreateTeamPlayerFromExcelService } from '../services/BulkCreateTeamPlayerFromExcelService';
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
 import { IUuidGenerator } from '../../../../shared/application/uuid/ports/IUuidGenerator';
+import { IFindAllTeamActivePlayersUseCase } from '../../application/use-cases/ports/IFindAllTeamActivePlayersUseCase';
 
 export interface ITeamPlayerContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -41,4 +42,6 @@ export interface ITeamPlayerContainer {
   passwordHashingDomainService: IPasswordHashingDomainService;
   passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
   uuidGenerator: IUuidGenerator;
+  findAllTeamActivePlayersGETController: IController;
+  findAllTeamActivePlayersUseCase: IFindAllTeamActivePlayersUseCase;
 }
