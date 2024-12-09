@@ -11,3 +11,4 @@ export const teamPlayerRouteManager = awilixTeamPlayerContainer.resolve('teamPla
 export const bulkCreateTeamPlayerFromExcelPOSTController = awilixTeamPlayerContainer.resolve('bulkCreateTeamPlayerFromExcelPOSTController');
 export const teamPlayerServerErrorHandler = awilixTeamPlayerContainer.resolve('teamPlayerServerErrorHandler');
 export const findAllTeamActivePlayersGETController = awilixTeamPlayerContainer.resolve('findAllTeamActivePlayersGETController');
+export const findTeamActivePlayerGETController = awilixTeamPlayerContainer.resolve('findTeamActivePlayerGETController');

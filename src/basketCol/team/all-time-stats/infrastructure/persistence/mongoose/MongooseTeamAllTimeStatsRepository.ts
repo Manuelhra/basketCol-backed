@@ -3,6 +3,7 @@ import {
   ITeamAllTimeStatsRepository,
   Nullable,
   TATStatsId,
+  TATStatsTeamId,
   TeamAllTimeStats,
 } from '@basketcol/domain';
 
@@ -32,6 +33,12 @@ export class MongooseTeamAllTimeStatsRepository
   public async findById(teamAllTimeStatsId: TATStatsId): Promise<Nullable<TeamAllTimeStats>> {
     const MyModel = await this.model();
     const document: Nullable<IMongooseTeamAllTimeStatsDocument> = await MyModel.findOne<IMongooseTeamAllTimeStatsDocument>({ id: teamAllTimeStatsId.value });
+    return document === null ? null : this.#mapDocumentToTeamAllTimeStats(document);
+  }
+
+  public async findByTeamId(teamId: TATStatsTeamId): Promise<Nullable<TeamAllTimeStats>> {
+    const MyModel = await this.model();
+    const document: Nullable<IMongooseTeamAllTimeStatsDocument> = await MyModel.findOne<IMongooseTeamAllTimeStatsDocument>({ teamId: teamId.value });
     return document === null ? null : this.#mapDocumentToTeamAllTimeStats(document);
   }
 

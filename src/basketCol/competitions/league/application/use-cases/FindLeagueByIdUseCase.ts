@@ -1,15 +1,20 @@
 import {
+  ILeagueFounderUserRepository,
   ILeagueRepository,
   League,
+  LeagueFounderUser,
+  LeagueFounderUserId,
   LeagueId,
   Nullable,
 } from '@basketcol/domain';
 
-import { IFindLeagueByIdUseCase } from './ports/IFindLeagueByIdUseCase';
+import { IFindLeagueByIdUseCase, IFindLeagueByIdUseCaseResponse } from './ports/IFindLeagueByIdUseCase';
 import { FindLeagueByIdDTO } from '../dtos/FindLeagueByIdDTO';
+import { FounderNotFoundForLeagueError } from '../exceptions/FounderNotFoundForLeagueError';
 
 type Dependencies = {
   readonly leagueRepository: ILeagueRepository;
+  readonly leagueFounderUserRepository: ILeagueFounderUserRepository;
 };
 
 export class FindLeagueByIdUseCase implements IFindLeagueByIdUseCase {
@@ -19,8 +24,24 @@ export class FindLeagueByIdUseCase implements IFindLeagueByIdUseCase {
     return new FindLeagueByIdUseCase(dependencies);
   }
 
-  public execute(dto: FindLeagueByIdDTO): Promise<Nullable<League>> {
+  public async execute(dto: FindLeagueByIdDTO): Promise<IFindLeagueByIdUseCaseResponse> {
     const leagueId: LeagueId = LeagueId.create(dto.id);
-    return this.dependencies.leagueRepository.findById(leagueId);
+    const leagueFound: Nullable<League> = await this.dependencies.leagueRepository.findById(leagueId);
+
+    if (leagueFound === null || leagueFound === undefined) {
+      return null;
+    }
+
+    const leagueFounderUserId: LeagueFounderUserId = LeagueFounderUserId.create(leagueFound.toPrimitives.leagueFounderUserId);
+    const leagueFounderUserFound: Nullable<LeagueFounderUser> = await this.dependencies.leagueFounderUserRepository.findById(leagueFounderUserId);
+
+    if (leagueFounderUserFound === null || leagueFounderUserFound === undefined) {
+      throw FounderNotFoundForLeagueError.create(`Founder not found for league with ID ${leagueId.value}`);
+    }
+
+    return {
+      league: leagueFound,
+      leagueFounderUser: leagueFounderUserFound,
+    };
   }
 }

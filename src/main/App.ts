@@ -20,6 +20,7 @@ import { ExpressServer } from '../basketCol/shared/infrastructure/server/express
 import { playerUserCareerStatsRouteManager } from '../basketCol/users/player/career-stats/infrastructure/dependency-injection';
 import { playerUserAttributesRouteManager } from '../basketCol/users/player/attributes/shared/infrastructure/dependency-injection';
 import { teamPlayerRouteManager, teamPlayerServerErrorHandler } from '../basketCol/team/team-player/infrastructure/dependency-injection';
+import { leagueTeamRouteManager, leagueTeamServerErrorHandler } from '../basketCol/competitions/league/league-team/infrastructure/dependency-injection';
 
 export class App {
   readonly #server: IServer;
@@ -62,6 +63,7 @@ export class App {
       leagueSeasonFixtureGameRouteManager,
       teamRouteManager,
       teamPlayerRouteManager,
+      leagueTeamRouteManager,
     ]);
   }
 
@@ -84,6 +86,7 @@ export class App {
       leagueSeasonFixtureServerErrorHandler,
       leagueSeasonFixtureGameServerErrorHandler,
       teamPlayerServerErrorHandler,
+      leagueTeamServerErrorHandler,
     ]);
   }
 }

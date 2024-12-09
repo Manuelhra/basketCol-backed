@@ -5,7 +5,7 @@ import { httpResponseHandler, tokenValidatorService } from '../../../../../../..
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
 import { createLeagueSeasonPOSTControllerValidations } from './validations/create-league-season-post-controller.validations';
 import { expressInputValidationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
-import { createLeagueSeasonPOSTController } from '../../../dependency-injection';
+import { createLeagueSeasonPOSTController, findAllLeagueSeasonsByLeagueIdGETController } from '../../../dependency-injection';
 import { expressServiceAvailabilityMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
@@ -13,7 +13,7 @@ const register = (router: Router) => {
 
   // Endpoint - Create league season
   router.post(
-    `${pathPrefix}/league-seasons`,
+    `${pathPrefix}/leagues/seasons`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create league season',
@@ -23,6 +23,17 @@ const register = (router: Router) => {
     createLeagueSeasonPOSTControllerValidations,
     expressInputValidationMiddleware,
     createLeagueSeasonPOSTController.run.bind(createLeagueSeasonPOSTController),
+  );
+
+  // Endpoint - Find all league seasons by league id
+  router.get(
+    `${pathPrefix}/leagues/:leagueId/seasons`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Find all league seasons by league id',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    findAllLeagueSeasonsByLeagueIdGETController.run.bind(findAllLeagueSeasonsByLeagueIdGETController),
   );
 };
 

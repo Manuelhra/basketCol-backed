@@ -21,6 +21,7 @@ import { BulkCreateTeamPlayerFromExcelService } from '../services/BulkCreateTeam
 import { IServerErrorHandler } from '../../../../shared/infrastructure/server/IServerErrorHandler';
 import { IUuidGenerator } from '../../../../shared/application/uuid/ports/IUuidGenerator';
 import { IFindAllTeamActivePlayersUseCase } from '../../application/use-cases/ports/IFindAllTeamActivePlayersUseCase';
+import { IFindTeamActivePlayerUseCase } from '../../application/use-cases/ports/IFindTeamActivePlayerUseCase';
 
 export interface ITeamPlayerContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -44,4 +45,6 @@ export interface ITeamPlayerContainer {
   uuidGenerator: IUuidGenerator;
   findAllTeamActivePlayersGETController: IController;
   findAllTeamActivePlayersUseCase: IFindAllTeamActivePlayersUseCase;
+  findTeamActivePlayerGETController: IController;
+  findTeamActivePlayerUseCase: IFindTeamActivePlayerUseCase;
 }

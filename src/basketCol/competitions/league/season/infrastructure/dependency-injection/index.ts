@@ -10,3 +10,4 @@ if (awilixLeagueSeasonContainer === null) {
 export const createLeagueSeasonPOSTController = awilixLeagueSeasonContainer.resolve('createLeagueSeasonPOSTController');
 export const leagueSeasonRouteManager = awilixLeagueSeasonContainer.resolve('leagueSeasonRouteManager');
 export const leagueSeasonServerErrorHandler = awilixLeagueSeasonContainer.resolve('leagueSeasonServerErrorHandler');
+export const findAllLeagueSeasonsByLeagueIdGETController = awilixLeagueSeasonContainer.resolve('findAllLeagueSeasonsByLeagueIdGETController');

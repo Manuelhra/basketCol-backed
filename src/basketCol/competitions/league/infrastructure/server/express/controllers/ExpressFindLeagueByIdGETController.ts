@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { HttpStatus, League, Nullable } from '@basketcol/domain';
+import { HttpStatus } from '@basketcol/domain';
 
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 import { IFindLeagueByIdUseCase } from '../../../../application/use-cases/ports/IFindLeagueByIdUseCase';
@@ -19,14 +19,17 @@ export class ExpressFindLeagueByIdGETController implements ExpressBaseController
 
   public async run(request: Request, response: Response): Promise<void> {
     const { leagueId } = request.params;
-    const league: Nullable<League> = await this.dependencies.findLeagueByIdUseCase.execute({ id: leagueId });
+    const result = await this.dependencies.findLeagueByIdUseCase.execute({ id: leagueId });
+
+    const responseData = result === null ? null : {
+      ...result.league.toPrimitives,
+      leagueFounderUser: result.leagueFounderUser.toPrimitives,
+    };
 
     const successResult = this.dependencies.httpResponseHandler.handleSuccessResponse({
       code: HttpStatus.OK,
       message: HttpStatus.getMessage(HttpStatus.OK),
-      data: {
-        league: league ? league.toPrimitives : null,
-      },
+      data: responseData,
     });
 
     response.status(HttpStatus.OK).json(successResult);

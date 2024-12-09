@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import { HttpStatus, Nullable, Team } from '@basketcol/domain';
+import { HttpStatus } from '@basketcol/domain';
 
 import { ExpressBaseController } from '../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 import { IFindTeamByIdUseCase } from '../../../../application/use-cases/ports/IFindTeamByIdUseCase';
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
+import { TeamHttpResponseDTO } from '../../../dtos/TeamHttpResponseDTO';
+import { TeamAllTimeStatsHttpResponseDTO } from '../../../../all-time-stats/infrastructure/dtos/TeamAllTimeStatsHttpResponseDTO';
 
 type Dependencies = {
   readonly findTeamByIdUseCase: IFindTeamByIdUseCase;
@@ -19,14 +21,20 @@ export class ExpressFindTeamByIdGETController implements ExpressBaseController {
 
   public async run(request: Request, response: Response): Promise<void> {
     const { teamId } = request.params;
-    const team: Nullable<Team> = await this.dependencies.findTeamByIdUseCase.execute({ id: teamId });
+    const result = await this.dependencies.findTeamByIdUseCase.execute({ id: teamId });
+
+    const responseData: {
+      team: TeamHttpResponseDTO,
+      teamAllTimeStats: TeamAllTimeStatsHttpResponseDTO,
+    } | null = result ? {
+      team: result.team.toPrimitives,
+      teamAllTimeStats: result.teamAllTimeStats.toPrimitives,
+    } : null;
 
     const successResult = this.dependencies.httpResponseHandler.handleSuccessResponse({
       code: HttpStatus.OK,
       message: HttpStatus.getMessage(HttpStatus.OK),
-      data: {
-        team: team ? team.toPrimitives : null,
-      },
+      data: responseData,
     });
 
     response.status(HttpStatus.OK).json(successResult);

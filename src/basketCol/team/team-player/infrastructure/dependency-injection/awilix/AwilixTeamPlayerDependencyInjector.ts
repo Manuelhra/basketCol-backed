@@ -40,6 +40,9 @@ import { UuidV4Generator } from '../../../../../shared/infrastructure/uuid/UuidV
 import { ExpressFindAllTeamActivePlayersGETController } from '../../server/express/controllers/ExpressFindAllTeamActivePlayersGETController';
 import { IFindAllTeamActivePlayersUseCase } from '../../../application/use-cases/ports/IFindAllTeamActivePlayersUseCase';
 import { FindAllTeamActivePlayersUseCase } from '../../../application/use-cases/FindAllTeamActivePlayersUseCase';
+import { ExpressFindTeamActivePlayerGETController } from '../../server/express/controllers/ExpressFindTeamActivePlayerGETController';
+import { IFindTeamActivePlayerUseCase } from '../../../application/use-cases/ports/IFindTeamActivePlayerUseCase';
+import { FindTeamActivePlayerUseCase } from '../../../application/use-cases/FindTeamActivePlayerUseCase';
 
 export class AwilixTeamPlayerDependencyInjector extends AwilixDependencyInjector<ITeamPlayerContainer> {
   private constructor() {
@@ -79,6 +82,8 @@ export class AwilixTeamPlayerDependencyInjector extends AwilixDependencyInjector
       uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
       findAllTeamActivePlayersGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindAllTeamActivePlayersGETController.create).singleton(),
       findAllTeamActivePlayersUseCase: AwilixDependencyInjector.registerAsFunction<IFindAllTeamActivePlayersUseCase>(FindAllTeamActivePlayersUseCase.create).singleton(),
+      findTeamActivePlayerGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindTeamActivePlayerGETController.create).singleton(),
+      findTeamActivePlayerUseCase: AwilixDependencyInjector.registerAsFunction<IFindTeamActivePlayerUseCase>(FindTeamActivePlayerUseCase.create).singleton(),
     });
   }
 
