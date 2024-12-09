@@ -26,6 +26,7 @@ import { ICreateSkillAttributesUseCase } from '../../../skill/application/use-ca
 import { BulkCreatePlayerUserAttributeCategoriesFromExcelService } from '../services/BulkCreatePlayerUserAttributeCategoriesFromExcelService';
 import { IGetPlayerUserAttributeCategoriesUseCase } from '../../application/use-cases/ports/IGetPlayerUserAttributeCategoriesUseCase';
 import { IExcelManager } from '../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
+import { IUuidGenerator } from '../../../../../../shared/application/uuid/ports/IUuidGenerator';
 
 export interface IPlayerUserAttributesContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -54,4 +55,5 @@ export interface IPlayerUserAttributesContainer {
   passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService
   getPlayerUserAttributeCategoriesGETController: IController;
   getPlayerUserAttributeCategoriesUseCase: IGetPlayerUserAttributeCategoriesUseCase;
+  uuidGenerator: IUuidGenerator;
 }

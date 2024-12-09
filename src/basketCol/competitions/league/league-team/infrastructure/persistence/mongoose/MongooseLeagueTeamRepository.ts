@@ -7,6 +7,7 @@ import {
   IPaginatedResponse,
   LeagueTeamLeagueId,
   LeagueTeamTeamId,
+  LeagueTeamStatus,
 } from '@basketcol/domain';
 
 import { IMongooseLeagueTeamDocument } from './IMongooseLeagueTeamDocument';
@@ -86,6 +87,12 @@ export class MongooseLeagueTeamRepository
     const MyModel = await this.model();
     const document: Nullable<IMongooseLeagueTeamDocument> = await MyModel.findOne<IMongooseLeagueTeamDocument>({ id: leagueTeamId.value });
     return document === null ? null : this.#mapDocumentToLeagueTeam(document);
+  }
+
+  public async findAllByLeagueId(leagueId: LeagueTeamLeagueId, status: LeagueTeamStatus): Promise<LeagueTeam[]> {
+    const MyModel = await this.model();
+    const documents: IMongooseLeagueTeamDocument[] = await MyModel.find<IMongooseLeagueTeamDocument>({ leagueId: leagueId.value, status: status.value });
+    return documents.map(this.#mapDocumentToLeagueTeam);
   }
 
   public save(leagueTeam: LeagueTeam): Promise<void> {

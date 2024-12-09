@@ -4,8 +4,12 @@ import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/i
 import { httpResponseHandler, tokenValidatorService } from '../../../../../../shared/infrastructure/dependency-injection';
 import { expressAuthenticationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-authentication.middleware';
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
-import { bulkCreateTeamPlayerFromExcelPOSTController, findAllTeamActivePlayersGETController } from '../../../dependency-injection';
 import { ExpressBulkCreateTeamPlayerFromExcelPOSTController } from '../controllers/ExpressBulkCreateTeamPlayerFromExcelPOSTController';
+import {
+  bulkCreateTeamPlayerFromExcelPOSTController,
+  findAllTeamActivePlayersGETController,
+  findTeamActivePlayerGETController,
+} from '../../../dependency-injection';
 
 const register = (router: Router) => {
   const pathPrefix: string = '/teams';
@@ -32,6 +36,17 @@ const register = (router: Router) => {
     }, httpResponseHandler),
     expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
     findAllTeamActivePlayersGETController.run.bind(findAllTeamActivePlayersGETController),
+  );
+
+  // Endpoint - Find team active player
+  router.get(
+    `${pathPrefix}/players/:playerUserId/active`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Find team active player',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    findTeamActivePlayerGETController.run.bind(findTeamActivePlayerGETController),
   );
 };
 

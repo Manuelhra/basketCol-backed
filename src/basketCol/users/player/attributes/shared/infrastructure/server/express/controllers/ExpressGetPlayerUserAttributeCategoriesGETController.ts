@@ -2,11 +2,11 @@ import { HttpStatus } from '@basketcol/domain';
 import { Request, Response } from 'express';
 
 import { ExpressBaseController } from '../../../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
-import { GetPlayerUserAttributeCategoriesUseCase } from '../../../../application/use-cases/GetPlayerUserAttributeCategoriesUseCase';
 import { IHttpResponseHandler } from '../../../../../../../../shared/application/http/ports/IHttpResponseHandler';
+import { IGetPlayerUserAttributeCategoriesUseCase } from '../../../../application/use-cases/ports/IGetPlayerUserAttributeCategoriesUseCase';
 
 type Dependencies = {
-  readonly getPlayerUserAttributeCategoriesUseCase: GetPlayerUserAttributeCategoriesUseCase;
+  readonly getPlayerUserAttributeCategoriesUseCase: IGetPlayerUserAttributeCategoriesUseCase;
   readonly httpResponseHandler: IHttpResponseHandler;
 };
 
@@ -15,7 +15,7 @@ type AttributeCategory = {
 };
 
 export class ExpressGetPlayerUserAttributeCategoriesGETController implements ExpressBaseController {
-  readonly #getPlayerUserAttributeCategoriesUseCase: GetPlayerUserAttributeCategoriesUseCase;
+  readonly #getPlayerUserAttributeCategoriesUseCase: IGetPlayerUserAttributeCategoriesUseCase;
 
   readonly #httpResponseHandler: IHttpResponseHandler;
 

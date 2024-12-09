@@ -52,6 +52,8 @@ import { IGetPlayerUserAttributeCategoriesUseCase } from '../../../application/u
 import { GetPlayerUserAttributeCategoriesUseCase } from '../../../application/use-cases/GetPlayerUserAttributeCategoriesUseCase';
 import { IExcelManager } from '../../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
 import { XLSXManager } from '../../../../../../../shared/infrastructure/file-upload/excel/xlsx/XLSXManager';
+import { UuidV4Generator } from '../../../../../../../shared/infrastructure/uuid/UuidV4Generator';
+import { IUuidGenerator } from '../../../../../../../shared/application/uuid/ports/IUuidGenerator';
 
 export class AwilixPlayerUserAttributesDependencyInjector
   extends AwilixDependencyInjector<IPlayerUserAttributesContainer> {
@@ -130,6 +132,7 @@ export class AwilixPlayerUserAttributesDependencyInjector
       passwordValueObjectCreationDomainService: AwilixDependencyInjector.registerAsFunction<IPasswordValueObjectCreationDomainService>(PasswordValueObjectCreationDomainService.create).singleton(),
       getPlayerUserAttributeCategoriesGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressGetPlayerUserAttributeCategoriesGETController.create).singleton(),
       getPlayerUserAttributeCategoriesUseCase: AwilixDependencyInjector.registerAsFunction<IGetPlayerUserAttributeCategoriesUseCase>(GetPlayerUserAttributeCategoriesUseCase.create).singleton(),
+      uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
     });
   }
 

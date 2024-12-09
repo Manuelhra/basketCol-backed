@@ -13,6 +13,7 @@ import { IServerErrorHandler } from '../../../../../shared/infrastructure/server
 import { ICreateLeagueSeasonUseCase } from '../../application/use-cases/ports/ICreateLeagueSeasonUseCase';
 import { IRouteManager } from '../../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IFileSystem';
+import { IFindAllLeagueSeasonsByLeagueIdUseCase } from '../../application/use-cases/ports/IFindAllLeagueSeasonsByLeagueIdUseCase';
 
 export interface ILeagueSeasonContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -27,4 +28,6 @@ export interface ILeagueSeasonContainer {
   courtRepository: ICourtRepository;
   leagueSeasonRouteManager: IRouteManager;
   fileSystem: IFileSystem;
+  findAllLeagueSeasonsByLeagueIdGETController: IController;
+  findAllLeagueSeasonsByLeagueIdUseCase: IFindAllLeagueSeasonsByLeagueIdUseCase;
 }

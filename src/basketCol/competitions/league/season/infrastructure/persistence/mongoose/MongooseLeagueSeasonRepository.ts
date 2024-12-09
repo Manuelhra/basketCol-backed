@@ -4,6 +4,7 @@ import {
   IPaginatedResponse,
   LeagueSeason,
   LeagueSeasonId,
+  LeagueSeasonLeagueId,
   Nullable,
 } from '@basketcol/domain';
 
@@ -34,6 +35,12 @@ export class MongooseLeagueSeasonRepository
     const MyModel = await this.model();
     const document: Nullable<IMongooseLeagueSeasonDocument> = await MyModel.findOne<IMongooseLeagueSeasonDocument>({ id: leagueSeasonId.value });
     return document === null ? null : this.#mapDocumentToLeagueSeason(document);
+  }
+
+  public async findAllByLeagueId(leagueId: LeagueSeasonLeagueId): Promise<LeagueSeason[]> {
+    const MyModel = await this.model();
+    const documents: IMongooseLeagueSeasonDocument[] = await MyModel.find<IMongooseLeagueSeasonDocument>({ leagueId: leagueId.value });
+    return documents.map(this.#mapDocumentToLeagueSeason);
   }
 
   public async searchAll(params: { query?: string; page: number; perPage: number; }): Promise<IPaginatedResponse<LeagueSeason>> {

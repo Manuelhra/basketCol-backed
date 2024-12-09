@@ -8,6 +8,7 @@ import { Response } from 'express';
 import { IErrorApiResponse } from '../../../../../shared/application/http/ports/IErrorApiResponse';
 import { IHttpResponseHandler } from '../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { IServerErrorHandler } from '../../../../../shared/infrastructure/server/IServerErrorHandler';
+import { FounderNotFoundForLeagueError } from '../../../application/exceptions/FounderNotFoundForLeagueError';
 
 type Dependencies = {
   readonly httpResponseHandler: IHttpResponseHandler;
@@ -36,6 +37,7 @@ export class ExpressLeagueServerErrorHandler implements IServerErrorHandler {
         isInstanceof = true;
         break;
 
+      case error instanceof FounderNotFoundForLeagueError:
       case error instanceof LeagueNotFoundError:
         errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,

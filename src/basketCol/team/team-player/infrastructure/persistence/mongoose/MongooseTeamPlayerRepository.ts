@@ -59,6 +59,16 @@ export class MongooseTeamPlayerRepository
     return document === null ? null : this.#mapDocumentToTeamPlayer(document);
   }
 
+  public async findTeamActivePlayerByPlayerUserId(playerUserId: TeamPlayerPlayerUserId): Promise<Nullable<TeamPlayer>> {
+    const MyModel = await this.model();
+    const document: Nullable<IMongooseTeamPlayerDocument> = await MyModel.findOne<IMongooseTeamPlayerDocument>({
+      playerUserId: playerUserId.value,
+      status: TeamPlayerStatus.active,
+    });
+
+    return document === null ? null : this.#mapDocumentToTeamPlayer(document);
+  }
+
   public save(teamPlayer: TeamPlayer): Promise<void> {
     return this.persist(teamPlayer);
   }
