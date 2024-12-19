@@ -5,7 +5,11 @@ import { httpResponseHandler, tokenValidatorService } from '../../../../../../..
 import { expressUserTypeAuthorizationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-user-type-authorization.middleware';
 import { createLeagueSeasonPOSTControllerValidations } from './validations/create-league-season-post-controller.validations';
 import { expressInputValidationMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
-import { createLeagueSeasonPOSTController, findAllLeagueSeasonsByLeagueIdGETController } from '../../../dependency-injection';
+import {
+  createLeagueSeasonPOSTController,
+  findAllLeagueSeasonsByLeagueIdGETController,
+  findLeagueSeasonByIdGETController,
+} from '../../../dependency-injection';
 import { expressServiceAvailabilityMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
@@ -34,6 +38,17 @@ const register = (router: Router) => {
     }, httpResponseHandler),
     expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
     findAllLeagueSeasonsByLeagueIdGETController.run.bind(findAllLeagueSeasonsByLeagueIdGETController),
+  );
+
+  // Endpoint - Find league season by id
+  router.get(
+    `${pathPrefix}/leagues/seasons/:leagueSeasonId`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Find league season by id',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    findLeagueSeasonByIdGETController.run.bind(findLeagueSeasonByIdGETController),
   );
 };
 

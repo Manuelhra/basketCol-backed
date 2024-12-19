@@ -1,5 +1,4 @@
-import { IImageValueObjectProps } from '@basketcol/domain/build/types/basketCol/shared/domain/value-objects/ImageValueObject';
-import { ILocationValueObjectProps } from '@basketcol/domain/build/types/basketCol/shared/domain/value-objects/LocationValueObject';
+import { ILocationValueObjectProps, IImageValueObjectProps } from '@basketcol/domain';
 
 export interface CreateCourtDTO {
   id: string;

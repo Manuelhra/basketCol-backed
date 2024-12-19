@@ -1,4 +1,4 @@
-import { ILocationValueObjectProps } from '@basketcol/domain/build/types/basketCol/shared/domain/value-objects/LocationValueObject';
+import { ILocationValueObjectProps } from '@basketcol/domain';
 
 export interface CreateLeagueDTO {
   id: string;

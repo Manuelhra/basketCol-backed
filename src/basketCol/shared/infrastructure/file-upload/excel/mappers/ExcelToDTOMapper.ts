@@ -32,6 +32,8 @@ export class ExcelToDTOMapper {
         return this.#parseNumberValue(value);
       case 'boolean':
         return this.#parseBooleanValue(value);
+      case 'time':
+        return this.#parseTimeValue(value);
       case 'string':
       default:
         return this.#parseStringValue(value);
@@ -84,5 +86,24 @@ export class ExcelToDTOMapper {
   static #parseStringValue(value: any): string {
     if (value === null || value === undefined) return '';
     return String(value);
+  }
+
+  static #parseTimeValue(value: any): string {
+    // Si el valor ya es una cadena con formato de hora
+    if (typeof value === 'string' && /^\d{2}:\d{2}$/.test(value)) {
+      return value;
+    }
+
+    // Si es un número decimal (representación de Excel)
+    if (typeof value === 'number') {
+      // Convertir el valor decimal a hora
+      const hours = Math.floor(value * 24);
+      const minutes = Math.round((value * 24 - hours) * 60);
+
+      return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+
+    // Para otros casos, devolver una hora por defecto
+    return '00:00';
   }
 }

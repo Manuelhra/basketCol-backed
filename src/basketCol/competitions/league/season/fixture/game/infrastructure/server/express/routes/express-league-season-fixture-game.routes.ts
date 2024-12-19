@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { bulkCreateLeagueSeasonFixtureGameFromExcelPOSTController } from '../../../dependency-injection';
+import { bulkCreateLeagueSeasonFixtureGameFromExcelPOSTController, findAllLeagueSeasonFixtureGamesByFixtureIdGETController } from '../../../dependency-injection';
 import { ExpressBulkCreateLeagueSeasonFixtureGameFromExcelPOSTController } from '../controllers/ExpressBulkCreateLeagueSeasonFixtureGameFromExcelPOSTController';
 import { httpResponseHandler, tokenValidatorService } from '../../../../../../../../../shared/infrastructure/dependency-injection';
 import { expressAuthenticationMiddleware } from '../../../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-authentication.middleware';
@@ -12,7 +12,7 @@ const register = (router: Router) => {
 
   // Endpoint - Bulk create league season fixture games from Excel
   router.post(
-    `${pathPrefix}/league-season-fixture-games/bulk-upload/excel`,
+    `${pathPrefix}/leagues/seasons/fixtures/games/bulk-upload/excel`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Bulk create league season fixture games from Excel',
@@ -21,6 +21,17 @@ const register = (router: Router) => {
     expressUserTypeAuthorizationMiddleware(['HOST_USER'], httpResponseHandler),
     (bulkCreateLeagueSeasonFixtureGameFromExcelPOSTController as ExpressBulkCreateLeagueSeasonFixtureGameFromExcelPOSTController).getExcelFileUploadMiddleware(),
     bulkCreateLeagueSeasonFixtureGameFromExcelPOSTController.run.bind(bulkCreateLeagueSeasonFixtureGameFromExcelPOSTController),
+  );
+
+  // Endpoint - Find all league season fixture games by fixture ID
+  router.get(
+    `${pathPrefix}/leagues/seasons/fixtures/:fixtureId/games`,
+    expressServiceAvailabilityMiddleware({
+      isEnabled: true,
+      serviceName: 'Find all league season fixture games by fixture ID',
+    }, httpResponseHandler),
+    expressAuthenticationMiddleware(tokenValidatorService, httpResponseHandler),
+    findAllLeagueSeasonFixtureGamesByFixtureIdGETController.run.bind(findAllLeagueSeasonFixtureGamesByFixtureIdGETController),
   );
 };
 

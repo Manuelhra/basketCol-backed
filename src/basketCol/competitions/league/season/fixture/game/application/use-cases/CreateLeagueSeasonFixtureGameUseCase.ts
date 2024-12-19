@@ -6,7 +6,7 @@ import {
   ILeagueSeasonFixtureGamePrimitives,
   ILeagueSeasonFixtureGameRepository,
   LeagueSeasonFixtureGame,
-  LeagueSeasonValidationDomainService,
+  LeagueSeasonFixtureValidationDomainService,
   LSFGameAssistantRefereeId,
   LSFGameAwayTeamId,
   LSFGameCourtId,
@@ -32,7 +32,7 @@ type Dependencies = {
   readonly teamValidationDomainService: TeamValidationDomainService;
   readonly refereeUserValidationDomainService: RefereeUserValidationDomainService;
   readonly courtValidationDomainService: CourtValidationDomainService;
-  readonly leagueSeasonValidationDomainService: LeagueSeasonValidationDomainService;
+  readonly leagueSeasonFixtureValidationDomainService: LeagueSeasonFixtureValidationDomainService;
   readonly businessDateDomainService: BusinessDateDomainService;
   readonly leagueSeasonFixtureGameRepository: ILeagueSeasonFixtureGameRepository;
 };
@@ -125,7 +125,7 @@ export class CreateLeagueSeasonFixtureGameUseCase implements ICreateLeagueSeason
     await this.dependencies.refereeUserValidationDomainService.ensureRefereeUserExists(lSFGameHeadRefereeId);
     await this.dependencies.refereeUserValidationDomainService.ensureRefereeUserExists(lSFGameAssistantRefereeId);
     await this.dependencies.courtValidationDomainService.ensureCourtExists(lSFGameCourtId);
-    await this.dependencies.leagueSeasonValidationDomainService.ensureLeagueSeasonExists(lSFGameFixtureId);
+    await this.dependencies.leagueSeasonFixtureValidationDomainService.ensureLeagueSeasonFixtureExists(lSFGameFixtureId);
   }
 
   #validateUserAccess(userContext: IUserContext): void {

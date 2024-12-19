@@ -1,6 +1,5 @@
 import {
   LeagueSeasonValidationDomainService,
-  LeagueSeasonFixtureGameValidationDomainService,
   BusinessDateDomainService,
   ILeagueSeasonFixtureGameRepository,
   ILeagueSeasonRepository,
@@ -9,6 +8,12 @@ import {
   TeamValidationDomainService,
   ITeamRepository,
   IRefereeUserRepository,
+  ICourtRepository,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  SecurePasswordCreationDomainService,
+  LeagueSeasonFixtureValidationDomainService,
+  ILeagueSeasonFixtureRepository,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -19,6 +24,8 @@ import { IRouteManager } from '../../../../../../../shared/infrastructure/server
 import { ICreateLeagueSeasonFixtureGameUseCase } from '../../application/use-cases/ports/ICreateLeagueSeasonFixtureGameUseCase';
 import { BulkCreateLeagueSeasonFixtureGameFromExcelService } from '../services/BulkCreateLeagueSeasonFixtureGameFromExcelService';
 import { IExcelManager } from '../../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
+import { IFindAllLeagueSeasonFixtureGamesByFixtureIdUseCase } from '../../application/use-cases/ports/IFindAllLeagueSeasonFixtureGamesByFixtureIdUseCase';
+import { IUuidGenerator } from '../../../../../../../shared/application/uuid/ports/IUuidGenerator';
 
 export interface ILeagueSeasonFixtureGameContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -28,7 +35,7 @@ export interface ILeagueSeasonFixtureGameContainer {
   excelManager: IExcelManager;
   createLeagueSeasonFixtureGameUseCase: ICreateLeagueSeasonFixtureGameUseCase;
   leagueSeasonValidationDomainService: LeagueSeasonValidationDomainService;
-  leagueSeasonFixtureGameValidationDomainService: LeagueSeasonFixtureGameValidationDomainService;
+  leagueSeasonFixtureValidationDomainService: LeagueSeasonFixtureValidationDomainService;
   businessDateDomainService: BusinessDateDomainService;
   leagueSeasonFixtureGameRepository: ILeagueSeasonFixtureGameRepository;
   leagueSeasonRepository: ILeagueSeasonRepository;
@@ -39,4 +46,12 @@ export interface ILeagueSeasonFixtureGameContainer {
   refereeUserValidationDomainService: RefereeUserValidationDomainService;
   teamRepository: ITeamRepository;
   refereeUserRepository: IRefereeUserRepository;
+  findAllLeagueSeasonFixtureGamesByFixtureIdGETController: IController;
+  findAllLeagueSeasonFixtureGamesByFixtureIdUseCase: IFindAllLeagueSeasonFixtureGamesByFixtureIdUseCase;
+  courtRepository: ICourtRepository;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
+  uuidGenerator: IUuidGenerator;
+  leagueSeasonFixtureRepository: ILeagueSeasonFixtureRepository;
 }

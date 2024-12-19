@@ -29,6 +29,9 @@ import { MongooseLeagueRepository } from '../../../../infrastructure/persistence
 import { ExpressFindAllLeagueSeasonsByLeagueIdGETController } from '../../server/express/controllers/ExpressFindAllLeagueSeasonsByLeagueIdGETController';
 import { FindAllLeagueSeasonsByLeagueIdUseCase } from '../../../application/use-cases/FindAllLeagueSeasonsByLeagueIdUseCase';
 import { IFindAllLeagueSeasonsByLeagueIdUseCase } from '../../../application/use-cases/ports/IFindAllLeagueSeasonsByLeagueIdUseCase';
+import { ExpressFindLeagueSeasonByIdGETController } from '../../server/express/controllers/ExpressFindLeagueSeasonByIdGETController';
+import { IFindLeagueSeasonByIdUseCase } from '../../../application/use-cases/ports/IFindLeagueSeasonByIdUseCase';
+import { FindLeagueSeasonByIdUseCase } from '../../../application/use-cases/FindLeagueSeasonByIdUseCase';
 
 export class AwilixLeagueSeasonDependencyInjector extends AwilixDependencyInjector<ILeagueSeasonContainer> {
   private constructor() {
@@ -60,6 +63,8 @@ export class AwilixLeagueSeasonDependencyInjector extends AwilixDependencyInject
       leagueRepository: AwilixDependencyInjector.registerAsFunction<ILeagueRepository>(MongooseLeagueRepository.create).singleton(),
       findAllLeagueSeasonsByLeagueIdGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindAllLeagueSeasonsByLeagueIdGETController.create).singleton(),
       findAllLeagueSeasonsByLeagueIdUseCase: AwilixDependencyInjector.registerAsFunction<IFindAllLeagueSeasonsByLeagueIdUseCase>(FindAllLeagueSeasonsByLeagueIdUseCase.create).singleton(),
+      findLeagueSeasonByIdGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindLeagueSeasonByIdGETController.create).singleton(),
+      findLeagueSeasonByIdUseCase: AwilixDependencyInjector.registerAsFunction<IFindLeagueSeasonByIdUseCase>(FindLeagueSeasonByIdUseCase.create).singleton(),
     });
   }
 

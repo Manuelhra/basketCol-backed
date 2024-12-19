@@ -4,6 +4,7 @@ import {
   ILeagueSeasonFixtureGameRepository,
   LSFGameId,
   Nullable,
+  FixtureId,
 } from '@basketcol/domain';
 
 import { MongooseRepository } from '../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
@@ -33,6 +34,12 @@ export class MongooseLeagueSeasonFixtureGameRepository
     const MyModel = await this.model();
     const document: Nullable<IMongooseLeagueSeasonFixtureGameDocument> = await MyModel.findOne<IMongooseLeagueSeasonFixtureGameDocument>({ id: leagueSeasonFixtureGameId.value });
     return document === null ? null : this.#mapDocumentToLeagueSeasonFixtureGame(document);
+  }
+
+  public async findAllByFixtureId(fixtureId: FixtureId): Promise<LeagueSeasonFixtureGame[]> {
+    const MyModel = await this.model();
+    const documents: IMongooseLeagueSeasonFixtureGameDocument[] = await MyModel.find<IMongooseLeagueSeasonFixtureGameDocument>({ fixtureId: fixtureId.value });
+    return documents.map((document) => this.#mapDocumentToLeagueSeasonFixtureGame(document));
   }
 
   public save(leagueSeasonFixtureGame: LeagueSeasonFixtureGame): Promise<void> {
