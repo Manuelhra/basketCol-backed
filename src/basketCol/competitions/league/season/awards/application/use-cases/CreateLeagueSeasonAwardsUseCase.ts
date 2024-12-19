@@ -1,5 +1,6 @@
 import {
   BusinessDateDomainService,
+  HostUserType,
   IdUniquenessValidatorDomainService,
   ILeagueSeasonAwardsPrimitives,
   ILeagueSeasonAwardsRepository,
@@ -15,6 +16,7 @@ import {
   LSAChampionTeamId,
   LSACreatedAt,
   LSALeagueSeasonId,
+  LSAMostValuablePlayerId,
   LSAUpdatedAt,
   PlayerUserValidationDomainService,
   TeamValidationDomainService,
@@ -22,14 +24,16 @@ import {
 
 import { CreateLeagueSeasonAwardsDTO } from '../dtos/CreateLeagueSeasonAwardsDTO';
 import { ICreateLeagueSeasonAwardsUseCase } from './ports/ICreateLeagueSeasonAwardsUseCase';
+import { IUserContext } from '../../../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../../../shared/application/exceptions/UnauthorizedAccessError';
 
 type Dependencies = {
-  idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
-  playerUserValidationDomainService: PlayerUserValidationDomainService;
-  teamValidationDomainService: TeamValidationDomainService;
-  leagueSeasonValidationDomainService: LeagueSeasonValidationDomainService;
-  businessDateDomainService: BusinessDateDomainService;
-  leagueSeasonAwardsRepository: ILeagueSeasonAwardsRepository;
+  readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
+  readonly playerUserValidationDomainService: PlayerUserValidationDomainService;
+  readonly teamValidationDomainService: TeamValidationDomainService;
+  readonly leagueSeasonValidationDomainService: LeagueSeasonValidationDomainService;
+  readonly businessDateDomainService: BusinessDateDomainService;
+  readonly leagueSeasonAwardsRepository: ILeagueSeasonAwardsRepository;
 };
 
 export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAwardsUseCase {
@@ -58,7 +62,9 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
     return new CreateLeagueSeasonAwardsUseCase(dependencies);
   }
 
-  public async execute(dto: CreateLeagueSeasonAwardsDTO): Promise<void> {
+  public async execute(dto: CreateLeagueSeasonAwardsDTO, userContext: IUserContext): Promise<void> {
+    this.#validateUserAccess(userContext);
+
     const {
       id,
       bestThreePointShooterId,
@@ -67,6 +73,7 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
       bestAssistProviderId,
       bestOffensiveRebounderId,
       bestDefensiveRebounderId,
+      mostValuablePlayerId,
       championTeamId,
       leagueSeasonId,
     } = dto;
@@ -78,6 +85,7 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
     const lSABestAssistProviderId: LSABestAssistProviderId = LSABestAssistProviderId.create(bestAssistProviderId);
     const lSABestOffensiveRebounderId: LSABestOffensiveRebounderId = LSABestOffensiveRebounderId.create(bestOffensiveRebounderId);
     const lSABestDefensiveRebounderId: LSABestDefensiveRebounderId = LSABestDefensiveRebounderId.create(bestDefensiveRebounderId);
+    const lSAMostValuablePlayerId: LSAMostValuablePlayerId = LSAMostValuablePlayerId.create(mostValuablePlayerId);
     const lSAChampionTeamId: LSAChampionTeamId = LSAChampionTeamId.create(championTeamId);
     const lSALeagueSeasonId: LSALeagueSeasonId = LSALeagueSeasonId.create(leagueSeasonId);
 
@@ -102,6 +110,7 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
       lSABestAssistProviderId.value,
       lSABestOffensiveRebounderId.value,
       lSABestDefensiveRebounderId.value,
+      lSAMostValuablePlayerId.value,
       lSAChampionTeamId.value,
       lSALeagueSeasonId.value,
       lSACreatedAt.value,
@@ -109,5 +118,11 @@ export class CreateLeagueSeasonAwardsUseCase implements ICreateLeagueSeasonAward
     );
 
     return this.#leagueSeasonAwardsRepository.save(leagueSeasonAwards);
+  }
+
+  #validateUserAccess(userContext: IUserContext): void {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create a team');
+    }
   }
 }

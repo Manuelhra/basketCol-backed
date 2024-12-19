@@ -6,6 +6,7 @@ export interface CreateLeagueSeasonAwardsDTO {
   bestAssistProviderId: string;
   bestOffensiveRebounderId: string;
   bestDefensiveRebounderId: string;
+  mostValuablePlayerId: string;
   championTeamId: string;
   leagueSeasonId: string;
 }

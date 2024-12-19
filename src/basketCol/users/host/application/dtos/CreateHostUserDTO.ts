@@ -1,4 +1,4 @@
-import { IImageValueObjectProps } from '@basketcol/domain/build/types/basketCol/shared/domain/value-objects/ImageValueObject';
+import { IImageValueObjectProps } from '@basketcol/domain';
 
 export interface CreateHostUserDTO {
   id: string;

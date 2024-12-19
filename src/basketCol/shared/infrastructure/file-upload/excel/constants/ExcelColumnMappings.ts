@@ -1,4 +1,4 @@
-export type ColumnMappingType = 'string' | 'number' | 'date' | 'boolean';
+export type ColumnMappingType = 'string' | 'number' | 'date' | 'boolean' | 'time';
 
 export interface ColumnMapping {
   readonly excelColumn: string;

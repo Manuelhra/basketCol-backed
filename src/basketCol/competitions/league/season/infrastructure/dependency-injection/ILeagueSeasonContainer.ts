@@ -14,6 +14,7 @@ import { ICreateLeagueSeasonUseCase } from '../../application/use-cases/ports/IC
 import { IRouteManager } from '../../../../../shared/infrastructure/server/routes/IRouteManager';
 import { IFileSystem } from '../../../../../shared/infrastructure/file-system/IFileSystem';
 import { IFindAllLeagueSeasonsByLeagueIdUseCase } from '../../application/use-cases/ports/IFindAllLeagueSeasonsByLeagueIdUseCase';
+import { IFindLeagueSeasonByIdUseCase } from '../../application/use-cases/ports/IFindLeagueSeasonByIdUseCase';
 
 export interface ILeagueSeasonContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -30,4 +31,6 @@ export interface ILeagueSeasonContainer {
   fileSystem: IFileSystem;
   findAllLeagueSeasonsByLeagueIdGETController: IController;
   findAllLeagueSeasonsByLeagueIdUseCase: IFindAllLeagueSeasonsByLeagueIdUseCase;
+  findLeagueSeasonByIdGETController: IController;
+  findLeagueSeasonByIdUseCase: IFindLeagueSeasonByIdUseCase;
 }

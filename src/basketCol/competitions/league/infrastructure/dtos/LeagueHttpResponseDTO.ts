@@ -1,4 +1,4 @@
-import { ILocationValueObjectProps } from '@basketcol/domain/build/types/basketCol/shared/domain/value-objects/LocationValueObject';
+import { ILocationValueObjectProps } from '@basketcol/domain';
 
 import { AggregateRootHttpResponseDTO } from '../../../../shared/infrastructure/dtos/AggregateRootHttpResponseDTO';
 

@@ -29,6 +29,12 @@ import { IExcelManager } from '../../../../../../../shared/infrastructure/file-u
 import { XLSXManager } from '../../../../../../../shared/infrastructure/file-upload/excel/xlsx/XLSXManager';
 import { UuidV4Generator } from '../../../../../../../shared/infrastructure/uuid/UuidV4Generator';
 import { IUuidGenerator } from '../../../../../../../shared/application/uuid/ports/IUuidGenerator';
+import { ExpressFindAllLeagueSeasonFixturesByLeagueSeasonIdGETController } from '../../server/express/controllers/ExpressFindAllLeagueSeasonFixturesByLeagueSeasonIdGETController';
+import { IFindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase } from '../../../application/use-cases/ports/IFindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase';
+import { FindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase } from '../../../application/use-cases/FindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase';
+import { ExpressFindLeagueSeasonFixtureByIdGETController } from '../../server/express/controllers/ExpressFindLeagueSeasonFixtureByIdGETController';
+import { IFindLeagueSeasonFixtureByIdUseCase } from '../../../application/use-cases/ports/IFindLeagueSeasonFixtureByIdUseCase';
+import { FindLeagueSeasonFixtureByIdUseCase } from '../../../application/use-cases/FindLeagueSeasonFixtureByIdUseCase';
 
 export class AwilixLeagueSeasonFixtureDependencyInjector extends AwilixDependencyInjector<ILeagueSeasonFixtureContainer> {
   private constructor() {
@@ -60,6 +66,10 @@ export class AwilixLeagueSeasonFixtureDependencyInjector extends AwilixDependenc
       leagueSeasonValidationDomainService: AwilixDependencyInjector.registerAsFunction<LeagueSeasonValidationDomainService>(LeagueSeasonValidationDomainService.create).singleton(),
       leagueSeasonRepository: AwilixDependencyInjector.registerAsFunction<ILeagueSeasonRepository>(MongooseLeagueSeasonRepository.create).singleton(),
       uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
+      findAllLeagueSeasonFixturesByLeagueSeasonIdGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindAllLeagueSeasonFixturesByLeagueSeasonIdGETController.create).singleton(),
+      findAllLeagueSeasonFixturesByLeagueSeasonIdUseCase: AwilixDependencyInjector.registerAsFunction<IFindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase>(FindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase.create).singleton(),
+      findLeagueSeasonFixtureByIdGETController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressFindLeagueSeasonFixtureByIdGETController.create).singleton(),
+      findLeagueSeasonFixtureByIdUseCase: AwilixDependencyInjector.registerAsFunction<IFindLeagueSeasonFixtureByIdUseCase>(FindLeagueSeasonFixtureByIdUseCase.create).singleton(),
     });
   }
 

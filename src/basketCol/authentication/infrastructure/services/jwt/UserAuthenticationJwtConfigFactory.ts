@@ -4,7 +4,7 @@ export abstract class UserAuthenticationJwtConfigFactory {
   public static createAuthenticateUserConfig(): { secretKey: string; expiresIn: string } {
     return {
       secretKey: convictConfig.get('jwt.secretKeys.authenticateUserSecretKey'),
-      expiresIn: '1h',
+      expiresIn: '20d',
     };
   }
 }

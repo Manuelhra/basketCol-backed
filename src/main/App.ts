@@ -21,6 +21,7 @@ import { playerUserCareerStatsRouteManager } from '../basketCol/users/player/car
 import { playerUserAttributesRouteManager } from '../basketCol/users/player/attributes/shared/infrastructure/dependency-injection';
 import { teamPlayerRouteManager, teamPlayerServerErrorHandler } from '../basketCol/team/team-player/infrastructure/dependency-injection';
 import { leagueTeamRouteManager, leagueTeamServerErrorHandler } from '../basketCol/competitions/league/league-team/infrastructure/dependency-injection';
+import { leagueSeasonAwardsRouteManager } from '../basketCol/competitions/league/season/awards/infrastructure/dependency-injection';
 
 export class App {
   readonly #server: IServer;
@@ -64,6 +65,7 @@ export class App {
       teamRouteManager,
       teamPlayerRouteManager,
       leagueTeamRouteManager,
+      leagueSeasonAwardsRouteManager,
     ]);
   }
 

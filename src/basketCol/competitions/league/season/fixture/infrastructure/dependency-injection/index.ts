@@ -10,3 +10,5 @@ if (awilixLeagueSeasonFixtureContainer === null) {
 export const bulkCreateLeagueSeasonFixtureFromExcelPOSTController = awilixLeagueSeasonFixtureContainer.resolve('bulkCreateLeagueSeasonFixtureFromExcelPOSTController');
 export const leagueSeasonFixtureRouteManager = awilixLeagueSeasonFixtureContainer.resolve('leagueSeasonFixtureRouteManager');
 export const leagueSeasonFixtureServerErrorHandler = awilixLeagueSeasonFixtureContainer.resolve('leagueSeasonFixtureServerErrorHandler');
+export const findAllLeagueSeasonFixturesByLeagueSeasonIdGETController = awilixLeagueSeasonFixtureContainer.resolve('findAllLeagueSeasonFixturesByLeagueSeasonIdGETController');
+export const findLeagueSeasonFixtureByIdGETController = awilixLeagueSeasonFixtureContainer.resolve('findLeagueSeasonFixtureByIdGETController');

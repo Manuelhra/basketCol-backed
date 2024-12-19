@@ -15,6 +15,8 @@ import { IRouteManager } from '../../../../../../shared/infrastructure/server/ro
 import { IFileSystem } from '../../../../../../shared/infrastructure/file-system/IFileSystem';
 import { IExcelManager } from '../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
 import { IUuidGenerator } from '../../../../../../shared/application/uuid/ports/IUuidGenerator';
+import { IFindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase } from '../../application/use-cases/ports/IFindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase';
+import { IFindLeagueSeasonFixtureByIdUseCase } from '../../application/use-cases/ports/IFindLeagueSeasonFixtureByIdUseCase';
 
 export interface ILeagueSeasonFixtureContainer {
   httpResponseHandler: IHttpResponseHandler;
@@ -31,4 +33,8 @@ export interface ILeagueSeasonFixtureContainer {
   leagueSeasonFixtureRouteManager: IRouteManager;
   fileSystem: IFileSystem;
   uuidGenerator: IUuidGenerator;
+  findAllLeagueSeasonFixturesByLeagueSeasonIdGETController: IController;
+  findAllLeagueSeasonFixturesByLeagueSeasonIdUseCase: IFindAllLeagueSeasonFixturesByLeagueSeasonIdUseCase;
+  findLeagueSeasonFixtureByIdGETController: IController;
+  findLeagueSeasonFixtureByIdUseCase: IFindLeagueSeasonFixtureByIdUseCase;
 }

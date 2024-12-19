@@ -5,7 +5,7 @@ export const SHEET_NAME = 'Partidos';
 export const LEAGUE_SEASON_FIXTURE_GAME_MAPPINGS: ExcelSheetMapping = {
   sheetName: SHEET_NAME,
   mappings: [
-    { excelColumn: 'Hora de Juego', dtoProperty: 'startTime', type: 'string' },
+    { excelColumn: 'Hora de Juego', dtoProperty: 'startTime', type: 'time' },
     { excelColumn: 'ID del Equipo Local', dtoProperty: 'homeTeamId', type: 'string' },
     { excelColumn: 'ID del Equipo Visitante', dtoProperty: 'awayTeamId', type: 'string' },
     { excelColumn: 'Tipo de Partido', dtoProperty: 'gameType', type: 'string' },

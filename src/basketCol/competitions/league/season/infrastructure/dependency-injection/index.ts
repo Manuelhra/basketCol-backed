@@ -11,3 +11,4 @@ export const createLeagueSeasonPOSTController = awilixLeagueSeasonContainer.reso
 export const leagueSeasonRouteManager = awilixLeagueSeasonContainer.resolve('leagueSeasonRouteManager');
 export const leagueSeasonServerErrorHandler = awilixLeagueSeasonContainer.resolve('leagueSeasonServerErrorHandler');
 export const findAllLeagueSeasonsByLeagueIdGETController = awilixLeagueSeasonContainer.resolve('findAllLeagueSeasonsByLeagueIdGETController');
+export const findLeagueSeasonByIdGETController = awilixLeagueSeasonContainer.resolve('findLeagueSeasonByIdGETController');
