@@ -7,7 +7,7 @@
     "tsc": "tsc",
     "tsc:dev": "tsc --watch",
     "start:dev": "cross-env NODE_ENV=development ts-node --files ./src/main",
-    "start:prod": "pm2 start --name basketcol-prod-api ./build/src/main/index.js"
+    "start:prod": "pm2 start --name basketcol-prod-api ./build/src/main"
   },
   "author": "Manuel Rivera - manuelh_ra",
   "license": "ISC",
