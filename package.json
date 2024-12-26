@@ -4,8 +4,10 @@
   "description": "basketCol-backend",
   "main": "main/index.ts",
   "scripts": {
-    "tsc": "tsc --watch",
-    "start:dev": "cross-env NODE_ENV=development ts-node --files ./src/main"
+    "tsc": "tsc",
+    "tsc:dev": "tsc --watch",
+    "start:dev": "cross-env NODE_ENV=development ts-node --files ./src/main",
+    "start:prod": "NODE_ENV=production pm2 start --name basketcol-prod-api ./build/src/server.js"
   },
   "author": "Manuel Rivera - manuelh_ra",
   "license": "ISC",
