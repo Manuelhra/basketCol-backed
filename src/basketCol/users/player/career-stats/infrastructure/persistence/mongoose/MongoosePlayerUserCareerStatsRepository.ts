@@ -42,6 +42,10 @@ export class MongoosePlayerUserCareerStatsRepository
     return document === null ? null : this.#mapDocumentToPlayerUserCareerStats(document);
   }
 
+  public update(playerUserCareerStats: PlayerUserCareerStats): Promise<void> {
+    return this.persist(playerUserCareerStats);
+  }
+
   public save(playerUserCareerStats: PlayerUserCareerStats): Promise<void> {
     return this.persist(playerUserCareerStats);
   }

@@ -9,7 +9,7 @@ import {
 
 import { IFindTeamByIdUseCase, IFindTeamByIdUseCaseResponse } from './ports/IFindTeamByIdUseCase';
 import { FindTeamByIdDTO } from '../dtos/FindTeamByIdDTO';
-import { TeamAllTimeStatsNotFoundForPlayerError } from '../exceptions/TeamAllTimeStatsNotFoundError';
+import { TeamAllTimeStatsNotFoundError } from '../../all-time-stats/application/exceptions/TeamAllTimeStatsNotFoundError';
 
 type Dependencies = {
   readonly teamRepository: ITeamRepository;
@@ -34,8 +34,7 @@ export class FindTeamByIdUseCase implements IFindTeamByIdUseCase {
     const teamAllTimeStats: Nullable<TeamAllTimeStats> = await this.dependencies.teamAllTimeStatsRepository.findByTeamId(team.id);
 
     if (teamAllTimeStats === null || teamAllTimeStats === undefined) {
-      const errorMessage: string = `Team all-time stats not found for team with ID ${team.id.value}`;
-      throw TeamAllTimeStatsNotFoundForPlayerError.create(errorMessage);
+      throw TeamAllTimeStatsNotFoundError.create(team.id);
     }
 
     return {

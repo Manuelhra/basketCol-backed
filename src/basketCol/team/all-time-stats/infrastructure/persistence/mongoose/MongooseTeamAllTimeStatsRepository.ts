@@ -42,6 +42,10 @@ export class MongooseTeamAllTimeStatsRepository
     return document === null ? null : this.#mapDocumentToTeamAllTimeStats(document);
   }
 
+  public update(teamAllTimeStats: TeamAllTimeStats): Promise<void> {
+    return this.persist(teamAllTimeStats);
+  }
+
   public save(teamAllTimeStats: TeamAllTimeStats): Promise<void> {
     return this.persist(teamAllTimeStats);
   }
