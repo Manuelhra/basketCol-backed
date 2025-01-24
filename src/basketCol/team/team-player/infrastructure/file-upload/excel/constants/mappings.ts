@@ -1,6 +1,6 @@
 import { ExcelSheetMapping } from '../../../../../../shared/infrastructure/file-upload/excel/constants/ExcelColumnMappings';
 
-export const SHEET_NAME = 'Registrar Jugadores en Equipo';
+export const SHEET_NAME = 'Register Players in Team';
 
 export const TEAM_PLAYER_MAPPINGS: ExcelSheetMapping = {
   sheetName: SHEET_NAME,

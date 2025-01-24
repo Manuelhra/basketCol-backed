@@ -9,11 +9,11 @@ import { createLeagueTeamPOSTController, findAllLeagueTeamsByLeagueIdGETControll
 import { expressServiceAvailabilityMiddleware } from '../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/competitions';
+  const pathPrefix: string = '/competitions/leagues';
 
   // Endpoint - Create league team
   router.post(
-    `${pathPrefix}/leagues/teams`,
+    `${pathPrefix}/teams`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create league team',
@@ -27,7 +27,7 @@ const register = (router: Router) => {
 
   // Endpoint - Find all league teams by league id
   router.get(
-    `${pathPrefix}/leagues/:leagueId/teams`,
+    `${pathPrefix}/:leagueId/teams`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Find all league teams by league id',

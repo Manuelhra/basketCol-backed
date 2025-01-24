@@ -11,11 +11,11 @@ import { expressInputValidationMiddleware } from '../../../../../../shared/infra
 import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/users';
+  const pathPrefix: string = '/users/league-founders';
 
   // Endpoint - Create league founder user
   router.post(
-    `${pathPrefix}/league-founders`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create league founder user',

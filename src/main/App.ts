@@ -23,6 +23,7 @@ import { teamPlayerRouteManager, teamPlayerServerErrorHandler } from '../basketC
 import { leagueTeamRouteManager, leagueTeamServerErrorHandler } from '../basketCol/competitions/league/league-team/infrastructure/dependency-injection';
 import { leagueSeasonAwardsRouteManager } from '../basketCol/competitions/league/season/awards/infrastructure/dependency-injection';
 import { teamAllTimeStatsServerErrorHandler } from '../basketCol/team/all-time-stats/infrastructure/dependency-injection';
+import { teamLeagueSeasonFixtureGameBoxScoreRouteManager } from '../basketCol/competitions/league/season/fixture/game/box-score/team/infrastructure/dependency-injection';
 
 export class App {
   readonly #server: IServer;
@@ -67,6 +68,7 @@ export class App {
       teamPlayerRouteManager,
       leagueTeamRouteManager,
       leagueSeasonAwardsRouteManager,
+      teamLeagueSeasonFixtureGameBoxScoreRouteManager,
     ]);
   }
 

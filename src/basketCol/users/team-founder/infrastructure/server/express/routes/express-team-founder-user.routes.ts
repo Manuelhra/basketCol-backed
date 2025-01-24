@@ -11,11 +11,11 @@ import { createTeamFounderUserPOSTControllerValidations } from './validations/cr
 import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/users';
+  const pathPrefix: string = '/users/team-founders';
 
   // Endpoint - Create a team founder user
   router.post(
-    `${pathPrefix}/team-founders`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create team founder user',

@@ -1,6 +1,11 @@
-import { Nullable, PlayerUser } from '@basketcol/domain';
+import { PlayerUser, PlayerUserCareerStats } from '@basketcol/domain';
 
 import { IUseCase } from '../../../../../shared/application/use-cases/ports/IUseCase';
 import { FindPlayerUserByIdDTO } from '../../dtos/FindPlayerUserByIdDTO';
 
-export interface IFindPlayerUserByIdUseCase extends IUseCase<FindPlayerUserByIdDTO, Nullable<PlayerUser>> {}
+export type IFindPlayerUserByIdUseCaseResponse = {
+  playerUser: PlayerUser;
+  playerUserCareerStats: PlayerUserCareerStats;
+} | null;
+
+export interface IFindPlayerUserByIdUseCase extends IUseCase<FindPlayerUserByIdDTO, IFindPlayerUserByIdUseCaseResponse> {}

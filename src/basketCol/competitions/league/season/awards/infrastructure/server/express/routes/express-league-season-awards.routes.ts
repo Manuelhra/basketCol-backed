@@ -9,11 +9,11 @@ import { createLeagueSeasonAwardsPOSTController, findLeagueSeasonAwardsByLeagueS
 import { createLeagueSeasonAwardsPOSTControllerValidations } from './validations/create-league-season-awards-post-controller.validations';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/competitions';
+  const pathPrefix: string = '/competitions/leagues/seasons';
 
   // Endpoint - Create league season awards
   router.post(
-    `${pathPrefix}/leagues/seasons/awards`,
+    `${pathPrefix}/awards`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create league season awards',
@@ -27,7 +27,7 @@ const register = (router: Router) => {
 
   // Endpoint - Find league season awards by league season id
   router.get(
-    `${pathPrefix}/leagues/seasons/:leagueSeasonId/awards`,
+    `${pathPrefix}/:leagueSeasonId/awards`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Find league season awards by league season id',

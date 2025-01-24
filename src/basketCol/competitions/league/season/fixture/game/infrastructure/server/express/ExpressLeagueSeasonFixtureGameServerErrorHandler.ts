@@ -10,15 +10,11 @@ import { IHttpResponseHandler } from '../../../../../../../../shared/application
 import { IServerErrorHandler } from '../../../../../../../../shared/infrastructure/server/IServerErrorHandler';
 
 type Dependencies = {
-  httpResponseHandler: IHttpResponseHandler;
+  readonly httpResponseHandler: IHttpResponseHandler;
 };
 
 export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServerErrorHandler {
-  protected readonly httpResponseHandler: IHttpResponseHandler;
-
-  private constructor(dependencies: Dependencies) {
-    this.httpResponseHandler = dependencies.httpResponseHandler;
-  }
+  private constructor(private readonly dependencies: Dependencies) {}
 
   public static create(dependencies: Dependencies): ExpressLeagueSeasonFixtureGameServerErrorHandler {
     return new ExpressLeagueSeasonFixtureGameServerErrorHandler(dependencies);
@@ -31,7 +27,7 @@ export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServer
 
     switch (true) {
       case error instanceof FixtureAlreadyExistsForDateInLeagueSeasonError:
-        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
+        errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.CONFLICT,
           message: HttpStatus.getMessage(HttpStatus.CONFLICT),
           error: { name: error.name, details: error.message },
@@ -41,7 +37,7 @@ export class ExpressLeagueSeasonFixtureGameServerErrorHandler implements IServer
         break;
 
       case error instanceof LeagueSeasonFixtureGameNotFoundError:
-        errorResponse = this.httpResponseHandler.handleSingleErrorResponse({
+        errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.NOT_FOUND,
           message: HttpStatus.getMessage(HttpStatus.NOT_FOUND),
           error: { name: error.name, details: error.message },

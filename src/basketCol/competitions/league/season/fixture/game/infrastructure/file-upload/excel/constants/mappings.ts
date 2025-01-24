@@ -1,6 +1,6 @@
 import { ExcelSheetMapping } from '../../../../../../../../../shared/infrastructure/file-upload/excel/constants/ExcelColumnMappings';
 
-export const SHEET_NAME = 'Partidos';
+export const SHEET_NAME = 'Juegos';
 
 export const LEAGUE_SEASON_FIXTURE_GAME_MAPPINGS: ExcelSheetMapping = {
   sheetName: SHEET_NAME,

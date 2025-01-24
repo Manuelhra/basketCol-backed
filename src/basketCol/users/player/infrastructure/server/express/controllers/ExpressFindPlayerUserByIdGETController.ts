@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
-import { HttpStatus, Nullable, PlayerUser } from '@basketcol/domain';
+import { HttpStatus } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 import { IFindPlayerUserByIdUseCase } from '../../../../application/use-cases/ports/IFindPlayerUserByIdUseCase';
+import { PlayerUserHttpResponseDTO } from '../../../dtos/PlayerUserHttpResponseDTO';
+import { PlayerUserCareerStatsHttpResponseDTO } from '../../../../career-stats/dtos/PlayerUserCareerStatsHttpResponseDTO';
 
 type Dependencies = {
   readonly findPlayerUserByIdUseCase: IFindPlayerUserByIdUseCase;
-  httpResponseHandler: IHttpResponseHandler;
+  readonly httpResponseHandler: IHttpResponseHandler;
 };
 
 export class ExpressFindPlayerUserByIdGETController implements ExpressBaseController {
@@ -19,14 +21,20 @@ export class ExpressFindPlayerUserByIdGETController implements ExpressBaseContro
 
   public async run(request: Request, response: Response): Promise<void> {
     const { playerUserId } = request.params;
-    const playerUser: Nullable<PlayerUser> = await this.dependencies.findPlayerUserByIdUseCase.execute({ id: playerUserId });
+    const result = await this.dependencies.findPlayerUserByIdUseCase.execute({ id: playerUserId });
+
+    const responseData: {
+      playerUser: PlayerUserHttpResponseDTO,
+      playerUserCareerStats: PlayerUserCareerStatsHttpResponseDTO,
+    } | null = result ? {
+      playerUser: result.playerUser.toPrimitives,
+      playerUserCareerStats: result.playerUserCareerStats.toPrimitives,
+    } : null;
 
     const successResult = this.dependencies.httpResponseHandler.handleSuccessResponse({
       code: HttpStatus.OK,
       message: HttpStatus.getMessage(HttpStatus.OK),
-      data: {
-        playerUser: playerUser ? playerUser.toPrimitives : null,
-      },
+      data: responseData,
     });
 
     response.status(HttpStatus.OK).json(successResult);

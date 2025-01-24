@@ -9,11 +9,11 @@ import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/i
 import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/users';
+  const pathPrefix: string = '/users/host';
 
   // Endpoint - Create the host user for BasketCol
   router.post(
-    `${pathPrefix}/host`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create host user',
