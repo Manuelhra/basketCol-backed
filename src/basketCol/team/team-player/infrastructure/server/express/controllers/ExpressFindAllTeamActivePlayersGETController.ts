@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
 import {
-  HttpStatus, Nullable, PlayerUser, Team, TeamPlayer,
+  HttpStatus,
+  Nullable,
+  PlayerUser,
+  Team,
+  TeamPlayer,
 } from '@basketcol/domain';
 
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 import { IFindAllTeamActivePlayersUseCase } from '../../../../application/use-cases/ports/IFindAllTeamActivePlayersUseCase';
 import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { TeamPlayerHttpResponseDTO } from '../../../dtos/TeamPlayerHttpResponseDTO';
-import { TeamHttpResponseDTO } from '../../../../../infrastructure/dtos/TeamHttpResponseDTO';
-import { PlayerUserHttpResponseDTO } from '../../../../../../users/player/infrastructure/dtos/PlayerUserHttpResponseDTO';
 
 type Dependencies = {
   readonly findAllTeamActivePlayersUseCase: IFindAllTeamActivePlayersUseCase;
@@ -47,15 +49,7 @@ export class ExpressFindAllTeamActivePlayersGETController implements ExpressBase
     teamPlayer: TeamPlayer,
     team: Team,
     playerUserList: PlayerUser[],
-  ): {
-      team: TeamHttpResponseDTO;
-      playerUser: PlayerUserHttpResponseDTO;
-      status: string;
-      jerseyNumber: number | null;
-      position: string | null;
-      joinedAt: string;
-      leftAt: string | null;
-    } | null {
+  ): TeamPlayerHttpResponseDTO | null {
     const playerUserFound: Nullable<PlayerUser> = playerUserList.find(
       (playerUser) => playerUser.id.value === teamPlayer.toPrimitives.playerUserId,
     );

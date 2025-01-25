@@ -1,11 +1,9 @@
 import {
-  IPlayerUserCareerStatsRepository,
   IPlayerUserRepository,
   ITeamPlayerRepository,
   ITeamRepository,
   Nullable,
   PlayerUser,
-  PlayerUserCareerStats,
   Team,
   TeamId,
   TeamNotFoundError,
@@ -21,7 +19,6 @@ type Dependencies = {
   readonly teamPlayerRepository: ITeamPlayerRepository;
   readonly teamRepository: ITeamRepository;
   readonly playerUserRepository: IPlayerUserRepository;
-  readonly playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
 };
 
 export class FindTeamActivePlayerUseCase implements IFindTeamActivePlayerUseCase {
@@ -42,17 +39,10 @@ export class FindTeamActivePlayerUseCase implements IFindTeamActivePlayerUseCase
     const teamInfo = await this.#findTeamInfo(teamPlayer);
     const playerUserInfo = await this.#findPlayerUserInfo(playerUserId, teamPlayer);
 
-    const playerUserCareerStats: Nullable<PlayerUserCareerStats> = await this.dependencies.playerUserCareerStatsRepository.findByPlayerUserId(playerUserId);
-
-    if (playerUserCareerStats === undefined || playerUserCareerStats === null) {
-      return null;
-    }
-
     return {
       teamPlayer,
       teamInfo,
       playerUserInfo,
-      playerUserCareerStats,
     };
   }
 

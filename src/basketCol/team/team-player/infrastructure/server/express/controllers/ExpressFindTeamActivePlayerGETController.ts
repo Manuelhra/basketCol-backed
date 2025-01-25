@@ -26,7 +26,6 @@ export class ExpressFindTeamActivePlayerGETController implements ExpressBaseCont
       ...result.teamPlayer.toPrimitives,
       playerUser: result.playerUserInfo.toPrimitives,
       team: result.teamInfo.toPrimitives,
-      playerUserCareerStats: result.playerUserCareerStats.toPrimitives,
     } : null;
 
     const successResult = this.dependencies.httpResponseHandler.handleSuccessResponse({
