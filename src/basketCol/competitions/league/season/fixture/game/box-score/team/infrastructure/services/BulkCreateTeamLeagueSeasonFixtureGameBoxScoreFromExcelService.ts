@@ -1,11 +1,11 @@
 import XLSX, { WorkBook, WorkSheet } from 'xlsx';
 
-import { IUuidGenerator } from '../../../../../../../../../../../shared/application/uuid/ports/IUuidGenerator';
-import { ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase } from '../../../../application/use-cases/ports/ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase';
-import { IUserContext } from '../../../../../../../../../../../shared/application/context/ports/IUserContext';
-import { CreateTeamLeagueSeasonFixtureGameBoxScoreDTO } from '../../../../application/dtos/CreateTeamLeagueSeasonFixtureGameBoxScoreDTO';
-import { LEAGUE_SEASON_FIXTURE_GAME_BOX_SCORE_TEAM_MAPPINGS } from '../../../file-upload/excel/constants/mappings';
-import { ExcelToDTOMapper } from '../../../../../../../../../../../shared/infrastructure/file-upload/excel/mappers/ExcelToDTOMapper';
+import { IUserContext } from '../../../../../../../../../shared/application/context/ports/IUserContext';
+import { IUuidGenerator } from '../../../../../../../../../shared/application/uuid/ports/IUuidGenerator';
+import { ExcelToDTOMapper } from '../../../../../../../../../shared/infrastructure/file-upload/excel/mappers/ExcelToDTOMapper';
+import { CreateTeamLeagueSeasonFixtureGameBoxScoreDTO } from '../../application/dtos/CreateTeamLeagueSeasonFixtureGameBoxScoreDTO';
+import { ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase } from '../../application/use-cases/ports/ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase';
+import { LEAGUE_SEASON_FIXTURE_GAME_BOX_SCORE_TEAM_MAPPINGS } from '../file-upload/excel/constants/mappings';
 
 type Dependencies = {
   readonly createTeamLeagueSeasonFixtureGameBoxScoreUseCase: ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase;

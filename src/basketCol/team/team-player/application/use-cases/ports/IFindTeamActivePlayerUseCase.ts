@@ -1,5 +1,6 @@
 import {
   PlayerUser,
+  PlayerUserCareerStats,
   Team,
   TeamPlayer,
 } from '@basketcol/domain';
@@ -11,6 +12,7 @@ export type IFindTeamActivePlayerUseCaseResponse = {
   teamPlayer: TeamPlayer;
   teamInfo: Team;
   playerUserInfo: PlayerUser;
+  playerUserCareerStats: PlayerUserCareerStats;
 } | null;
 
 export interface IFindTeamActivePlayerUseCase extends IUseCase<FindTeamActivePlayerDTO, IFindTeamActivePlayerUseCaseResponse> {}

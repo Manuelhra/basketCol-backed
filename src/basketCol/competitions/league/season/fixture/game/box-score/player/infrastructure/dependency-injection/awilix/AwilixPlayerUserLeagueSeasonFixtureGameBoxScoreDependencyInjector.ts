@@ -10,36 +10,36 @@ import { HttpResponseHandler } from '../../../../../../../../../../shared/infras
 import { IController } from '../../../../../../../../../../shared/infrastructure/server/controllers/IController';
 import { IServerErrorHandler } from '../../../../../../../../../../shared/infrastructure/server/IServerErrorHandler';
 import { IRouteManager } from '../../../../../../../../../../shared/infrastructure/server/routes/IRouteManager';
-import { ExpressBulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController } from '../../server/express/controllers/ExpressBulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController';
-import { ExpressTeamLeagueSeasonFixtureGameBoxScoreServerErrorHandler } from '../../server/express/ExpressTeamLeagueSeasonFixtureGameBoxScoreServerErrorHandler';
-import { ExpressTeamLeagueSeasonFixtureGameBoxScoreRouterManager } from '../../server/express/routes/ExpressTeamLeagueSeasonFixtureGameBoxScoreRouteManager';
-import { ITeamLeagueSeasonFixtureGameBoxScoreContainer } from '../ITeamLeagueSeasonFixtureGameBoxScoreContainer';
+import { ExpressBulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController } from '../../server/express/controllers/ExpressBulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController';
+import { ExpressPlayerUserLeagueSeasonFixtureGameBoxScoreServerErrorHandler } from '../../server/express/ExpressPlayerUserLeagueSeasonFixtureGameBoxScoreServerErrorHandler';
+import { ExpressPlayerUserLeagueSeasonFixtureGameBoxScoreRouterManager } from '../../server/express/routes/ExpressPlayerUserLeagueSeasonFixtureGameBoxScoreRouteManager';
+import { IPlayerUserLeagueSeasonFixtureGameBoxScoreContainer } from '../IPlayerUserLeagueSeasonFixtureGameBoxScoreContainer';
 import { IUuidGenerator } from '../../../../../../../../../../shared/application/uuid/ports/IUuidGenerator';
 import { UuidV4Generator } from '../../../../../../../../../../shared/infrastructure/uuid/UuidV4Generator';
-import { BulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService } from '../../services/BulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService';
+import { BulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService } from '../../services/BulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService';
 
-export class AwilixTeamLeagueSeasonFixtureGameBoxScoreDependencyInjector
-  extends AwilixDependencyInjector<ITeamLeagueSeasonFixtureGameBoxScoreContainer> {
+export class AwilixPlayerUserLeagueSeasonFixtureGameBoxScoreDependencyInjector
+  extends AwilixDependencyInjector<IPlayerUserLeagueSeasonFixtureGameBoxScoreContainer> {
   private constructor() {
     super();
 
     this.createContainer();
     this.registerDependencies({
-      teamLeagueSeasonFixtureGameBoxScoreRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressTeamLeagueSeasonFixtureGameBoxScoreRouterManager.create).singleton(),
+      playerUserLeagueSeasonFixtureGameBoxScoreRouteManager: AwilixDependencyInjector.registerAsFunction<IRouteManager>(ExpressPlayerUserLeagueSeasonFixtureGameBoxScoreRouterManager.create).singleton(),
       fileSystem: AwilixDependencyInjector.registerAsFunction<IFileSystem>(() => GlobFileSystem.create({
         basePath: __dirname,
       })).singleton(),
       httpResponseHandler: AwilixDependencyInjector.registerAsFunction<IHttpResponseHandler>(HttpResponseHandler.create).singleton(),
-      teamLeagueSeasonFixtureGameBoxScoreServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressTeamLeagueSeasonFixtureGameBoxScoreServerErrorHandler.create).singleton(),
-      bulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressBulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController.create).singleton(),
+      playerUserLeagueSeasonFixtureGameBoxScoreServerErrorHandler: AwilixDependencyInjector.registerAsFunction<IServerErrorHandler>(ExpressPlayerUserLeagueSeasonFixtureGameBoxScoreServerErrorHandler.create).singleton(),
+      bulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressBulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController.create).singleton(),
       excelManager: AwilixDependencyInjector.registerAsFunction<IExcelManager>(XLSXManager.create).singleton(),
-      bulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService: AwilixDependencyInjector.registerAsFunction<BulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService>(BulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService.create).singleton(),
+      bulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService: AwilixDependencyInjector.registerAsFunction<BulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService>(BulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService.create).singleton(),
       businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),
       uuidGenerator: AwilixDependencyInjector.registerAsFunction<IUuidGenerator>(UuidV4Generator.create).singleton(),
     });
   }
 
-  public static create(): AwilixTeamLeagueSeasonFixtureGameBoxScoreDependencyInjector {
-    return new AwilixTeamLeagueSeasonFixtureGameBoxScoreDependencyInjector();
+  public static create(): AwilixPlayerUserLeagueSeasonFixtureGameBoxScoreDependencyInjector {
+    return new AwilixPlayerUserLeagueSeasonFixtureGameBoxScoreDependencyInjector();
   }
 }

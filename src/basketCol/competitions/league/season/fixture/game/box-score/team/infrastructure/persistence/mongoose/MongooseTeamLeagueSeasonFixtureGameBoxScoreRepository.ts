@@ -4,8 +4,8 @@ import {
   TeamLeagueSeasonFixtureGameBoxScore,
 } from '@basketcol/domain';
 
-import { MongooseRepository } from '../../../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
-import { MongooseClientFactory } from '../../../../../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
+import { MongooseRepository } from '../../../../../../../../../../shared/infrastructure/persistence/mongoose/MongooseRepository';
+import { MongooseClientFactory } from '../../../../../../../../../../shared/infrastructure/persistence/mongoose/MongooseClientFactory';
 import { mongooseTeamLeagueSeasonFixtureGameBoxScoreSchema } from './mongoose-team-league-season-fixture-game-box-score.schema';
 
 export class MongooseTeamLeagueSeasonFixtureGameBoxScoreRepository

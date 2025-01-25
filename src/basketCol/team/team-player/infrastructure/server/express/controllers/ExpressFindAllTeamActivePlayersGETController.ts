@@ -7,6 +7,8 @@ import { ExpressBaseController } from '../../../../../../shared/infrastructure/s
 import { IFindAllTeamActivePlayersUseCase } from '../../../../application/use-cases/ports/IFindAllTeamActivePlayersUseCase';
 import { IHttpResponseHandler } from '../../../../../../shared/application/http/ports/IHttpResponseHandler';
 import { TeamPlayerHttpResponseDTO } from '../../../dtos/TeamPlayerHttpResponseDTO';
+import { TeamHttpResponseDTO } from '../../../../../infrastructure/dtos/TeamHttpResponseDTO';
+import { PlayerUserHttpResponseDTO } from '../../../../../../users/player/infrastructure/dtos/PlayerUserHttpResponseDTO';
 
 type Dependencies = {
   readonly findAllTeamActivePlayersUseCase: IFindAllTeamActivePlayersUseCase;
@@ -45,7 +47,15 @@ export class ExpressFindAllTeamActivePlayersGETController implements ExpressBase
     teamPlayer: TeamPlayer,
     team: Team,
     playerUserList: PlayerUser[],
-  ): TeamPlayerHttpResponseDTO | null {
+  ): {
+      team: TeamHttpResponseDTO;
+      playerUser: PlayerUserHttpResponseDTO;
+      status: string;
+      jerseyNumber: number | null;
+      position: string | null;
+      joinedAt: string;
+      leftAt: string | null;
+    } | null {
     const playerUserFound: Nullable<PlayerUser> = playerUserList.find(
       (playerUser) => playerUser.id.value === teamPlayer.toPrimitives.playerUserId,
     );

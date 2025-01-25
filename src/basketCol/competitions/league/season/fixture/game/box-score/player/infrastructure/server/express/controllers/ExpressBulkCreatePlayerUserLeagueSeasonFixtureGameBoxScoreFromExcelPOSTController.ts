@@ -7,15 +7,15 @@ import { IHttpResponseHandler } from '../../../../../../../../../../../shared/ap
 import { IExcelManager } from '../../../../../../../../../../../shared/infrastructure/file-upload/excel/ports/IExcelManager';
 import { ExpressBaseController } from '../../../../../../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';
 import { MulterError } from '../../../../../../../../../../../shared/infrastructure/exceptions/MulterError';
-import { BulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService } from '../../../services/BulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService';
+import { BulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService } from '../../../services/BulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService';
 
 type Dependencies = {
   readonly httpResponseHandler: IHttpResponseHandler;
   readonly excelManager: IExcelManager;
-  readonly bulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService: BulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService;
+  readonly bulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService: BulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService;
 };
 
-export class ExpressBulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController
+export class ExpressBulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController
 implements ExpressBaseController {
   readonly #excelFileUploadMiddleware: multer.Multer;
 
@@ -37,8 +37,8 @@ implements ExpressBaseController {
     });
   }
 
-  public static create(dependencies: Dependencies): ExpressBulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController {
-    return new ExpressBulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController(dependencies);
+  public static create(dependencies: Dependencies): ExpressBulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController {
+    return new ExpressBulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelPOSTController(dependencies);
   }
 
   public async run(request: Request, response: Response): Promise<void> {
@@ -65,7 +65,7 @@ implements ExpressBaseController {
     }
 
     const workBook: WorkBook = await this.dependencies.excelManager.readExcelFileFromBuffer(request.file.buffer);
-    await this.dependencies.bulkCreateTeamLeagueSeasonFixtureGameBoxScoreFromExcelService.execute(workBook, request.userContext);
+    await this.dependencies.bulkCreatePlayerUserLeagueSeasonFixtureGameBoxScoreFromExcelService.execute(workBook, request.userContext);
     response.status(HttpStatus.CREATED).send();
   }
 

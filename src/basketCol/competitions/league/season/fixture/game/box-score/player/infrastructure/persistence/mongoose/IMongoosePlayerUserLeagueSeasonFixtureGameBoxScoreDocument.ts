@@ -1,0 +1,3 @@
+import { IPlayerUserLeagueSeasonFixtureGameBoxScorePrimitives } from '@basketcol/domain';
+
+export interface IMongoosePlayerUserLeagueSeasonFixtureGameBoxScoreDocument extends IPlayerUserLeagueSeasonFixtureGameBoxScorePrimitives {}
