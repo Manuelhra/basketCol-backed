@@ -11,11 +11,11 @@ import { createRefereeUserPOSTControllerValidations } from './validations/create
 import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/users';
+  const pathPrefix: string = '/users/referees';
 
   // Endpoint - Create referee user
   router.post(
-    `${pathPrefix}/referees`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create referee user',

@@ -12,11 +12,11 @@ import { httpResponseHandler, tokenValidatorService } from '../../../../../../..
 import { expressServiceAvailabilityMiddleware } from '../../../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/competitions';
+  const pathPrefix: string = '/competitions/leagues/seasons';
 
   // Endpoint - Bulk create league season fixtures from Excel
   router.post(
-    `${pathPrefix}/leagues/seasons/fixtures/bulk-upload/excel`,
+    `${pathPrefix}/fixtures/bulk-upload/excel`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Bulk create league season fixtures from Excel',
@@ -29,7 +29,7 @@ const register = (router: Router) => {
 
   // Endpoint - Find all league season fixtures by league season id
   router.get(
-    `${pathPrefix}/leagues/seasons/:leagueSeasonId/fixtures`,
+    `${pathPrefix}/:leagueSeasonId/fixtures`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Find all league season fixtures by league season id',
@@ -40,7 +40,7 @@ const register = (router: Router) => {
 
   // Endpoint - Find league season fixture by id
   router.get(
-    `${pathPrefix}/leagues/seasons/fixtures/:leagueSeasonFixtureId`,
+    `${pathPrefix}/fixtures/:leagueSeasonFixtureId`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Find league season fixture by id',

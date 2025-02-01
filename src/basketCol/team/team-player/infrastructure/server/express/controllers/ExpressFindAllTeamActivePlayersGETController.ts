@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import {
-  HttpStatus, Nullable, PlayerUser, Team, TeamPlayer,
+  HttpStatus,
+  Nullable,
+  PlayerUser,
+  Team,
+  TeamPlayer,
 } from '@basketcol/domain';
 
 import { ExpressBaseController } from '../../../../../../shared/infrastructure/server/express/controllers/ExpressBaseController';

@@ -16,6 +16,7 @@ import {
 import { CreateTeamLeagueSeasonFixtureGameBoxScoreDTO } from '../dtos/CreateTeamLeagueSeasonFixtureGameBoxScoreDTO';
 import { ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase } from './ports/ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase';
 import { IUpdateTeamAllTimeStatsAfterGameUseCase } from '../../../../../../../../../team/all-time-stats/application/use-cases/ports/IUpdateTeamAllTimeStatsAfterGameUseCase';
+import { TeamNotParticipatingInFixtureGameError } from '../exceptions/TeamNotParticipatingInFixtureGameError';
 
 interface CreateTeamLeagueSeasonFixtureGameBoxScoreDependencies {
   readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
@@ -85,9 +86,7 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
     const isAwayTeam = fixtureGame.awayTeamId === teamId;
 
     if (isHomeTeam === false && isAwayTeam === false) {
-      throw new Error(
-        `Team with id ${teamId} is not participating in this fixture game. Must be either home team (${fixtureGame.homeTeamId}) or away team (${fixtureGame.awayTeamId}).`,
-      );
+      throw TeamNotParticipatingInFixtureGameError.create(teamId, fixtureGame.homeTeamId, fixtureGame.awayTeamId);
     }
   }
 

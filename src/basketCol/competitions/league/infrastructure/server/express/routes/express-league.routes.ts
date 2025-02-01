@@ -13,11 +13,11 @@ import {
 } from '../../../dependency-injection';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/competitions';
+  const pathPrefix: string = '/competitions/leagues';
 
   // Endpoint - Create league
   router.post(
-    `${pathPrefix}/leagues`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create league',
@@ -31,7 +31,7 @@ const register = (router: Router) => {
 
   // Endpoint - Search All leagues
   router.get(
-    `${pathPrefix}/leagues`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Search all leagues',
@@ -42,7 +42,7 @@ const register = (router: Router) => {
 
   // Endpoint - Find league by ID
   router.get(
-    `${pathPrefix}/leagues/:leagueId`,
+    `${pathPrefix}/:leagueId`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Find league by ID',

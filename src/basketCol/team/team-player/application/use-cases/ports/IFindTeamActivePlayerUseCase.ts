@@ -1,8 +1,4 @@
-import {
-  PlayerUser,
-  Team,
-  TeamPlayer,
-} from '@basketcol/domain';
+import { PlayerUser, Team, TeamPlayer } from '@basketcol/domain';
 
 import { IUseCase } from '../../../../../shared/application/use-cases/ports/IUseCase';
 import { FindTeamActivePlayerDTO } from '../../dtos/FindTeamActivePlayerDTO';

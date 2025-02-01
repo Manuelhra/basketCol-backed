@@ -1,15 +1,18 @@
 import {
+  IPlayerUserCareerStatsRepository,
   IPlayerUserRepository,
   Nullable,
   PlayerUser,
+  PlayerUserCareerStats,
   PlayerUserId,
 } from '@basketcol/domain';
 
-import { IFindPlayerUserByIdUseCase } from './ports/IFindPlayerUserByIdUseCase';
+import { IFindPlayerUserByIdUseCase, IFindPlayerUserByIdUseCaseResponse } from './ports/IFindPlayerUserByIdUseCase';
 import { FindPlayerUserByIdDTO } from '../dtos/FindPlayerUserByIdDTO';
 
 type Dependencies = {
   readonly playerUserRepository: IPlayerUserRepository;
+  readonly playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
 };
 
 export class FindPlayerUserByIdUseCase implements IFindPlayerUserByIdUseCase {
@@ -19,8 +22,27 @@ export class FindPlayerUserByIdUseCase implements IFindPlayerUserByIdUseCase {
     return new FindPlayerUserByIdUseCase(dependencies);
   }
 
-  public execute(dto: FindPlayerUserByIdDTO): Promise<Nullable<PlayerUser>> {
+  public async execute(dto: FindPlayerUserByIdDTO): Promise<IFindPlayerUserByIdUseCaseResponse> {
     const playerUserId: PlayerUserId = PlayerUserId.create(dto.id);
-    return this.dependencies.playerUserRepository.findById(playerUserId);
+    const playerUser: Nullable<PlayerUser> = await this.dependencies.playerUserRepository.findById(playerUserId);
+
+    if (playerUser === null || playerUser === undefined) {
+      return this.#emptyResponse();
+    }
+
+    const playerUserCareerStats: Nullable<PlayerUserCareerStats> = await this.dependencies.playerUserCareerStatsRepository.findByPlayerUserId(playerUser.id);
+
+    if (playerUserCareerStats === null || playerUserCareerStats === undefined) {
+      return this.#emptyResponse();
+    }
+
+    return {
+      playerUser,
+      playerUserCareerStats,
+    };
+  }
+
+  #emptyResponse(): IFindPlayerUserByIdUseCaseResponse {
+    return null;
   }
 }

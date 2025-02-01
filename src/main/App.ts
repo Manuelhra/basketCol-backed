@@ -23,6 +23,8 @@ import { teamPlayerRouteManager, teamPlayerServerErrorHandler } from '../basketC
 import { leagueTeamRouteManager, leagueTeamServerErrorHandler } from '../basketCol/competitions/league/league-team/infrastructure/dependency-injection';
 import { leagueSeasonAwardsRouteManager } from '../basketCol/competitions/league/season/awards/infrastructure/dependency-injection';
 import { teamAllTimeStatsServerErrorHandler } from '../basketCol/team/all-time-stats/infrastructure/dependency-injection';
+import { teamLeagueSeasonFixtureGameBoxScoreRouteManager, teamLeagueSeasonFixtureGameBoxScoreServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/box-score/team/infrastructure/dependency-injection';
+import { playerUserLeagueSeasonFixtureGameBoxScoreRouteManager, playerUserLeagueSeasonFixtureGameBoxScoreServerErrorHandler } from '../basketCol/competitions/league/season/fixture/game/box-score/player/infrastructure/dependency-injection';
 
 export class App {
   readonly #server: IServer;
@@ -67,6 +69,8 @@ export class App {
       teamPlayerRouteManager,
       leagueTeamRouteManager,
       leagueSeasonAwardsRouteManager,
+      teamLeagueSeasonFixtureGameBoxScoreRouteManager,
+      playerUserLeagueSeasonFixtureGameBoxScoreRouteManager,
     ]);
   }
 
@@ -91,6 +95,8 @@ export class App {
       teamPlayerServerErrorHandler,
       leagueTeamServerErrorHandler,
       teamAllTimeStatsServerErrorHandler,
+      teamLeagueSeasonFixtureGameBoxScoreServerErrorHandler,
+      playerUserLeagueSeasonFixtureGameBoxScoreServerErrorHandler,
     ]);
   }
 }

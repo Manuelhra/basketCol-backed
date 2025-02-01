@@ -11,11 +11,11 @@ import { expressInputValidationMiddleware } from '../../../../../../shared/infra
 import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/facilities';
+  const pathPrefix: string = '/facilities/courts';
 
   // Endpoint - Create court
   router.post(
-    `${pathPrefix}/courts`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create court',
@@ -31,7 +31,7 @@ const register = (router: Router) => {
 
   // Endpoint - Search All courts
   router.get(
-    `${pathPrefix}/courts`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Search all courts',

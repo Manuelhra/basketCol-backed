@@ -15,11 +15,11 @@ import { expressExtractDataFromBodyMiddleware } from '../../../../../../shared/i
 import { expressServiceAvailabilityMiddleware } from '../../../../../../shared/infrastructure/server/express/routes/middlewares/express-service-availability.middleware';
 
 const register = (router: Router) => {
-  const pathPrefix: string = '/users';
+  const pathPrefix: string = '/users/players';
 
   // Endpoint - Create player user
   router.post(
-    `${pathPrefix}/players`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Create player user',
@@ -35,7 +35,7 @@ const register = (router: Router) => {
 
   // Endpoint - Search all player users
   router.get(
-    `${pathPrefix}/players`,
+    `${pathPrefix}`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Search all player users',
@@ -46,7 +46,7 @@ const register = (router: Router) => {
 
   // Endpoint - Find player user by ID
   router.get(
-    `${pathPrefix}/players/:playerUserId`,
+    `${pathPrefix}/:playerUserId`,
     expressServiceAvailabilityMiddleware({
       isEnabled: true,
       serviceName: 'Find player user by ID',
