@@ -5,6 +5,7 @@ import { IHttpResponseHandler } from '../../../../../../../../../../shared/appli
 import { IServerErrorHandler } from '../../../../../../../../../../shared/infrastructure/server/IServerErrorHandler';
 import { IErrorApiResponse } from '../../../../../../../../../../shared/application/http/ports/IErrorApiResponse';
 import { NoActiveTeamPlayerFoundError } from '../../../application/exceptions/NoActiveTeamPlayerFoundError';
+import { PlayerUserLeagueSeasonFixtureGameBoxScoreAlreadyExistsError } from '../../../application/exceptions/PlayerUserLeagueSeasonFixtureGameBoxScoreAlreadyExistsError';
 
 type Dependencies = {
   readonly httpResponseHandler: IHttpResponseHandler;
@@ -24,6 +25,15 @@ implements IServerErrorHandler {
     let isInstanceof: boolean = false;
 
     switch (true) {
+      case error instanceof PlayerUserLeagueSeasonFixtureGameBoxScoreAlreadyExistsError:
+        errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
+          code: HttpStatus.CONFLICT,
+          message: HttpStatus.getMessage(HttpStatus.CONFLICT),
+          error: { name: error.name, details: error.message },
+        });
+        status = HttpStatus.CONFLICT;
+        isInstanceof = true;
+        break;
       case error instanceof NoActiveTeamPlayerFoundError:
         errorResponse = this.dependencies.httpResponseHandler.handleSingleErrorResponse({
           code: HttpStatus.BAD_REQUEST,

@@ -57,7 +57,7 @@ export class AwilixLeagueDependencyInjector extends AwilixDependencyInjector<ILe
         businessDateDomainService: cradle.businessDateDomainService,
         leagueFounderUserValidationDomainService: cradle.leagueFounderUserValidationDomainService,
         leagueValidationDomainService: cradle.leagueValidationDomainService,
-      })),
+      })).singleton(),
       leagueRepository: AwilixDependencyInjector.registerAsFunction<ILeagueRepository>(MongooseLeagueRepository.create).singleton(),
       leagueFounderUserRepository: AwilixDependencyInjector.registerAsFunction<ILeagueFounderUserRepository>(MongooseLeagueFounderUserRepository.create).singleton(),
       businessDateDomainService: AwilixDependencyInjector.registerAsFunction<BusinessDateDomainService>(BusinessDateDomainService.create).singleton(),

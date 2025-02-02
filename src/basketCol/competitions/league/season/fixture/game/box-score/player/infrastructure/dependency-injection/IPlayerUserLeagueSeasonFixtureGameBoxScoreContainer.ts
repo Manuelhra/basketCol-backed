@@ -3,7 +3,14 @@ import {
   LeagueSeasonFixtureGameValidationDomainService,
   PlayerUserValidationDomainService,
   BusinessDateDomainService,
-  IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository, IPlayerUserRepository,
+  IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository,
+  IPlayerUserRepository,
+  ITeamPlayerRepository,
+  ILeagueSeasonFixtureGameRepository,
+  SecurePasswordCreationDomainService,
+  IPasswordHashingDomainService,
+  IPasswordValueObjectCreationDomainService,
+  IPlayerUserCareerStatsRepository,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -34,4 +41,10 @@ export interface IPlayerUserLeagueSeasonFixtureGameBoxScoreContainer {
   playerUserRepository: IPlayerUserRepository;
   playerUserLeagueSeasonFixtureGameBoxScoreRouteManager: IRouteManager;
   fileSystem: IFileSystem;
+  teamPlayerRepository: ITeamPlayerRepository;
+  leagueSeasonFixtureGameRepository: ILeagueSeasonFixtureGameRepository;
+  securePasswordCreationDomainService: SecurePasswordCreationDomainService;
+  passwordHashingDomainService: IPasswordHashingDomainService;
+  passwordValueObjectCreationDomainService: IPasswordValueObjectCreationDomainService;
+  playerUserCareerStatsRepository: IPlayerUserCareerStatsRepository;
 }

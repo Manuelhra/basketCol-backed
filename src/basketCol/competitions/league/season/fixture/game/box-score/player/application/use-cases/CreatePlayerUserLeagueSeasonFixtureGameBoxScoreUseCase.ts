@@ -1,10 +1,12 @@
 import {
   BusinessDateDomainService,
+  HostUserType,
   IdUniquenessValidatorDomainService,
   IPlayerUserLeagueSeasonFixtureGameBoxScorePrimitives,
   IPlayerUserLeagueSeasonFixtureGameBoxScoreRepository,
   ITeamPlayerRepository,
   LeagueSeasonFixtureGameValidationDomainService,
+  Nullable,
   PlayerUserLeagueSeasonFixtureGameBoxScore,
   PlayerUserValidationDomainService,
   PLSFGBoxScoreCreatedAt,
@@ -18,6 +20,9 @@ import { CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO } from '../dtos/Crea
 import { ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase } from './ports/ICreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase';
 import { IUpdatePlayerUserCareerStatsAfterGameUseCase } from '../../../../../../../../../users/player/career-stats/application/use-cases/ports/IUpdatePlayerUserCareerStatsAfterGameUseCase';
 import { NoActiveTeamPlayerFoundError } from '../exceptions/NoActiveTeamPlayerFoundError';
+import { IUserContext } from '../../../../../../../../../shared/application/context/ports/IUserContext';
+import { UnauthorizedAccessError } from '../../../../../../../../../shared/application/exceptions/UnauthorizedAccessError';
+import { PlayerUserLeagueSeasonFixtureGameBoxScoreAlreadyExistsError } from '../exceptions/PlayerUserLeagueSeasonFixtureGameBoxScoreAlreadyExistsError';
 
 type Dependencies = {
   readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
@@ -36,7 +41,11 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
     return new CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase(dependencies);
   }
 
-  public async execute(dto: CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO): Promise<void> {
+  public async execute(dto: CreatePlayerUserLeagueSeasonFixtureGameBoxScoreDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create player user league season fixture game box score');
+    }
+
     const {
       id,
       points,
@@ -56,6 +65,12 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
       fixtureGameId,
       playerUserId,
     } = dto;
+
+    const playerUserLeagueSeasonFixtureGameBoxScoreFound: Nullable<PlayerUserLeagueSeasonFixtureGameBoxScore> = await this.dependencies.playerUserLeagueSeasonFixtureGameBoxScoreRepository.find();
+
+    if (playerUserLeagueSeasonFixtureGameBoxScoreFound !== null) {
+      throw PlayerUserLeagueSeasonFixtureGameBoxScoreAlreadyExistsError.create(playerUserId, fixtureGameId);
+    }
 
     const pLSFGBoxScoreId: PLSFGBoxScoreId = PLSFGBoxScoreId.create(id);
     const pLSFGBoxScoreFixtureGameId: PLSFGBoxScoreFixtureGameId = PLSFGBoxScoreFixtureGameId.create(fixtureGameId);
@@ -128,7 +143,7 @@ export class CreatePlayerUserLeagueSeasonFixtureGameBoxScoreUseCase implements I
       fieldGoalsAttempted,
       fieldGoalsMade,
       playerUserId,
-    });
+    }, userContext);
   }
 
   private determineGameResult(

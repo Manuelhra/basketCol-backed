@@ -26,6 +26,10 @@ type Dependencies = {
 export class UpdatePlayerUserCareerStatsAfterGameUseCase implements IUpdatePlayerUserCareerStatsAfterGameUseCase {
   private constructor(private readonly dependencies: Dependencies) {}
 
+  public static create(dependencies: Dependencies): UpdatePlayerUserCareerStatsAfterGameUseCase {
+    return new UpdatePlayerUserCareerStatsAfterGameUseCase(dependencies);
+  }
+
   public async execute(dto: UpdatePlayerUserCareerStatsAfterGameDTO, userContext: IUserContext): Promise<void> {
     if (userContext.userType !== HostUserType.value) {
       throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'update player user career stats');
