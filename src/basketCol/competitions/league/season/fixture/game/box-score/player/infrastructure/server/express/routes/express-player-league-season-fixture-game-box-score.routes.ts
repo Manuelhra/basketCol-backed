@@ -10,7 +10,7 @@ import { expressUserTypeAuthorizationMiddleware } from '../../../../../../../../
 const register = (router: Router) => {
   const pathPrefix: string = '/competitions/leagues/seasons';
 
-  // Endpoint - create player league season fixture game box score from Excel
+  // Endpoint - Bulk create player league season fixture game box score from Excel
   router.post(
     `${pathPrefix}/fixtures/games/players/box-score/bulk-upload/excel`,
     expressServiceAvailabilityMiddleware({

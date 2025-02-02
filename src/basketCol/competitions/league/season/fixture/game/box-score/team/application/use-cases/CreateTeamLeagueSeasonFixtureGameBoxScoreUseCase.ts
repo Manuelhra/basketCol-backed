@@ -1,9 +1,11 @@
 import {
   BusinessDateDomainService,
+  HostUserType,
   IdUniquenessValidatorDomainService,
   ITeamLeagueSeasonFixtureGameBoxScorePrimitives,
   ITeamLeagueSeasonFixtureGameBoxScoreRepository,
   LeagueSeasonFixtureGameValidationDomainService,
+  Nullable,
   TeamLeagueSeasonFixtureGameBoxScore,
   TeamValidationDomainService,
   TLSFGBoxScoreCreatedAt,
@@ -17,6 +19,9 @@ import { CreateTeamLeagueSeasonFixtureGameBoxScoreDTO } from '../dtos/CreateTeam
 import { ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase } from './ports/ICreateTeamLeagueSeasonFixtureGameBoxScoreUseCase';
 import { IUpdateTeamAllTimeStatsAfterGameUseCase } from '../../../../../../../../../team/all-time-stats/application/use-cases/ports/IUpdateTeamAllTimeStatsAfterGameUseCase';
 import { TeamNotParticipatingInFixtureGameError } from '../exceptions/TeamNotParticipatingInFixtureGameError';
+import { UnauthorizedAccessError } from '../../../../../../../../../shared/application/exceptions/UnauthorizedAccessError';
+import { IUserContext } from '../../../../../../../../../shared/application/context/ports/IUserContext';
+import { TeamLeagueSeasonFixtureGameBoxScoreAlreadyExistsError } from '../exceptions/TeamLeagueSeasonFixtureGameBoxScoreAlreadyExistsError';
 
 interface CreateTeamLeagueSeasonFixtureGameBoxScoreDependencies {
   readonly idUniquenessValidatorDomainService: IdUniquenessValidatorDomainService;
@@ -38,10 +43,20 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
     return new CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase(dependencies);
   }
 
-  public async execute(dto: CreateTeamLeagueSeasonFixtureGameBoxScoreDTO): Promise<void> {
+  public async execute(dto: CreateTeamLeagueSeasonFixtureGameBoxScoreDTO, userContext: IUserContext): Promise<void> {
+    if (userContext.userType !== HostUserType.value) {
+      throw UnauthorizedAccessError.create(userContext, HostUserType.value, 'create team league season fixture game box score');
+    }
+
     const boxScoreId: TLSFGBoxScoreId = TLSFGBoxScoreId.create(dto.id);
     const fixtureGameId: TLSFGBoxScoreFixtureGameId = TLSFGBoxScoreFixtureGameId.create(dto.fixtureGameId);
     const teamId: TLSFGBoxScoreTeamId = TLSFGBoxScoreTeamId.create(dto.teamId);
+
+    const teamLeagueSeasonFixtureGameBoxScoreFound: Nullable<TeamLeagueSeasonFixtureGameBoxScore> = await this.dependencies.teamLeagueSeasonFixtureGameBoxScoreRepository.find();
+
+    if (teamLeagueSeasonFixtureGameBoxScoreFound !== null) {
+      throw TeamLeagueSeasonFixtureGameBoxScoreAlreadyExistsError.create(dto.teamId, dto.fixtureGameId);
+    }
 
     await this.validateEntities(boxScoreId, fixtureGameId, teamId);
 
@@ -62,7 +77,7 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
 
     const boxScore = this.createBoxScore(dto, currentDate);
 
-    await this.saveBoxScoreAndUpdateStats(boxScore, dto, hasWonGame);
+    await this.saveBoxScoreAndUpdateStats(boxScore, dto, hasWonGame, userContext);
   }
 
   private async validateEntities(
@@ -138,6 +153,7 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
     boxScore: TeamLeagueSeasonFixtureGameBoxScore,
     dto: CreateTeamLeagueSeasonFixtureGameBoxScoreDTO,
     hasWonGame: boolean,
+    userContext: IUserContext,
   ): Promise<void> {
     await this.dependencies.teamLeagueSeasonFixtureGameBoxScoreRepository.save(boxScore);
 
@@ -158,6 +174,6 @@ export class CreateTeamLeagueSeasonFixtureGameBoxScoreUseCase implements ICreate
       fieldGoalsAttempted: dto.fieldGoalsAttempted,
       fieldGoalsMade: dto.fieldGoalsMade,
       teamId: dto.teamId,
-    });
+    }, userContext);
   }
 }

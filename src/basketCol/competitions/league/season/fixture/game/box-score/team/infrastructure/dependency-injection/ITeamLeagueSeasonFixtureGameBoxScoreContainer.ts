@@ -5,6 +5,8 @@ import {
   BusinessDateDomainService,
   ITeamLeagueSeasonFixtureGameBoxScoreRepository,
   ITeamRepository,
+  ILeagueSeasonFixtureGameRepository,
+  ITeamAllTimeStatsRepository,
 } from '@basketcol/domain';
 
 import { IHttpResponseHandler } from '../../../../../../../../../shared/application/http/ports/IHttpResponseHandler';
@@ -35,4 +37,6 @@ export interface ITeamLeagueSeasonFixtureGameBoxScoreContainer {
   teamRepository: ITeamRepository;
   teamLeagueSeasonFixtureGameBoxScoreRouteManager: IRouteManager;
   fileSystem: IFileSystem;
+  leagueSeasonFixtureGameRepository: ILeagueSeasonFixtureGameRepository;
+  teamAllTimeStatsRepository: ITeamAllTimeStatsRepository;
 }
