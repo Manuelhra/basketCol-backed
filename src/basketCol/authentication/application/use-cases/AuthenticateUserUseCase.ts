@@ -39,13 +39,13 @@ import { InvalidCredentialsError } from '../exceptions/InvalidCredentialsError';
 import { IAuthenticateUserUseCase } from './ports/IAuthenticateUserUseCase';
 
 type Dependencies = {
-  playerUserRepository: IPlayerUserRepository;
-  hostUserRepository: IHostUserRepository;
-  refereeUserRepository: IRefereeUserRepository;
-  teamFounderUserRepository: ITeamFounderUserRepository;
-  leagueFounderUserRepository: ILeagueFounderUserRepository;
-  passwordValidationService: PasswordValidationService;
-  tokenGeneratorService: ITokenGeneratorService;
+  readonly playerUserRepository: IPlayerUserRepository;
+  readonly hostUserRepository: IHostUserRepository;
+  readonly refereeUserRepository: IRefereeUserRepository;
+  readonly teamFounderUserRepository: ITeamFounderUserRepository;
+  readonly leagueFounderUserRepository: ILeagueFounderUserRepository;
+  readonly passwordValidationService: PasswordValidationService;
+  readonly tokenGeneratorService: ITokenGeneratorService;
 };
 
 export class AuthenticateUserUseCase implements IAuthenticateUserUseCase {

@@ -1,7 +1,9 @@
+// TODO: Validar que todo lo que sean interfaces esten en la caperta ports y empiecen con la letra I
+
 import { IPasswordHashingDomainService, UserPassword } from '@basketcol/domain';
 
 type Dependencies = {
-  passwordHashingDomainService: IPasswordHashingDomainService;
+  readonly passwordHashingDomainService: IPasswordHashingDomainService;
 };
 
 export class PasswordValidationService {

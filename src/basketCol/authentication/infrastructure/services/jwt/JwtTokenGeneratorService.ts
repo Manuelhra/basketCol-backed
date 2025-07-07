@@ -2,8 +2,8 @@ import { IUserPrimitives, User } from '@basketcol/domain';
 import jwt from 'jsonwebtoken';
 
 import { ITokenGeneratorService } from '../../../application/services/ITokenGeneratorService';
-import { UserAuthenticationJwtConfigFactory } from './UserAuthenticationJwtConfigFactory';
 import { IUserAuthenticationTokenPayload } from '../../../application/services/IUserAuthenticationTokenPayload';
+import { UserAuthenticationJwtConfigFactory } from '../../factories/jwt/UserAuthenticationJwtConfigFactory';
 
 export class JwtTokenGeneratorService implements ITokenGeneratorService {
   public static create(): JwtTokenGeneratorService {

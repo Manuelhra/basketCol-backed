@@ -12,3 +12,4 @@ export const authenticationRouteManager = awilixAuthenticationContainer.resolve(
 export const authenticationServerErrorHandler = awilixAuthenticationContainer.resolve('authenticationServerErrorHandler');
 export const validateAndRefreshAuthenticationTokenPOSTController = awilixAuthenticationContainer.resolve('validateAndRefreshAuthenticationTokenPOSTController');
 export const getAuthenticatedUserGETController = awilixAuthenticationContainer.resolve('getAuthenticatedUserGETController');
+export const requestPasswordResetPOSTController = awilixAuthenticationContainer.resolve('requestPasswordResetPOSTController');

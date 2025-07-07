@@ -43,4 +43,5 @@ export interface IAuthenticationContainer {
   validateAndRefreshAuthenticationTokenPOSTController: IController;
   validateAndRefreshAuthenticationTokenUseCase:IValidateAndRefreshAuthenticationTokenUseCase;
   tokenValidatorService: ITokenValidatorService;
+  requestPasswordResetPOSTController: IController;
 }

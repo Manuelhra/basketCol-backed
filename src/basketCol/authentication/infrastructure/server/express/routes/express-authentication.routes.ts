@@ -3,10 +3,12 @@ import { Router } from 'express';
 import {
   authenticateUserPOSTController,
   getAuthenticatedUserGETController,
+  requestPasswordResetPOSTController,
   validateAndRefreshAuthenticationTokenPOSTController,
 } from '../../../dependency-injection';
 import { expressInputValidationMiddleware } from '../../../../../shared/infrastructure/server/express/routes/middlewares/express-input-validation.middleware';
 import { authenticateUserPOSTControllerValidations } from './validations/authenticate-user-post-controller.validations';
+import { requestPasswordResetPOSTControllerValidations } from './validations/request-password-reset-post-controller.validations';
 
 const registerAuthenticationRoutes = (router: Router): void => {
   const pathPrefix: string = '/authentication';
@@ -29,6 +31,14 @@ const registerAuthenticationRoutes = (router: Router): void => {
   router.get(
     `${pathPrefix}/users/me`,
     getAuthenticatedUserGETController.run.bind(getAuthenticatedUserGETController),
+  );
+
+  // Endpoint - Request password reset
+  router.post(
+    `${pathPrefix}/password/request-reset`,
+    requestPasswordResetPOSTControllerValidations,
+    expressInputValidationMiddleware,
+    requestPasswordResetPOSTController.run.bind(requestPasswordResetPOSTController),
   );
 };
 
