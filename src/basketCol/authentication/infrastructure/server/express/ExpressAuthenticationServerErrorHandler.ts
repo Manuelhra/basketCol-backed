@@ -10,7 +10,7 @@ import { MissingEmailError } from '../../../application/exceptions/MissingEmailE
 import { InvalidAuthenticationTokenError } from '../../../application/exceptions/InvalidAuthenticationTokenError';
 
 type Dependencies = {
-  httpResponseHandler: IHttpResponseHandler;
+  readonly httpResponseHandler: IHttpResponseHandler;
 };
 
 export class ExpressAuthenticationServerErrorHandler implements IServerErrorHandler {

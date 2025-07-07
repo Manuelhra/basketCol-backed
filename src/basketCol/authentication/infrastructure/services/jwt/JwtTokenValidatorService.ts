@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 
 import { ITokenValidatorService } from '../../../application/services/ITokenValidatorService';
-import { UserAuthenticationJwtConfigFactory } from './UserAuthenticationJwtConfigFactory';
 import { IUserAuthenticationTokenPayload } from '../../../application/services/IUserAuthenticationTokenPayload';
 import { InvalidAuthenticationTokenError } from '../../../application/exceptions/InvalidAuthenticationTokenError';
+import { UserAuthenticationJwtConfigFactory } from '../../factories/jwt/UserAuthenticationJwtConfigFactory';
 
 export class JwtTokenValidatorService implements ITokenValidatorService {
   public static create(): JwtTokenValidatorService {

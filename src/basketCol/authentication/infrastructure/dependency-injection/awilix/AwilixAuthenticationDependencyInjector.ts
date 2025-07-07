@@ -41,6 +41,7 @@ import { JwtTokenValidatorService } from '../../services/jwt/JwtTokenValidatorSe
 import { IGetAuthenticatedUserUseCase } from '../../../application/use-cases/ports/IGetAuthenticatedUserUseCase';
 import { GetAuthenticatedUserUseCase } from '../../../application/use-cases/GetAuthenticatedUserUseCase';
 import { ExpressGetAuthenticatedUserGETController } from '../../server/express/controllers/ExpressGetAuthenticatedUserGETController';
+import { ExpressRequestPasswordResetPOSTController } from '../../server/express/controllers/ExpressRequestPasswordResetPOSTController';
 
 export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInjector<IAuthenticationContainer> {
   private constructor() {
@@ -71,6 +72,7 @@ export class AwilixAuthenticationDependencyInjector extends AwilixDependencyInje
       validateAndRefreshAuthenticationTokenPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressValidateAndRefreshAuthenticationTokenPOSTController.create).singleton(),
       validateAndRefreshAuthenticationTokenUseCase: AwilixAuthenticationDependencyInjector.registerAsFunction<IValidateAndRefreshAuthenticationTokenUseCase>(ValidateAndRefreshAuthenticationTokenUseCase.create).singleton(),
       tokenValidatorService: AwilixDependencyInjector.registerAsFunction<ITokenValidatorService>(JwtTokenValidatorService.create).singleton(),
+      requestPasswordResetPOSTController: AwilixDependencyInjector.registerAsFunction<IController>(ExpressRequestPasswordResetPOSTController.create).singleton(),
     });
   }
 
